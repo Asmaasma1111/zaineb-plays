@@ -36,7 +36,7 @@ test('unlock rule: stage 2 opens at 80% of stage 1 known (13 of 16), stages open
 });
 
 test('session: 5 cards, no duplicates, new cards come from the current stage, up to 3 reviews', () => {
-  const p = E.emptyProgress(); const t = '2026-10-09';
+  const p = E.emptyProgress(); p.settings.cardsPerSession = 5; const t = '2026-10-09';
   const s0 = E.buildSession(p, cards, levels, t, seeded(1));
   assert.equal(s0.length, 5); assert.equal(new Set(s0.map(c => c.id)).size, 5);
   assert.ok(s0.every(c => c.stage === 1)); assert.deepEqual(s0.map(c => c.id), ['1-01', '1-02', '1-03', '1-04', '1-05'], 'first session follows deck order');
@@ -49,7 +49,7 @@ test('session: 5 cards, no duplicates, new cards come from the current stage, up
 });
 
 test('session guarantees: a do card once stage 4 is open, a silly card once stage 5 is open; do card goes last', () => {
-  const p = E.emptyProgress(); p.manualUnlocked = [2, 3, 4, 5]; p.sessionCount = 20;
+  const p = E.emptyProgress(); p.settings.cardsPerSession = 5; p.manualUnlocked = [2, 3, 4, 5]; p.sessionCount = 20;
   const s = E.buildSession(p, cards, levels, '2026-10-09', seeded(3));
   assert.equal(s.length, 5); assert.ok(s.some(c => c.type === 'do')); assert.ok(s.some(c => c.type === 'silly'));
   assert.equal(s[s.length - 1].type, 'do');
@@ -82,7 +82,7 @@ test('mission: from the session cards when any has one, else a default', () => {
 });
 
 test('practice: N cards from one open stage, due and weakest first, nothing from a locked stage', () => {
-  const p = E.emptyProgress(); const t = '2026-10-09';
+  const p = E.emptyProgress(); p.settings.cardsPerSession = 5; const t = '2026-10-09';
   ['1-01', '1-02', '1-03'].forEach(id => E.recordAnswer(p, id, 'correct', t, 0)); E.recordAnswer(p, '1-04', 'wrong', t, 0);
   const s = E.buildPractice(p, cards, levels, 1, t, seeded(7));
   assert.equal(s.length, 5); assert.ok(s.every(c => c.stage === 1)); assert.equal(new Set(s.map(c => c.id)).size, 5);
