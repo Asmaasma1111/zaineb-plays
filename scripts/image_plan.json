@@ -1,0 +1,620 @@
+{
+ "note": "Every picture the app needs. 'asset' is the file name (img/<asset>.webp). 'cards' lists card ids that use it.",
+ "photos": [
+  {
+   "asset": "kitten",
+   "query": "cute kitten",
+   "cards": [
+    "1-01",
+    "5-08",
+    "5-12"
+   ]
+  },
+  {
+   "asset": "puppy",
+   "query": "puppy dog",
+   "cards": [
+    "1-02",
+    "5-08"
+   ]
+  },
+  {
+   "asset": "cow",
+   "query": "dairy cow",
+   "cards": [
+    "1-03"
+   ]
+  },
+  {
+   "asset": "sheep",
+   "query": "white sheep lamb",
+   "cards": [
+    "1-04"
+   ]
+  },
+  {
+   "asset": "camel",
+   "query": "camel",
+   "cards": [
+    "1-05"
+   ]
+  },
+  {
+   "asset": "hen",
+   "query": "hen chicken farm",
+   "cards": [
+    "1-06",
+    "6-02"
+   ]
+  },
+  {
+   "asset": "fish",
+   "query": "goldfish",
+   "cards": [
+    "1-07"
+   ]
+  },
+  {
+   "asset": "sparrow",
+   "query": "sparrow bird branch",
+   "cards": [
+    "1-08"
+   ]
+  },
+  {
+   "asset": "apple",
+   "query": "red apple white background",
+   "cards": [
+    "1-09",
+    "2-08",
+    "2-13",
+    "5-08",
+    "5-09",
+    "5-10"
+   ]
+  },
+  {
+   "asset": "banana",
+   "query": "ripe banana fruit",
+   "cards": [
+    "1-10",
+    "2-09",
+    "5-10"
+   ]
+  },
+  {
+   "asset": "milk",
+   "query": "glass of milk white background",
+   "cards": [
+    "1-11"
+   ]
+  },
+  {
+   "asset": "bread",
+   "query": "bread loaf",
+   "cards": [
+    "1-12",
+    "5-12"
+   ]
+  },
+  {
+   "asset": "hand",
+   "query": "baby hand",
+   "cards": [
+    "1-15",
+    "2-12"
+   ]
+  },
+  {
+   "asset": "feet",
+   "query": "baby feet",
+   "cards": [
+    "1-16"
+   ]
+  },
+  {
+   "asset": "red-ball",
+   "query": "red ball white background",
+   "cards": [
+    "2-01",
+    "5-09"
+   ]
+  },
+  {
+   "asset": "duck",
+   "query": "yellow rubber duck",
+   "cards": [
+    "2-02",
+    "2-10"
+   ]
+  },
+  {
+   "asset": "sky",
+   "query": "blue sky clouds",
+   "cards": [
+    "2-03"
+   ]
+  },
+  {
+   "asset": "leaf",
+   "query": "green leaf",
+   "cards": [
+    "2-04"
+   ]
+  },
+  {
+   "asset": "pizza",
+   "query": "pizza slice",
+   "cards": [
+    "2-07"
+   ]
+  },
+  {
+   "asset": "ball",
+   "query": "beach ball",
+   "cards": [
+    "2-11"
+   ]
+  },
+  {
+   "asset": "white-cat",
+   "query": "white fluffy cat",
+   "cards": [
+    "2-14"
+   ]
+  },
+  {
+   "asset": "elephant",
+   "query": "elephant",
+   "cards": [
+    "4-01"
+   ]
+  },
+  {
+   "asset": "mouse",
+   "query": "small mouse animal",
+   "cards": [
+    "4-01"
+   ]
+  },
+  {
+   "asset": "tea",
+   "query": "hot tea cup steam",
+   "cards": [
+    "4-02"
+   ]
+  },
+  {
+   "asset": "ice-cream",
+   "query": "ice cream cone",
+   "cards": [
+    "4-02",
+    "6-04"
+   ]
+  },
+  {
+   "asset": "cat-under-table",
+   "query": "cat under chair",
+   "cards": [
+    "4-03"
+   ]
+  },
+  {
+   "asset": "full-glass",
+   "query": "glass of water",
+   "cards": [
+    "4-05",
+    "6-05"
+   ]
+  },
+  {
+   "asset": "empty-glass",
+   "query": "empty glass",
+   "cards": [
+    "4-05",
+    "6-05"
+   ]
+  },
+  {
+   "asset": "giraffe",
+   "query": "giraffe",
+   "cards": [
+    "4-06"
+   ]
+  },
+  {
+   "asset": "rabbit",
+   "query": "rabbit bunny",
+   "cards": [
+    "4-06",
+    "4-07",
+    "4-13"
+   ]
+  },
+  {
+   "asset": "tortoise",
+   "query": "tortoise",
+   "cards": [
+    "4-07",
+    "4-13"
+   ]
+  },
+  {
+   "asset": "frog",
+   "query": "green frog",
+   "cards": [
+    "4-08"
+   ]
+  },
+  {
+   "asset": "bird-flying",
+   "query": "seagull flying",
+   "cards": [
+    "4-10",
+    "5-05"
+   ]
+  },
+  {
+   "asset": "penguin",
+   "query": "penguin walking",
+   "cards": [
+    "4-11"
+   ]
+  },
+  {
+   "asset": "washing-hands",
+   "query": "washing hands soap",
+   "cards": [
+    "4-14",
+    "6-03"
+   ]
+  },
+  {
+   "asset": "kitten-meow",
+   "query": "cat open mouth",
+   "cards": [
+    "5-07"
+   ]
+  },
+  {
+   "asset": "shoe",
+   "query": "child shoe sneaker",
+   "cards": [
+    "5-10"
+   ]
+  },
+  {
+   "asset": "moon",
+   "query": "moon night sky",
+   "cards": [
+    "5-14"
+   ]
+  },
+  {
+   "asset": "seed",
+   "query": "seeds in hand",
+   "cards": [
+    "6-01"
+   ]
+  },
+  {
+   "asset": "sprout",
+   "query": "seedling sprout",
+   "cards": [
+    "6-01"
+   ]
+  },
+  {
+   "asset": "flower",
+   "query": "tulip flower",
+   "cards": [
+    "6-01"
+   ]
+  },
+  {
+   "asset": "egg",
+   "query": "single egg",
+   "cards": [
+    "6-02"
+   ]
+  },
+  {
+   "asset": "chick",
+   "query": "baby chick yellow",
+   "cards": [
+    "6-02"
+   ]
+  },
+  {
+   "asset": "dirty-hands",
+   "query": "hands covered in paint",
+   "cards": [
+    "6-03"
+   ]
+  },
+  {
+   "asset": "clean-hands",
+   "query": "clean hands",
+   "cards": [
+    "6-03"
+   ]
+  },
+  {
+   "asset": "sun",
+   "query": "sun in the sky",
+   "cards": [
+    "6-04"
+   ]
+  },
+  {
+   "asset": "pouring-water",
+   "query": "pouring water into glass",
+   "cards": [
+    "6-05"
+   ]
+  },
+  {
+   "asset": "box",
+   "query": "empty cardboard box",
+   "cards": [
+    "6-07"
+   ]
+  },
+  {
+   "asset": "curious-cat",
+   "query": "curious cat looking",
+   "cards": [
+    "6-08"
+   ]
+  },
+  {
+   "asset": "cloud",
+   "query": "fluffy white cloud",
+   "cards": [
+    "6-09"
+   ]
+  },
+  {
+   "asset": "spoon",
+   "query": "wooden spoon",
+   "cards": [
+    "6-10"
+   ]
+  }
+ ],
+ "svg": [
+  {
+   "asset": "circle",
+   "cards": [
+    "2-05"
+   ]
+  },
+  {
+   "asset": "square",
+   "cards": [
+    "2-06"
+   ]
+  },
+  {
+   "asset": "stars",
+   "cards": [
+    "5-11"
+   ],
+   "note": "four stars: big yellow, small blue, big blue, small yellow"
+  },
+  {
+   "asset": "door-open",
+   "cards": [
+    "4-04"
+   ],
+   "note": "open door (no CC0 photo of an open door found)"
+  },
+  {
+   "asset": "door-closed",
+   "cards": [
+    "4-04"
+   ]
+  },
+  {
+   "asset": "melted-ice-cream",
+   "cards": [
+    "6-04"
+   ],
+   "note": "drawn: no CC0 photo of a dripping cone found"
+  }
+ ],
+ "generated": [
+  {
+   "asset": "face-eye",
+   "cards": [
+    "1-13"
+   ],
+   "prompt": "friendly cartoon toddler girl face, pointing to her eye, soft rounded style"
+  },
+  {
+   "asset": "face-nose",
+   "cards": [
+    "1-14"
+   ],
+   "prompt": "friendly cartoon toddler girl face, touching her nose, soft rounded style"
+  },
+  {
+   "asset": "happy",
+   "cards": [
+    "3-01",
+    "3-07",
+    "3-08",
+    "3-11"
+   ],
+   "prompt": "happy laughing cartoon child face"
+  },
+  {
+   "asset": "sad",
+   "cards": [
+    "3-02",
+    "3-07",
+    "3-08"
+   ],
+   "prompt": "gently sad cartoon girl face with one small tear"
+  },
+  {
+   "asset": "angry",
+   "cards": [
+    "3-03",
+    "3-07",
+    "3-08"
+   ],
+   "prompt": "mildly cross cartoon boy face with pink cheeks, not scary"
+  },
+  {
+   "asset": "scared",
+   "cards": [
+    "3-04",
+    "3-07",
+    "3-08"
+   ],
+   "prompt": "a little worried cartoon girl hugging a teddy, gentle, not scary"
+  },
+  {
+   "asset": "tired",
+   "cards": [
+    "3-05",
+    "3-07",
+    "3-08"
+   ],
+   "prompt": "tired yawning cartoon boy face"
+  },
+  {
+   "asset": "surprised",
+   "cards": [
+    "3-06",
+    "3-07",
+    "3-08"
+   ],
+   "prompt": "surprised cartoon girl face, round open mouth, wide eyes"
+  },
+  {
+   "asset": "gift",
+   "cards": [
+    "3-09"
+   ],
+   "prompt": "cartoon girl receiving a wrapped gift, delighted"
+  },
+  {
+   "asset": "ball-pool",
+   "cards": [
+    "3-10"
+   ],
+   "prompt": "cartoon boy sad, his ball fell into a small pool"
+  },
+  {
+   "asset": "sleeping",
+   "cards": [
+    "3-12"
+   ],
+   "prompt": "cartoon boy asleep in bed with a teddy"
+  },
+  {
+   "asset": "freeze",
+   "cards": [
+    "4-09"
+   ],
+   "prompt": "cartoon child frozen mid-dance like a statue, music notes"
+  },
+  {
+   "asset": "clapping",
+   "cards": [
+    "4-12"
+   ],
+   "prompt": "cartoon child clapping hands happily"
+  },
+  {
+   "asset": "pyjamas",
+   "cards": [
+    "6-06"
+   ],
+   "prompt": "folded pyjamas, cartoon"
+  },
+  {
+   "asset": "toothbrush",
+   "cards": [
+    "6-06"
+   ],
+   "prompt": "toothbrush with toothpaste, cartoon"
+  },
+  {
+   "asset": "bed",
+   "cards": [
+    "6-06"
+   ],
+   "prompt": "cosy child bed with pillow and moon lamp, cartoon"
+  },
+  {
+   "asset": "fish-shoes",
+   "cards": [
+    "5-01"
+   ],
+   "prompt": "cartoon fish wearing red shoes"
+  },
+  {
+   "asset": "cow-meow",
+   "cards": [
+    "5-02"
+   ],
+   "prompt": "cartoon cow with a speech bubble containing a tiny cat face"
+  },
+  {
+   "asset": "banana-hat",
+   "cards": [
+    "5-03"
+   ],
+   "prompt": "cartoon child wearing a banana as a hat"
+  },
+  {
+   "asset": "flying-puppy",
+   "cards": [
+    "5-04"
+   ],
+   "prompt": "cartoon puppy with tiny wings flying"
+  },
+  {
+   "asset": "fork-milk",
+   "cards": [
+    "5-06"
+   ],
+   "prompt": "cartoon fork standing in a glass of milk"
+  },
+  {
+   "asset": "camel-sea",
+   "cards": [
+    "5-13"
+   ],
+   "prompt": "cartoon camel swimming in the sea with goggles"
+  },
+  {
+   "asset": "rabbit-carrot",
+   "cards": [
+    "6-11"
+   ],
+   "prompt": "cute cartoon rabbit looking for a carrot, storybook"
+  },
+  {
+   "asset": "kitten-story",
+   "cards": [
+    "6-12"
+   ],
+   "prompt": "cute cartoon kitten in a storybook scene"
+  }
+ ],
+ "derived": [
+  {
+   "asset": "blue-ball",
+   "from": "red-ball",
+   "cards": [
+    "2-15",
+    "5-09"
+   ],
+   "note": "hue-shifted copy of the CC0 red ball photo"
+  }
+ ]
+}

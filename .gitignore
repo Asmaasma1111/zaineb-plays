@@ -1,0 +1,7 @@
+.env
+.env.*
+work/
+node_modules/
+.DS_Store
+contact-sheet.html
+PROMPT.md

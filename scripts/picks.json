@@ -1,0 +1,82 @@
+{
+ "kitten": 4,
+ "sheep": 3,
+ "hen": 1,
+ "sparrow": 2,
+ "apple": 3,
+ "bread": 3,
+ "duck": 1,
+ "sky": 3,
+ "leaf": 3,
+ "pizza": 1,
+ "elephant": 2,
+ "mouse": 2,
+ "tea": 5,
+ "ice-cream": 0,
+ "empty-glass": 1,
+ "giraffe": 3,
+ "rabbit": 4,
+ "tortoise": 5,
+ "frog": 1,
+ "penguin": 5,
+ "washing-hands": 1,
+ "shoe": 4,
+ "moon": 1,
+ "sprout": 1,
+ "flower": 5,
+ "chick": 3,
+ "clean-hands": 0,
+ "box": 5,
+ "curious-cat": 1,
+ "cloud": 5,
+ "spoon": 0,
+ "puppy": 4,
+ "cow": 0,
+ "camel": {
+  "i": 1,
+  "dir": "camel-y"
+ },
+ "fish": 0,
+ "milk": {
+  "i": 1,
+  "dir": "milk-x",
+  "zoom": 1.7,
+  "fx": 0.78,
+  "fy": 0.55
+ },
+ "ball": 5,
+ "full-glass": 2,
+ "bird-flying": 1,
+ "seed": 0,
+ "white-cat": 2,
+ "cat-under-table": {
+  "i": 3,
+  "dir": "cat-x"
+ },
+ "egg": {
+  "i": 2,
+  "dir": "egg-c"
+ },
+ "kitten-meow": 4,
+ "sun": 5,
+ "melted-ice-cream": 3,
+ "pouring-water": {
+  "i": 1,
+  "dir": "pouring-water-c"
+ },
+ "banana": 3,
+ "feet": 4,
+ "red-ball": {
+  "i": 2,
+  "dir": "red-ball-c"
+ },
+ "door": 0,
+ "hand": {
+  "i": 2,
+  "dir": "hand-4-c"
+ },
+ "dirty-hands": {
+  "i": 0,
+  "dir": "mud-hands"
+ }
+}
