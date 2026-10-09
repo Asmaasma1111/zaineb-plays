@@ -18,7 +18,7 @@ STYLE = ("A warm, cheerful young Algerian mother talking to her 3-year-old daugh
          "with a natural Algerian (Darja) accent: the lines mix simple Standard Arabic with Algerian dialect, so pronounce the Darja words "
          "the Algerian way (واش = wesh, كيما = kima, ما عندهاش = ma 3andhash). Laugh gently where the text says هههه. "
          "Each paragraph is a separate line: pause about two seconds between paragraphs.")
-CHECK_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.5-flash']
+CHECK_MODELS = [m for m in os.environ.get('CHECK_MODELS', 'gemini-3-flash-preview,gemini-3.5-transcribe,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest,gemini-3.5-flash').split(',') if m]
 STRICT = ('Transcribe this short Arabic clip verbatim in Arabic script, exactly as spoken, dialect words as pronounced. Do not correct, '
           'complete, translate or add anything. If the first or last word is cut off, write the part you hear followed by [cut]. '
           'Reply with the words only, or "-" if silent.')
@@ -137,9 +137,13 @@ class Ear:
                 self.n += 1; return (r.text or '').strip()
             except Exception as e:
                 msg = str(e)
-                if 'per day' in msg.lower() or '404' in msg or 'NOT_FOUND' in msg: self.mi += 1; continue
-                m = re.search(r'retry in ([\d.]+)s', msg); time.sleep(float(m.group(1)) + 1 if m else 6); self.mi += 1
-        return '?'
+                daily = 'per day' in msg.lower() or 'PerDay' in msg
+                if daily or '404' in msg or 'NOT_FOUND' in msg:
+                    self.dead = getattr(self, 'dead', set()) | {model}
+                    if len(self.dead) >= len(CHECK_MODELS): raise SystemExit('ALL CHECK MODELS EXHAUSTED — resume tomorrow')
+                    self.mi += 1; continue
+                m = re.search(r'retry in ([\d.]+)s', msg); time.sleep(min(float(m.group(1)) + 1 if m else 8, 70)); self.mi += 1
+        raise SystemExit('transcription kept failing')
 
 # ---------- split ----------
 def pieces_of(q):
@@ -225,7 +229,8 @@ def cmd_build(a):
     L = by_key(); clips = load(os.path.join(W, 'clips.json'), {}); out = os.path.join(ROOT, 'audio'); os.makedirs(out, exist_ok=True); man = {}
     for l in L.values():
         c = clips.get(l['key'])
-        if not c or c.get('missing') or not c.get('verified'): continue
+        if not c or c.get('missing'): continue
+        if not c.get('verified') and not (os.environ.get('PREVIEW') and c.get('sim', 0) >= 0.8): continue
         fn = slug(l['key']) + '.m4a'
         subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', os.path.join(W, 'clips', slug(l['key']) + '.wav'), '-c:a', 'aac', '-b:a', '64k', os.path.join(out, fn)], check=True)
         for k in l['keys']: man[k] = fn
