@@ -3,7 +3,7 @@
 (function (root) {
   const BOX_DAYS = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 };   // box -> days until due
   const KNOWN_BOX = 3;
-  const DEFAULT_SETTINGS = { sessionsPerDay: 2, cardsPerSession: 5, breakMinutes: 20, hints: true, unlockRatio: 0.8, bigPickAfter: 5 };
+  const DEFAULT_SETTINGS = { v: 2, sessionsPerDay: 2, cardsPerSession: 8, breakMinutes: 20, hints: true, unlockRatio: 0.8, bigPickAfter: 5 };
   const DEFAULT_MISSIONS = ['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!'];
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -85,7 +85,7 @@
 
     // 1. review cards due today (lowest box first, then oldest), up to 3
     const due = pool.filter(c => isDue(p, c.id, today, sIdx)).sort((a, b) => (p.cards[a.id].box - p.cards[b.id].box) || ((p.cards[a.id].lastSeen || '') < (p.cards[b.id].lastSeen || '') ? -1 : 1));
-    const maxReview = Math.min(3, N - 2);
+    const maxReview = Math.min(Math.max(3, Math.round(N * 0.4)), N - 2);   // about 40 % review, the rest new
     for (const c of shuffle(due, rnd)) { if (chosen.length >= maxReview) break; take(c); }
 
     // 2. new cards from the current stage, in JSON order (the deck is sequenced on purpose)

@@ -6,7 +6,7 @@
   let DATA = null, MEDIA = null, P = null, S = null;   // S = current session
 
   /* ---------- storage ---------- */
-  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } }
 
   /* ---------- audio: recorded clips through one unlocked <audio>; device voice only when a clip is missing ---------- */
@@ -309,7 +309,7 @@
       </div>
       <div class="ptab hidden" data-t="set">
         <label>حصص في اليوم <input type="number" min="1" max="6" id="spd" value="${st.sessionsPerDay}"></label>
-        <label>بطاقات في الحصة <input type="number" min="3" max="10" id="cps" value="${st.cardsPerSession}"></label>
+        <label>بطاقات في الحصة <input type="number" min="3" max="12" id="cps" value="${st.cardsPerSession}"></label>
         <label>استراحة بين الحصتين (دقائق) <input type="number" min="0" max="240" id="brk" value="${st.breakMinutes}"></label>
         <label><input type="checkbox" id="hints" ${st.hints ? 'checked' : ''}> إظهار تلميحات الكبار تحت البطاقة</label>
         <p><button class="btn-adult" id="unlock" ${next ? '' : 'disabled'}>فتح المرحلة ${next ? next.stage : ''} يدوياً</button></p>
@@ -326,7 +326,7 @@
     o.querySelector('#close').onclick = () => { o.remove(); renderHome(); };
     o.querySelectorAll('.ptabs button').forEach(b => b.onclick = () => { o.querySelectorAll('.ptabs button').forEach(x => x.classList.toggle('on', x === b)); o.querySelectorAll('.ptab').forEach(t => t.classList.toggle('hidden', t.dataset.t !== b.dataset.t)); });
     const setNum = (id, key, lo, hi) => o.querySelector(id).onchange = (e) => { const v = Math.max(lo, Math.min(hi, +e.target.value || lo)); P.settings[key] = v; e.target.value = v; save(); };
-    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#cps', 'cardsPerSession', 3, 10); setNum('#brk', 'breakMinutes', 0, 240);
+    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#cps', 'cardsPerSession', 3, 12); setNum('#brk', 'breakMinutes', 0, 240);
     o.querySelector('#hints').onchange = (e) => { P.settings.hints = e.target.checked; save(); };
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
