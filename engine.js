@@ -119,6 +119,20 @@
     return order;
   }
 
+  /* practice session: N cards from one open stage — due first, then the least-known, then the rest shuffled */
+  function buildPractice(p, cards, levels, stage, today, rnd) {
+    rnd = rnd || Math.random; const st = p.settings || DEFAULT_SETTINGS; const N = st.cardsPerSession; const sIdx = p.sessionCount;
+    if (!isUnlocked(p, cards, stage)) return [];
+    const pool = shuffle(stageCards(cards, stage), rnd);
+    const box = (c) => (cardState(p, c.id) ? cardState(p, c.id).box : 1.5);   // struggling cards first, then unseen, then known
+    const due = pool.filter(c => isDue(p, c.id, today, sIdx));
+    const rest = pool.filter(c => !due.includes(c)).sort((a, b) => box(a) - box(b));
+    const chosen = due.concat(rest).slice(0, N);
+    if (stage >= 4 && !chosen.some(c => c.type === 'do')) { const d = pool.find(c => c.type === 'do'); if (d) chosen[chosen.length - 1] = d; }
+    const i = chosen.findIndex(c => c.type === 'do'); if (i >= 0) chosen.push(chosen.splice(i, 1)[0]);
+    return chosen;
+  }
+
   /* distractors for a 'find' card: pictures of cards already seen in the same stage (fallback: same stage, then any) */
   function pickDistractors(p, cards, card, n, rnd, assetOf) {
     rnd = rnd || Math.random; assetOf = assetOf || (c => c.id);
@@ -146,6 +160,6 @@
   }
 
   const Engine = { BOX_DAYS, KNOWN_BOX, DEFAULT_SETTINGS, DEFAULT_MISSIONS, dateKey, addDays, emptyProgress, cardState, isKnown, isDue, recordAnswer,
-    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, buildSession, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
+    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, buildSession, buildPractice, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
   if (typeof module !== 'undefined' && module.exports) module.exports = Engine; else root.Engine = Engine;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -80,3 +80,14 @@ test('mission: from the session cards when any has one, else a default', () => {
   assert.equal(E.missionFor([cards.find(c => c.id === '2-01')], seeded(1)), 'جيبيلي حاجة حمراء!');
   assert.ok(E.DEFAULT_MISSIONS.includes(E.missionFor([cards.find(c => c.id === '1-01')], seeded(1))));
 });
+
+test('practice: N cards from one open stage, due and weakest first, nothing from a locked stage', () => {
+  const p = E.emptyProgress(); const t = '2026-10-09';
+  ['1-01', '1-02', '1-03'].forEach(id => E.recordAnswer(p, id, 'correct', t, 0)); E.recordAnswer(p, '1-04', 'wrong', t, 0);
+  const s = E.buildPractice(p, cards, levels, 1, t, seeded(7));
+  assert.equal(s.length, 5); assert.ok(s.every(c => c.stage === 1)); assert.equal(new Set(s.map(c => c.id)).size, 5);
+  assert.ok(s.some(c => c.id === '1-04'), 'the wrong card is in the practice set');
+  assert.deepEqual(E.buildPractice(p, cards, levels, 3, t, seeded(7)), [], 'locked stage gives nothing');
+  p.manualUnlocked = [2, 3, 4];
+  const s4 = E.buildPractice(p, cards, levels, 4, t, seeded(8)); assert.equal(s4[s4.length - 1].type, 'do', 'movement card last in stage 4');
+});

@@ -79,6 +79,10 @@
     const slot = s.querySelector('.mascot-slot'); setMascot(slot, can.ok ? 'idle' : 'sleep');
     longPress(slot, 3000, openParent);
     s.querySelector('#start').addEventListener('click', () => { if (E.canStart(P, new Date()).ok) { Voice.unlock(); Sfx.get(); startSession(); } });
+    s.querySelectorAll('.map .stop:not(.locked)').forEach(el => el.addEventListener('click', () => {
+      if (!E.canStart(P, new Date()).ok) { el.classList.add('wiggle'); setTimeout(() => el.classList.remove('wiggle'), 1300); return; }
+      Voice.unlock(); Sfx.get(); Sfx.pop(); startSession(+el.dataset.stage);
+    }));
     if (!can.ok && can.reason === 'break') setTimeout(() => { if ($app.querySelector('.home')) renderHome(); }, Math.min(can.waitMs + 500, 60000));
   }
   function renderMap(cur) {
@@ -88,7 +92,7 @@
       const un = E.isUnlocked(P, DATA.cards, l.stage); const st = E.stageStats(P, DATA.cards, l.stage);
       const done = un && st.known >= Math.ceil(st.total * (P.settings.unlockRatio || .8));
       const cls = !un ? 'locked' : (done ? 'done' : (l.stage === cur ? 'current' : ''));
-      return `<div class="stop ${cls}" style="right:${pts[i][0]}%;top:${pts[i][1]}%">
+      return `<div class="stop ${cls}" data-stage="${l.stage}" style="right:${pts[i][0]}%;top:${pts[i][1]}%">
         ${l.stage === cur && un ? '<div class="mini">' + M.svg('idle', { size: 64 }) + '</div>' : ''}
         <div class="dot">${!un ? '🔒' : (done ? '✓' : l.stage)}</div><div class="name">${l.name}</div></div>`;
     }).join('');
@@ -96,9 +100,11 @@
   }
 
   /* ---------- SESSION ---------- */
-  function startSession() {
+  function startSession(stage) {
     const today = E.dateKey();
-    S = { cards: E.buildSession(P, DATA.cards, DATA.levels, today), i: 0, results: {}, today, choices: E.choicesFor(P) };
+    const cards = stage ? E.buildPractice(P, DATA.cards, DATA.levels, stage, today, rnd) : E.buildSession(P, DATA.cards, DATA.levels, today);
+    if (!cards.length) return;
+    S = { cards, i: 0, results: {}, today, choices: E.choicesFor(P), practice: stage || null };
     showCard();
   }
   function card() { return S.cards[S.i]; }
