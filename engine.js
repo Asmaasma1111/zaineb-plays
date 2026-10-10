@@ -25,9 +25,10 @@
   /* record an answer. result: 'correct' | 'wrong' | 'help' */
   function recordAnswer(p, id, result, today, sessionIndex) {
     const s = p.cards[id] || { box: 1, seen: 0, correct: 0 };   // a new card enters box 1 when first shown
+    const firstTime = s.seen === 0; const known = s.box >= KNOWN_BOX;
     s.seen += 1; s.lastSeen = today;
-    if (result === 'correct') { s.correct += 1; s.box = Math.min(5, s.box + 1); }
-    else { s.box = 1; }
+    if (result === 'correct') { s.correct += 1; s.box = firstTime ? KNOWN_BOX : Math.min(5, s.box + 1); }   // right first time = she already knew it
+    else { s.box = known ? Math.max(1, s.box - 1) : 1; }                                                      // a slip on a known card costs one box, not all
     if (s.box === 1) { s.dueSession = sessionIndex + 1; s.due = today; }
     else { s.due = addDays(today, BOX_DAYS[s.box]); s.dueSession = null; }
     p.cards[id] = s; return s;

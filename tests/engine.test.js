@@ -6,13 +6,14 @@ const seeded = (s) => () => { s = (s * 9301 + 49297) % 233280; return s / 233280
 
 test('Leitner boxes: correct moves up, wrong/help back to box 1, due dates follow 0/1/3/7/14', () => {
   const p = E.emptyProgress(); const t = '2026-10-09';
-  let s = E.recordAnswer(p, '1-01', 'correct', t, 0); assert.equal(s.box, 2, 'new card starts in box 1, correct -> box 2'); assert.equal(s.due, '2026-10-10');
-  s = E.recordAnswer(p, '1-01', 'correct', '2026-10-10', 1); assert.equal(s.box, 3); assert.equal(s.due, '2026-10-13'); assert.ok(E.isKnown(p, '1-01'));
-  s = E.recordAnswer(p, '1-01', 'correct', '2026-10-13', 2); assert.equal(s.box, 4); assert.equal(s.due, '2026-10-20');
-  s = E.recordAnswer(p, '1-01', 'correct', '2026-10-20', 3); assert.equal(s.box, 5); assert.equal(s.due, '2026-11-03');
-  s = E.recordAnswer(p, '1-01', 'correct', '2026-11-03', 4); assert.equal(s.box, 5, 'box 5 is the top');
-  s = E.recordAnswer(p, '1-01', 'help', '2026-11-03', 5); assert.equal(s.box, 1); assert.equal(s.dueSession, 6); assert.ok(!E.isKnown(p, '1-01'));
+  let s = E.recordAnswer(p, '1-01', 'correct', t, 0); assert.equal(s.box, 3, 'right the first time = already known, box 3'); assert.equal(s.due, '2026-10-12'); assert.ok(E.isKnown(p, '1-01'));
+  s = E.recordAnswer(p, '1-01', 'correct', '2026-10-12', 1); assert.equal(s.box, 4); assert.equal(s.due, '2026-10-19');
+  s = E.recordAnswer(p, '1-01', 'correct', '2026-10-19', 2); assert.equal(s.box, 5); assert.equal(s.due, '2026-11-02');
+  s = E.recordAnswer(p, '1-01', 'correct', '2026-11-02', 3); assert.equal(s.box, 5, 'box 5 is the top');
+  s = E.recordAnswer(p, '1-01', 'wrong', '2026-11-02', 4); assert.equal(s.box, 4, 'a slip on a known card costs one box'); assert.ok(E.isKnown(p, '1-01'));
   s = E.recordAnswer(p, '1-02', 'wrong', t, 0); assert.equal(s.box, 1); assert.equal(s.dueSession, 1);
+  s = E.recordAnswer(p, '1-02', 'correct', t, 1); assert.equal(s.box, 2, 'learned after a miss: box 2, +1 day');
+  s = E.recordAnswer(p, '1-02', 'help', '2026-10-10', 2); assert.equal(s.box, 1, 'help on a card not yet known -> box 1');
 });
 
 test('isDue: box 1 is due next session, box 2+ by date', () => {
@@ -27,7 +28,7 @@ test('unlock rule: stage 2 opens at 80% of stage 1 known (13 of 16), stages open
   const p = E.emptyProgress();
   const s1 = E.stageCards(cards, 1); assert.equal(s1.length, 16);
   assert.ok(E.isUnlocked(p, cards, 1)); assert.ok(!E.isUnlocked(p, cards, 2));
-  const know = (id) => { E.recordAnswer(p, id, 'correct', '2026-10-01', 0); E.recordAnswer(p, id, 'correct', '2026-10-02', 1); };
+  const know = (id) => { E.recordAnswer(p, id, 'correct', '2026-10-01', 0); };
   s1.slice(0, 12).forEach(c => know(c.id)); assert.ok(!E.isUnlocked(p, cards, 2), '12/16 is not enough');
   know(s1[12].id); assert.ok(E.isUnlocked(p, cards, 2), '13/16 opens stage 2');
   assert.ok(!E.isUnlocked(p, cards, 3));

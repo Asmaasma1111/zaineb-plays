@@ -14,10 +14,23 @@ for line in open(os.path.join(ROOT, '.env')):
     if '=' in line and not line.startswith('#'):
         k, v = line.strip().split('=', 1); os.environ.setdefault(k, v.strip('"'))
 TTS_MODEL = os.environ.get('TTS_MODEL', 'gemini-3.8-flash-tts'); VOICE = 'Kore'; BATCH = int(os.environ.get('BATCH', '17')); CHARS = int(os.environ.get('CHARS', '800'))
-STYLE = ("A warm, cheerful young Algerian mother talking to her 3-year-old daughter. Speak slowly and clearly, playful and expressive, "
-         "with a natural Algerian (Darja) accent: the lines mix simple Standard Arabic with Algerian dialect, so pronounce the Darja words "
-         "the Algerian way (واش = wesh, كيما = kima, ما عندهاش = ma 3andhash). Laugh gently where the text says هههه. "
-         "Each paragraph is a separate line: pause about two seconds between paragraphs.")
+STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking slowly and playfully to her 3-year-old daughter. "
+         "Use the Sétif (eastern Algerian, Hilalian) accent, not Egyptian, Levantine or Standard Arabic: pronounce ق as a hard g "
+         "(قطة = gaṭṭa, تقول = tgūl, قريب = grīb) and ڨ always as g; keep the interdentals ث and ذ (ثلاثة = thlātha, هذي = hādhi); "
+         "pronounce ج as the French j; ضُرك = ḍork; نتي = nti; كيما = kīma; واش = wāsh; ما عندهاش = ma ʿandhāsh. Short vowels are "
+         "reduced like in Algerian speech. Laugh gently where the text says هههه. Each paragraph is a separate line: pause about two seconds between paragraphs.")
+KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق'}      # Standard-Arabic labels and loans that keep q in Sétif
+def tts_form(text):
+    """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
+    out = []
+    for tok in text.split(' '):
+        base = TASHKEEL.sub('', re.sub(r'[^\u0621-\u064A\u064B-\u0652\u0670]', '', tok))
+        out.append(tok if base in KEEP_Q else tok.replace('ق', 'ڨ'))
+    t = ' '.join(out)
+    t = re.sub(r'(?<![\u0621-\u064A])([وف]?)درك(?![\u0621-\u064A])', r'\1ضُرك', t)
+    t = re.sub(r'(?<![\u0621-\u064A])اثنين(?![\u0621-\u064A])', 'زوج', t)
+    t = re.sub(r'(?<![\u0621-\u064A])اِثْنَان(?![\u0621-\u064A])', 'زوج', t)
+    return t
 CHECK_MODELS = [m for m in os.environ.get('CHECK_MODELS', 'gemini-3-flash-preview,gemini-3.5-transcribe,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest,gemini-3.5-flash').split(',') if m]
 STRICT = ('Transcribe this short Arabic clip verbatim in Arabic script, exactly as spoken, dialect words as pronounced. Do not correct, '
           'complete, translate or add anything. If the first or last word is cut off, write the part you hear followed by [cut]. '
@@ -45,7 +58,7 @@ def runs(mask):
 
 # ---------- Arabic normalisation ----------
 TASHKEEL = re.compile(r'[ؐ-ًؚ-ٰٟۖ-ۭـ]')
-SUBS = [('واش', 'وش'), ('هذي', 'هادي'), ('هذا', 'هاد'), ('هذو', 'هادو'), ('كيما', 'كما'), ('درك', 'ضرك'), ('ولّا', 'ولا'), ('ئ', 'ء'), ('ؤ', 'ء')]
+SUBS = [('ڨ', 'ق'), ('واش', 'وش'), ('هذي', 'هادي'), ('هذا', 'هاد'), ('هذو', 'هادو'), ('كيما', 'كما'), ('درك', 'ضرك'), ('ولّا', 'ولا'), ('ئ', 'ء'), ('ؤ', 'ء')]
 def norm(t):
     t = TASHKEEL.sub('', t or '').replace('[cut]', '')
     t = re.sub(r'[أإآٱ]', 'ا', t).replace('ة', 'ه').replace('ى', 'ي')
@@ -62,7 +75,7 @@ def cmd_lines(a):
     def add(key, text, kind):
         n = norm(text)
         if n in E: E[n]['keys'].append(key); return
-        E[n] = {'key': key, 'keys': [key], 'text': text.strip(), 'kind': kind}; lines.append(E[n])
+        E[n] = {'key': key, 'keys': [key], 'text': text.strip(), 'tts': tts_form(text.strip()), 'kind': kind}; lines.append(E[n])
     for c in d['cards']:
         add(f'c:{c["id"]}:ask', c['ask'], 'ask'); add(f'c:{c["id"]}:reveal', c['reveal'], 'reveal'); add(f'c:{c["id"]}:word', c['word'], 'word')
         if c.get('mission'): add(f'mission:{c["id"]}', c['mission'], 'mission')
@@ -104,13 +117,18 @@ def synth(text):
             m = re.search(r'retry in ([\d.]+)s', msg); wait = float(m.group(1)) + 2 if m else 20
             print(f'  attempt {attempt+1} failed: {type(e).__name__}: {msg[:160]}; retry in {wait:.0f}s', flush=True); time.sleep(wait)
     raise SystemExit('TTS failed 3 times')
+def synth_patient(text):
+    while True:
+        try: return synth(text)
+        except SystemExit as e:
+            print('  quota/hang —', e, '— waiting 10 min', flush=True); time.sleep(600)
 def cmd_record(a):
     B = load(os.path.join(W, 'batches.json'), {}); L = by_key(); todo = a or list(B)
     for b in todo:
         out = os.path.join(W, 'takes', b + '.wav')
         if os.path.exists(out): print(b, 'exists'); continue
-        text = '\n\n'.join(L[k]['text'] for k in B[b])
-        raw = synth(text)
+        text = '\n\n'.join(L[k]['tts'] for k in B[b])
+        raw = synth_patient(text)
         if raw[:4] == b'RIFF': open(out, 'wb').write(raw)
         else:
             with wave.open(out, 'wb') as w: w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(raw)
@@ -157,7 +175,7 @@ def match(x, q, lines, ear, log):
     for s, e in merged:
         h = ear.hear(x[max(0, int((s * 0.01 - 0.05) * SR)):int((e * 0.01 + 0.05) * SR)])
         heard.append(norm(h) if h.strip() not in ('-', '?') else ''); log(f'  piece {s*0.01:6.2f}-{e*0.01:6.2f}  {h[:60]}')
-    L = [norm(l['text']).replace(' ', '') for l in lines]; H = [h.replace(' ', '') for h in heard]
+    L = [norm(l.get('tts', l['text'])).replace(' ', '') for l in lines]; H = [h.replace(' ', '') for h in heard]
     N, M, K = len(merged), len(lines), 8; NEG = -1e9
     dp = np.full((N + 1, M + 1), NEG); bk = {}; dp[0][0] = 0
     for i in range(N + 1):
@@ -205,7 +223,7 @@ def cmd_split(a):
         for l, (s, e, h) in zip(lines, spans):
             if s is None: print('  MISSING', l['key'], l['text']); clips[l['key']] = {'batch': b, 'missing': True}; continue
             y = x[int(s * 0.01 * SR):int(e * 0.01 * SR)]; write_wav(os.path.join(W, 'clips', slug(l['key']) + '.wav'), y)
-            clips[l['key']] = {'batch': b, 'start': round(s * 0.01, 2), 'end': round(e * 0.01, 2), 'heard': h, 'sim': round(sim(l['text'], h), 2)}
+            clips[l['key']] = {'batch': b, 'start': round(s * 0.01, 2), 'end': round(e * 0.01, 2), 'heard': h, 'sim': round(sim(l.get('tts', l['text']), h), 2)}
         dump(os.path.join(W, 'clips.json'), clips); print(b, 'done; ear calls', ear.n)
 def slug(key): return re.sub(r'[^a-z0-9]+', '-', key.lower()).strip('-')
 
@@ -216,10 +234,10 @@ def cmd_verify(a):
         if a and c.get('batch') not in a: continue
         if c.get('missing'): fails.append((k, 'missing', '')); continue
         if 'verified' in c and not os.environ.get('REVERIFY'): continue
-        h = ear.hear(read_wav(os.path.join(W, 'clips', slug(k) + '.wav'))); s = sim(L[k]['text'], h)
+        h = ear.hear(read_wav(os.path.join(W, 'clips', slug(k) + '.wav'))); s = sim(L[k].get('tts', L[k]['text']), h)
         c['verify_heard'] = h; c['verify_sim'] = round(s, 2); c['verified'] = s >= 0.72 and '[cut]' not in h
-        print(('ok  ' if c['verified'] else 'FAIL'), f'{s:.2f}', k, '|', L[k]['text'], '|', h, flush=True)
-        if not c['verified']: fails.append((k, h, L[k]['text']))
+        print(('ok  ' if c['verified'] else 'FAIL'), f'{s:.2f}', k, '|', L[k].get('tts', L[k]['text']), '|', h, flush=True)
+        if not c['verified']: fails.append((k, h, L[k].get('tts', L[k]['text'])))
         dump(os.path.join(W, 'clips.json'), clips)
     print('\nFAILURES:', len(fails))
     for f in fails: print(' ', f)
