@@ -6,8 +6,8 @@
     state = state || 'idle';
     opts = opts || {};
     const size = opts.size || 220;
-    const eyesOpen = state !== 'sleep';
-    const mouth = state === 'sleep' ? 'M92 106 Q100 110 108 106'
+    const eyesOpen = state !== 'sleep' && state !== 'refuse';
+    const mouth = (state === 'sleep' || state === 'refuse') ? 'M92 106 Q100 110 108 106'
                 : (state === 'tilt' ? 'M92 108 Q100 104 108 108'
                 : (state === 'happy' || state === 'clap' ? 'M86 102 Q100 118 114 102 Z' : 'M90 104 Q100 112 110 104'));
     const eyes = eyesOpen
@@ -21,7 +21,7 @@
            <path d="M106 80 Q114 86 122 80" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
     const brows = state === 'tilt'
       ? `<path d="M78 64 L94 68" stroke="${SAND_D}" stroke-width="3" stroke-linecap="round"/><path d="M106 66 L122 60" stroke="${SAND_D}" stroke-width="3" stroke-linecap="round"/>` : '';
-    const zzz = state === 'sleep'
+    const zzz = (state === 'sleep' || state === 'refuse')
       ? `<g class="m-zzz" font-family="Baloo Bhaijaan 2, sans-serif" font-weight="800" fill="#6FA8DC">
            <text x="140" y="56" font-size="22">z</text><text x="156" y="38" font-size="28">z</text><text x="174" y="16" font-size="34">z</text></g>` : '';
     return `

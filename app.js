@@ -40,6 +40,16 @@
     pop() { const c = this.get(); if (!c) return; this.tone(660, c.currentTime, .12); this.tone(880, c.currentTime + .1, .18); },
     sparkle() { const c = this.get(); if (!c) return; [523, 659, 784, 1047].forEach((f, i) => this.tone(f, c.currentTime + i * .09, .25, .14)); },
     hmm() { const c = this.get(); if (!c) return; this.tone(330, c.currentTime, .25, .12); this.tone(294, c.currentTime + .2, .3, .12); },
+    snore: null,
+    snoreStart() { const c = this.get(); if (!c || this.snore) return; if (c.state !== 'running') { c.resume().catch(() => {}); }
+      const len = c.sampleRate * 2; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(); src.buffer = buf; src.loop = true; const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 260; bp.Q.value = 1.2;
+      const g = c.createGain(); g.gain.value = 0; const lfo = c.createOscillator(); lfo.frequency.value = 0.32; const lg = c.createGain(); lg.gain.value = 0.09; lfo.connect(lg).connect(g.gain);
+      const base = c.createConstantSource(); base.offset.value = 0.09; base.connect(g.gain);
+      src.connect(bp).connect(g).connect(c.destination); src.start(); lfo.start(); base.start(); this.snore = { src, lfo, base, g }; },
+    snoreStop() { if (!this.snore) return; const s = this.snore; this.snore = null; try { s.g.gain.setTargetAtTime(0, this.ctx.currentTime, .15); setTimeout(() => { s.src.stop(); s.lfo.stop(); s.base.stop(); }, 600); } catch (e) {} },
+    wake() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const o = c.createOscillator(), v = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(220, t0); o.frequency.exponentialRampToValueAtTime(440, t0 + .7); o.frequency.exponentialRampToValueAtTime(330, t0 + 1.1);
+      v.gain.setValueAtTime(0, t0); v.gain.linearRampToValueAtTime(.16, t0 + .15); v.gain.linearRampToValueAtTime(.001, t0 + 1.2); o.connect(v).connect(c.destination); o.start(t0); o.stop(t0 + 1.25); [660, 880, 1100].forEach((f, i) => this.tone(f, t0 + 1.2 + i * .1, .25, .12)); },
     tune: null,
     startTune() { const c = this.get(); if (!c) return; this.stopTune(); const notes = [523, 587, 659, 523, 659, 698, 784, 784, 698, 659, 587, 523, 587, 659, 523]; let i = 0; const step = () => { this.tone(notes[i % notes.length], c.currentTime, .22, .16); i++; }; step(); this.tune = setInterval(step, 240); },
     stopTune() { if (this.tune) { clearInterval(this.tune); this.tune = null; } }
@@ -63,8 +73,10 @@
   const rnd = Math.random;
 
   /* ---------- HOME ---------- */
+  let wasAsleep = false;
   function renderHome() {
     const can = E.canStart(P, new Date());
+    const wakingUp = wasAsleep && can.ok; wasAsleep = !can.ok;
     const cur = E.currentStage(P, DATA.cards, DATA.levels);
     const bubble = can.ok ? (P.sessionCount === 0 ? 'أهلاً زينب! نلعبو؟' : 'يا زينب! نلعبو مرة أخرى؟')
                  : (can.reason === 'cap' ? DATA.feedback_lines.rest : 'نرتاحو شويا... ونعاودو من بعد!');
@@ -78,10 +90,18 @@
       ${renderMap(cur)}`);
     const slot = s.querySelector('.mascot-slot'); setMascot(slot, can.ok ? 'idle' : 'sleep');
     longPress(slot, 3000, openParent);
-    s.querySelector('#start').addEventListener('click', () => { if (E.canStart(P, new Date()).ok) { Voice.unlock(); Sfx.get(); startSession(); } });
+    if (!can.ok) { Sfx.snoreStart(); s.addEventListener('pointerdown', () => Sfx.snoreStart(), { once: true }); } else Sfx.snoreStop();
+    if (wakingUp) { setMascot(slot, 'wave'); s.querySelector('.bubble').textContent = 'آآآه... راني فقت! نلعبو؟'; Sfx.wake(); setTimeout(() => setMascot(slot, 'idle'), 2500); }
+    if (!can.ok) slot.addEventListener('click', () => {
+      if (slot.dataset.busy) return; slot.dataset.busy = '1';
+      const bub = s.querySelector('.bubble'); const old = bub.textContent; Voice.unlock();
+      setMascot(slot, 'refuse'); bub.textContent = 'ششش... خمس دقايق أخرين... زززز'; Voice.play('ui:5', 'ششش... خمس دقايق أخرين');
+      setTimeout(() => { setMascot(slot, 'sleep'); bub.textContent = old; delete slot.dataset.busy; }, 3200);
+    });
+    s.querySelector('#start').addEventListener('click', () => { if (E.canStart(P, new Date()).ok) { Voice.unlock(); Sfx.get(); Sfx.snoreStop(); startSession(); } });
     s.querySelectorAll('.map .stop:not(.locked)').forEach(el => el.addEventListener('click', () => {
       if (!E.canStart(P, new Date()).ok) { el.classList.add('wiggle'); setTimeout(() => el.classList.remove('wiggle'), 1300); return; }
-      Voice.unlock(); Sfx.get(); Sfx.pop(); startSession(+el.dataset.stage);
+      Voice.unlock(); Sfx.get(); Sfx.snoreStop(); Sfx.pop(); startSession(+el.dataset.stage);
     }));
     if (!can.ok && can.reason === 'break') setTimeout(() => { if ($app.querySelector('.home')) renderHome(); }, Math.min(can.waitMs + 500, 60000));
   }
@@ -115,32 +135,37 @@
   function frame(c, inner, side) {
     const dots = S.cards.map((x, i) => `<i class="${i < S.i ? 'on' : (i === S.i ? 'now' : '')}"></i>`).join('');
     const s = screen('play', `
-      <div class="topbar"><div class="progress">${dots}</div><div class="mascot-slot" data-size="110"></div><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button></div>
+      <div class="topbar"><div class="progress">${dots}</div><div></div><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button></div>
       <div class="card-area">${inner}${side ? `<div class="side">${side}</div>` : ''}</div>
+      <div class="zouzou"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="180"></div></div>
       <div class="word hidden" id="word">${c.word}</div>
       <div class="hint ${P.settings.hints ? '' : 'off'}">${c.parent}</div>`);
-    setMascot(s.querySelector('.mascot-slot'), 'idle');
+    setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle');
     s.querySelector('#home').addEventListener('click', () => { Voice.stop(); Sfx.stopTune(); S = null; renderHome(); });
     return s;
   }
-  function zouzou(state) { const el = $app.querySelector('.topbar .mascot-slot'); setMascot(el, state); if (state !== 'idle') setTimeout(() => setMascot(el, 'idle'), 2200); }
+  function zouzou(state, text) {
+    const el = $app.querySelector('.zouzou .mascot-slot'); setMascot(el, state); if (state !== 'idle') setTimeout(() => setMascot(el, 'idle'), 2200);
+    const b = $app.querySelector('.zbubble'); if (!b) return;
+    if (text) { b.textContent = text; b.hidden = false; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); clearTimeout(b._t); b._t = setTimeout(() => { b.hidden = true; }, 4500); }
+  }
   function showWord(c) { const w = $app.querySelector('#word'); if (w) w.classList.remove('hidden'); }
 
   async function correct(c, el) {
     if (el) el.classList.add('correct');
-    zouzou('clap'); confetti(); Sfx.sparkle();
     const fb = DATA.feedback_lines.correct; const i = Math.floor(rnd() * fb.length);
+    zouzou('clap', fb[i]); confetti(); Sfx.sparkle();
     await Voice.play(`fb:correct:${i}`, fb[i]);
   }
   async function tryAgain(c, target) {
-    zouzou('tilt'); Sfx.hmm();
     const fb = DATA.feedback_lines.try_again; const i = Math.floor(rnd() * fb.length);
+    zouzou('tilt', fb[i]); Sfx.hmm();
     await Voice.play(`fb:try:${i}`, fb[i]);
     if (target) { target.classList.remove('wiggle'); void target.offsetWidth; target.classList.add('wiggle'); }
   }
   async function reveal(c, result) {
     S.results[c.id] = S.results[c.id] || result;
-    showWord(c);
+    showWord(c); zouzou('happy', c.reveal);
     await Voice.play(k(c, 'reveal'), c.reveal);
     const w = $app.querySelector('#word'); if (w) { w.classList.add('pop'); }
     $app.querySelectorAll('.pic').forEach(p => { p.onclick = () => Voice.play(k(c, 'word'), c.word); });
@@ -195,7 +220,7 @@
     s.querySelectorAll('.pic').forEach(p => p.addEventListener('click', async () => {
       if (busy) return; busy = true;
       const ok = (phase === 1 ? m.rule1 : m.rule2).includes(p.dataset.asset);
-      if (ok && phase === 1) { p.classList.add('correct'); zouzou('happy'); Sfx.pop(); await Voice.play('ui:3', 'بدلنا اللعبة!'); phase = 2; s.querySelectorAll('.pic').forEach(x => x.classList.remove('correct')); }
+      if (ok && phase === 1) { p.classList.add('correct'); zouzou('happy', 'بدلنا اللعبة!'); Sfx.pop(); await Voice.play('ui:3', 'بدلنا اللعبة!'); phase = 2; s.querySelectorAll('.pic').forEach(x => x.classList.remove('correct')); }
       else if (ok) { await correct(c, p); busy = true; return reveal(c, wrong ? 'wrong' : 'correct'); }
       else { wrong = true; await tryAgain(c, null); }
       busy = false;
@@ -205,12 +230,12 @@
   function playAdult(c, m) {
     const s = frame(c, pic(m.pics[0] || assetOf(c), ''), `<div class="adult-btns"><button class="btn-adult ok" id="said">قالتها ✓</button><button class="btn-adult help" id="help">نعاونها</button></div>`);
     s.querySelector('#said').onclick = async () => { await correct(c, s.querySelector('.pic')); reveal(c, 'correct'); };
-    s.querySelector('#help').onclick = async () => { zouzou('happy'); reveal(c, 'help'); };
+    s.querySelector('#help').onclick = async () => { zouzou('happy', 'نعاونوها مع بعض!'); reveal(c, 'help'); };
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playOpen(c, m, label) {
     const s = frame(c, pic(m.pics[0] || assetOf(c), ''), `<button class="btn-adult ok big" id="done">${label}</button>`);
-    s.querySelector('#done').onclick = async () => { zouzou('clap'); confetti(); Sfx.sparkle(); reveal(c, 'correct'); };
+    s.querySelector('#done').onclick = async () => { zouzou('clap', 'يا سلام!'); confetti(); Sfx.sparkle(); reveal(c, 'correct'); };
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playCount(c, m) {
@@ -255,7 +280,7 @@
         if (freeze && el > 6 && Sfx.tune) { Sfx.stopTune(); num.textContent = '✋'; }
         if (left <= 0) { clearInterval(iv); res(); } }, 100); });
       if (!S || S.cards[S.i] !== c) return;
-      Sfx.stopTune(); zouzou('clap'); confetti(); Sfx.sparkle(); reveal(c, 'correct');
+      Sfx.stopTune(); zouzou('clap', 'برافو!'); confetti(); Sfx.sparkle(); reveal(c, 'correct');
     })();
   }
   function playSilly(c, m) {
@@ -263,7 +288,7 @@
     let wrong = false, done = false;
     s.querySelectorAll('.btn-round').forEach(b => b.addEventListener('click', async () => {
       if (done) return;
-      if (b.dataset.a === c.answer) { done = true; zouzou('happy'); await correct(c, s.querySelector('.pic')); reveal(c, wrong ? 'wrong' : 'correct'); }
+      if (b.dataset.a === c.answer) { done = true; await correct(c, s.querySelector('.pic')); reveal(c, wrong ? 'wrong' : 'correct'); }
       else if (!wrong) { wrong = true; await tryAgain(c, null); }
       else { done = true; reveal(c, 'wrong'); }
     }));

@@ -212,3 +212,20 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .map .stop:not(.locked):active .dot { transform: scale(.92); }
 .map .stop:not(.locked) .name::after { content: ' ↻'; color: var(--leaf-deep); }
 .map .stop.wiggle { animation: wiggle .6s ease 2; }
+
+/* Zouzou beside the card, with a speech bubble */
+.zouzou { position: absolute; right: 22px; bottom: 16px; display: flex; flex-direction: column; align-items: center; z-index: 4; pointer-events: none; }
+.zouzou .mascot-slot { line-height: 0; filter: drop-shadow(0 6px 10px rgba(50,90,120,.25)); }
+.zbubble { background: #fff; border-radius: 22px; padding: 8px 18px; font-size: 26px; font-weight: 700; max-width: 300px; text-align: center; box-shadow: var(--shadow); position: relative; margin-bottom: 10px; line-height: 1.25; }
+.zbubble::after { content: ''; position: absolute; bottom: -12px; right: 50%; transform: translateX(50%); border: 12px solid transparent; border-top-color: #fff; border-bottom: 0; }
+.zbubble.pop { animation: pop .4s ease; }
+.play .hint { max-width: 600px; }
+.play .word { margin-right: 0; }
+.btn-next { left: 28px; }
+
+/* sleepy refusal: head shakes slowly, deeper snore */
+.m-refuse { animation: snore 1.2s ease-in-out 3; }
+.m-refuse .m-head { animation: refuse 1s ease-in-out 3; transform-origin: 100px 100px; }
+@keyframes refuse { 0%, 100% { transform: rotate(8deg) translate(0, 6px) } 50% { transform: rotate(-8deg) translate(0, 6px) } }
+.m-refuse .m-zzz text { animation-duration: 1.2s; }
+.zbubble { max-width: 260px; }

@@ -19,14 +19,14 @@ STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking s
          "(قطة = gaṭṭa, تقول = tgūl, قريب = grīb) and ڨ always as g; keep the interdentals ث and ذ (ثلاثة = thlātha, هذي = hādhi); "
          "pronounce ج as the French j; ضُرك = ḍork; نتي = nti; كيما = kīma; واش = wāsh; ما عندهاش = ma ʿandhāsh. Short vowels are "
          "reduced like in Algerian speech. Laugh gently where the text says هههه. Each paragraph is a separate line: pause about two seconds between paragraphs.")
-KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق'}      # Standard-Arabic labels and loans that keep q in Sétif
+KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة'}      # Standard-Arabic labels and loans that keep q in Sétif
 def tts_form(text):
     """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
     out = []
     for tok in text.split(' '):
         base = TASHKEEL.sub('', re.sub(r'[^\u0621-\u064A\u064B-\u0652\u0670]', '', tok))
         out.append(tok if base in KEEP_Q else tok.replace('ق', 'ڨ'))
-    t = ' '.join(out)
+    t = ' '.join(out).replace(' / ', '... ')      # slashed labels: a pause, not a slash the voice may skip
     t = re.sub(r'(?<![\u0621-\u064A])([وف]?)درك(?![\u0621-\u064A])', r'\1ضُرك', t)
     t = re.sub(r'(?<![\u0621-\u064A])اثنين(?![\u0621-\u064A])', 'زوج', t)
     t = re.sub(r'(?<![\u0621-\u064A])اِثْنَان(?![\u0621-\u064A])', 'زوج', t)
@@ -84,7 +84,7 @@ def cmd_lines(a):
     add('fb:session_end', d['feedback_lines']['session_end'], 'fb'); add('fb:rest', d['feedback_lines']['rest'], 'fb')
     for i, t in enumerate(['واحد', 'اثنين', 'ثلاثة', 'أربعة', 'خمسة']): add(f'count:{i+1}', t, 'count')
     for i, t in enumerate(['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!']): add(f'mission:default:{i}', t, 'mission')
-    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!']): add(f'ui:{i}', t, 'ui')
+    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'ششش... خمس دقايق أخرين... زززز']): add(f'ui:{i}', t, 'ui')
     # batches: keep order, cap by characters so every take stays ~1.5-2 min
     batches, cur, chars = [], [], 0
     for l in lines:
@@ -147,7 +147,7 @@ class Ear:
         with tempfile.TemporaryDirectory() as d:
             p = os.path.join(d, 'p.wav'); write_wav(p, np.concatenate([pad, x, pad])); data = open(p, 'rb').read()
         t = self.t
-        for tries in range(12):
+        for tries in range(60):
             model = CHECK_MODELS[self.mi % len(CHECK_MODELS)]
             try:
                 r = self.client.models.generate_content(model=model, contents=[t.Part.from_bytes(data=data, mime_type='audio/wav'), STRICT],
@@ -158,7 +158,8 @@ class Ear:
                 daily = 'per day' in msg.lower() or 'PerDay' in msg
                 if daily or '404' in msg or 'NOT_FOUND' in msg:
                     self.dead = getattr(self, 'dead', set()) | {model}
-                    if len(self.dead) >= len(CHECK_MODELS): raise SystemExit('ALL CHECK MODELS EXHAUSTED — resume tomorrow')
+                    if len(self.dead) >= len(CHECK_MODELS):
+                        print('  all transcription models exhausted — waiting 15 min', flush=True); time.sleep(900); self.dead = set()
                     self.mi += 1; continue
                 m = re.search(r'retry in ([\d.]+)s', msg); time.sleep(min(float(m.group(1)) + 1 if m else 8, 70)); self.mi += 1
         raise SystemExit('transcription kept failing')
