@@ -13,12 +13,13 @@ W = os.path.join(ROOT, 'work/voice'); SR = 24000
 for line in open(os.path.join(ROOT, '.env')):
     if '=' in line and not line.startswith('#'):
         k, v = line.strip().split('=', 1); os.environ.setdefault(k, v.strip('"'))
-TTS_MODEL = os.environ.get('TTS_MODEL', 'gemini-3.8-flash-tts'); VOICE = 'Kore'; BATCH = int(os.environ.get('BATCH', '17')); CHARS = int(os.environ.get('CHARS', '800'))
+TTS_MODEL = os.environ.get('TTS_MODEL', 'gemini-3.8-flash-tts'); VOICE = os.environ.get('VOICE', 'Kore'); BATCH = int(os.environ.get('BATCH', '17')); CHARS = int(os.environ.get('CHARS', '800'))
 STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking slowly and playfully to her 3-year-old daughter. "
          "Use the Sétif (eastern Algerian, Hilalian) accent, not Egyptian, Levantine or Standard Arabic: pronounce ق as a hard g "
          "(قطة = gaṭṭa, تقول = tgūl, قريب = grīb) and ڨ always as g; keep the interdentals ث and ذ (ثلاثة = thlātha, هذي = hādhi); "
          "pronounce ج as the French j; ضُرك = ḍork; نتي = nti; كيما = kīma; واش = wāsh; ما عندهاش = ma ʿandhāsh. Short vowels are "
          "reduced like in Algerian speech. Laugh gently where the text says هههه. Each paragraph is a separate line: pause about two seconds between paragraphs.")
+STYLE = os.environ.get('STYLE', STYLE)
 KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة'}      # Standard-Arabic labels and loans that keep q in Sétif
 def tts_form(text):
     """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
@@ -84,7 +85,7 @@ def cmd_lines(a):
     add('fb:session_end', d['feedback_lines']['session_end'], 'fb'); add('fb:rest', d['feedback_lines']['rest'], 'fb')
     for i, t in enumerate(['واحد', 'اثنين', 'ثلاثة', 'أربعة', 'خمسة']): add(f'count:{i+1}', t, 'count')
     for i, t in enumerate(['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!']): add(f'mission:default:{i}', t, 'mission')
-    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'ششش... خمس دقايق أخرين... زززز']): add(f'ui:{i}', t, 'ui')
+    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'ششش... خمس دقايق أخرين... زززز', 'آآآه... راني فقت! نلعبو؟']): add(f'ui:{i}', t, 'ui')
     # batches: keep order, cap by characters so every take stays ~1.5-2 min
     batches, cur, chars = [], [], 0
     for l in lines:
