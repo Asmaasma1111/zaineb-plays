@@ -43,21 +43,21 @@
     snore: null,
     snoreStart() { const c = this.get(); if (!c || this.snore) return; if (c.state !== 'running') { c.resume().catch(() => {}); }
       const len = c.sampleRate * 2; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-      const master = c.createGain(); master.gain.value = 1; master.connect(c.destination); const st = { master, timer: null, nodes: [] };
+      const master = c.createGain(); master.gain.value = 1; master.connect(c.destination); const st = { master, timer: null };
+      const breath = (t0, dur, peak, f0, f1) => {       // one soft breath: hushed, low-passed air with a slow swell
+        const n = c.createBufferSource(); n.buffer = buf; n.loop = true;
+        const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = .7; lp.frequency.setValueAtTime(f0, t0); lp.frequency.linearRampToValueAtTime(f1, t0 + dur);
+        const g = c.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(peak, t0 + dur * .45); g.gain.linearRampToValueAtTime(0, t0 + dur);
+        n.connect(lp).connect(g).connect(master); n.start(t0); n.stop(t0 + dur + .05);
+      };
       const cycle = () => {
         const t0 = c.currentTime;
-        // inhale: a low rasp — buzzing tone through a lowpass, fluttering at ~24 Hz like a soft palate
-        const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(78, t0); o.frequency.linearRampToValueAtTime(96, t0 + 1.1);
-        const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420; lp.Q.value = 2;
-        const fl = c.createOscillator(); fl.frequency.value = 24; const flg = c.createGain(); flg.gain.value = .5; const bias = c.createConstantSource(); bias.offset.value = .5;
-        const tg = c.createGain(); tg.gain.value = 0; fl.connect(flg).connect(tg.gain); bias.connect(tg.gain);
-        const env = c.createGain(); env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(.11, t0 + .35); env.gain.setValueAtTime(.11, t0 + .9); env.gain.linearRampToValueAtTime(0, t0 + 1.3);
-        o.connect(lp).connect(tg).connect(env).connect(master); o.start(t0); fl.start(t0); bias.start(t0); o.stop(t0 + 1.4); fl.stop(t0 + 1.4); bias.stop(t0 + 1.4);
-        // exhale: a soft breath of filtered noise
-        const n = c.createBufferSource(); n.buffer = buf; const nl = c.createBiquadFilter(); nl.type = 'lowpass'; nl.frequency.value = 700;
-        const ne = c.createGain(); ne.gain.setValueAtTime(0, t0 + 1.7); ne.gain.linearRampToValueAtTime(.035, t0 + 2.0); ne.gain.linearRampToValueAtTime(0, t0 + 2.8);
-        n.connect(nl).connect(ne).connect(master); n.start(t0 + 1.7); n.stop(t0 + 2.9);
-        st.timer = setTimeout(cycle, 4200 + Math.random() * 600);
+        breath(t0, 1.7, .028, 380, 620);            // in
+        breath(t0 + 1.9, 2.2, .034, 560, 300);      // out, a little longer and softer
+        const o = c.createOscillator(), v = c.createGain(); o.type = 'sine'; o.frequency.value = 262;   // a tiny sleepy "mmm" on the way out
+        v.gain.setValueAtTime(0, t0 + 1.9); v.gain.linearRampToValueAtTime(.012, t0 + 2.5); v.gain.linearRampToValueAtTime(0, t0 + 3.6);
+        o.connect(v).connect(master); o.start(t0 + 1.9); o.stop(t0 + 3.7);
+        st.timer = setTimeout(cycle, 5200 + Math.random() * 600);
       };
       cycle(); this.snore = st; },
     snoreStop() { if (!this.snore) return; const s = this.snore; this.snore = null; clearTimeout(s.timer); try { s.master.gain.setTargetAtTime(0, this.ctx.currentTime, .1); setTimeout(() => s.master.disconnect(), 500); } catch (e) {} },
