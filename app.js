@@ -24,7 +24,7 @@
           const a = this.el; a.onended = a.onerror = () => { if (my === this.token) res(); }; a.src = 'audio/' + f;
           a.play().catch(() => res()); setTimeout(() => res(), 15000); return;
         }
-        if (!text || !('speechSynthesis' in window) || !speechSynthesis.getVoices().some(v => v.lang.startsWith('ar'))) return setTimeout(res, 600);
+        if (!text || key.startsWith('st:') || !('speechSynthesis' in window) || !speechSynthesis.getVoices().some(v => v.lang.startsWith('ar'))) return setTimeout(res, 600);   // sticker lines: Zouzou's clip or silence, never the device voice
         const u = new SpeechSynthesisUtterance(text.replace(/[ً-ْ]/g, '')); u.lang = 'ar'; u.rate = .85; u.onend = u.onerror = () => res(); speechSynthesis.speak(u);
         setTimeout(() => res(), 8000);
       });
