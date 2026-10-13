@@ -3,7 +3,7 @@
   const E = window.Engine, M = window.Mascot;
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
-  let DATA = null, MEDIA = null, P = null, S = null;   // S = current session
+  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book = null;   // S = current session
 
   /* ---------- storage ---------- */
   function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
@@ -63,6 +63,17 @@
     snoreStop() { if (!this.snore) return; const s = this.snore; this.snore = null; clearTimeout(s.timer); try { s.master.gain.setTargetAtTime(0, this.ctx.currentTime, .1); setTimeout(() => s.master.disconnect(), 500); } catch (e) {} },
     wake() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const o = c.createOscillator(), v = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(220, t0); o.frequency.exponentialRampToValueAtTime(440, t0 + .7); o.frequency.exponentialRampToValueAtTime(330, t0 + 1.1);
       v.gain.setValueAtTime(0, t0); v.gain.linearRampToValueAtTime(.16, t0 + .15); v.gain.linearRampToValueAtTime(.001, t0 + 1.2); o.connect(v).connect(c.destination); o.start(t0); o.stop(t0 + 1.25); [660, 880, 1100].forEach((f, i) => this.tone(f, t0 + 1.2 + i * .1, .25, .12)); },
+    stickerSound(kind) { const c = this.get(); if (!c) return; const t0 = c.currentTime;
+      const glide = (f0, f1, at, d, g, type) => { const o = c.createOscillator(), v = c.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t0 + at); o.frequency.exponentialRampToValueAtTime(f1, t0 + at + d);
+        v.gain.setValueAtTime(0, t0 + at); v.gain.linearRampToValueAtTime(g, t0 + at + .03); v.gain.exponentialRampToValueAtTime(.001, t0 + at + d); o.connect(v).connect(c.destination); o.start(t0 + at); o.stop(t0 + at + d + .05); };
+      if (kind === 'glitter') { glide(600, 180, 0, .3, .3); glide(240, 760, .28, .3, .25, 'triangle'); [880, 1100, 1320].forEach((f, i) => this.tone(f, t0 + .6 + i * .1, .3, .18)); }      // squish + twinkle
+      else if (kind === 'animal') { glide(220, 880, 0, .22, .32, 'triangle'); glide(880, 330, .22, .28, .25, 'triangle'); glide(330, 660, .5, .2, .2, 'triangle'); }          // boing-oing
+      else if (kind === 'food') { glide(900, 300, 0, .12, .3); this.tone(1200, t0 + .15, .15, .22); this.tone(1500, t0 + .3, .2, .2); }                                        // pop pop
+      else { [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => this.tone(f, t0 + i * .08, .5, .2)); }                                                                          // twinkle up
+    },
+    pageTurn() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const len = c.sampleRate * .5; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const n = c.createBufferSource(); n.buffer = buf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(900, t0); f.frequency.exponentialRampToValueAtTime(2400, t0 + .3); f.Q.value = .8;
+      const g = c.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.12, t0 + .08); g.gain.linearRampToValueAtTime(0, t0 + .4); n.connect(f).connect(g).connect(c.destination); n.start(t0); n.stop(t0 + .45); },
     tune: null,
     startTune() { const c = this.get(); if (!c) return; this.stopTune(); const notes = [523, 587, 659, 523, 659, 698, 784, 784, 698, 659, 587, 523, 587, 659, 523]; let i = 0; const step = () => { this.tone(notes[i % notes.length], c.currentTime, .22, .16); i++; }; step(); this.tune = setInterval(step, 240); },
     stopTune() { if (this.tune) { clearInterval(this.tune); this.tune = null; } }
@@ -95,7 +106,7 @@
                  : (can.reason === 'cap' ? DATA.feedback_lines.rest : 'نرتاحو شويا... ونعاودو من بعد!');
     const s = screen('home', `
       <div class="topbar"><div class="stars-row"><span class="star">★</span><span>${P.stars}</span></div>
-        <h1 class="title">زينب تلعب وتتعلم</h1><div style="width:120px"></div></div>
+        <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><span class="sticker-ico">✿</span><span>${((P.stickers || {}).got || []).length}</span></button></div>
       <div class="hero">
         <div class="mascot-wrap"><div class="bubble">${bubble}</div><div class="mascot-slot" data-size="260"></div></div>
         <button class="btn-big" id="start" ${can.ok ? '' : 'disabled'}>${can.ok ? 'نلعبو! ▶' : (can.reason === 'cap' ? 'غدوة إن شاء الله' : 'نرتاحو شويا')}</button>
@@ -112,6 +123,7 @@
       setTimeout(() => { setMascot(slot, 'sleep'); bub.textContent = old; delete slot.dataset.busy; }, 3200);
     });
     s.querySelector('#start').addEventListener('click', () => { if (E.canStart(P, new Date()).ok) { Voice.unlock(); Sfx.get(); Sfx.snoreStop(); startSession(); } });
+    s.querySelector('#book').addEventListener('click', () => { Voice.unlock(); Sfx.get(); Sfx.snoreStop(); Sfx.pageTurn(); Book.book(); });
     s.querySelectorAll('.map .stop:not(.locked)').forEach(el => el.addEventListener('click', () => {
       if (!E.canStart(P, new Date()).ok) { el.classList.add('wiggle'); setTimeout(() => el.classList.remove('wiggle'), 1300); return; }
       Voice.unlock(); Sfx.get(); Sfx.snoreStop(); Sfx.pop(); startSession(+el.dataset.stage);
@@ -315,11 +327,12 @@
     const text = E.missionFor(played, rnd);
     const mc = played.find(c => c.mission === text); const di = E.DEFAULT_MISSIONS.indexOf(text);
     const mkey = mc ? `mission:${mc.id}` : `mission:default:${di}`;
-    E.finishSession(P, played, today, now, text); save();
+    E.finishSession(P, played, today, now, text); P.today = today; Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); save();
     const s = screen('end', `<div class="center"><div class="bigstar">★</div><h2 class="h">نجمة جديدة في دفتر النجوم!</h2><div class="stars-row"><span class="star">★</span><span>${P.stars}</span></div><div class="mascot-slot" data-size="220"></div></div>`);
     setMascot(s.querySelector('.mascot-slot'), 'clap'); confetti(30); Sfx.sparkle();
     await Voice.play('ui:4', 'خذيتي نجمة!'); await wait(1500);
     if (!$app.querySelector('.end')) return;
+    await new Promise(res => Book.awardAll(res));
     const m = screen('end mission', `<div class="center"><div class="mascot-slot" data-size="220"></div><div class="bubble big">${text}</div><button class="btn-big green" id="ok">تم ✓</button></div>`);
     setMascot(m.querySelector('.mascot-slot'), 'wave');
     await Voice.play(mkey, text);
@@ -341,7 +354,7 @@
       <div class="ptabs"><button data-t="prog" class="on">التقدم</button><button data-t="set">الإعدادات</button><button data-t="data">نسخة احتياطية</button><button data-t="cred">المصادر</button></div>
       <div class="ptab" data-t="prog">
         <table class="ptable">${stageRows}</table>
-        <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
+        <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>الملصقات:</b> ${((P.stickers || {}).got || []).length} / ${STICKERS.length} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
         <p><b>الكلمات المعروفة (${known.length}):</b> ${known.join('، ') || '—'}</p>
         <p><b>دفتر النجوم:</b> ${P.starBook.map(s => '★').join('') || '—'}</p>
       </div>
@@ -349,6 +362,7 @@
         <label>حصص في اليوم <input type="number" min="1" max="6" id="spd" value="${st.sessionsPerDay}"></label>
         <label>بطاقات في الحصة <input type="number" min="3" max="15" id="cps" value="${st.cardsPerSession}"></label>
         <label>نوم زوزو بين الحصتين (دقائق؛ 240 = حصة الصباح وحصة العشية) <input type="number" min="0" max="600" id="brk" value="${st.breakMinutes}"></label>
+        <label>حصص لكل ملصق (1 = ملصق بعد كل حصة) <input type="number" min="1" max="5" id="stper" value="${st.stickerPer || 1}"></label>
         <label><input type="checkbox" id="hints" ${st.hints ? 'checked' : ''}> إظهار تلميحات الكبار تحت البطاقة</label>
         <p><button class="btn-adult" id="unlock" ${next ? '' : 'disabled'}>فتح المرحلة ${next ? next.stage : ''} يدوياً</button></p>
         <p><select id="resetcard"><option value="">— إعادة بطاقة واحدة —</option>${DATA.cards.filter(c => P.cards[c.id]).map(c => `<option value="${c.id}">${c.id} ${c.word}</option>`).join('')}</select> <button class="btn-adult" id="resetone">إعادة</button></p>
@@ -364,7 +378,7 @@
     o.querySelector('#close').onclick = () => { o.remove(); renderHome(); };
     o.querySelectorAll('.ptabs button').forEach(b => b.onclick = () => { o.querySelectorAll('.ptabs button').forEach(x => x.classList.toggle('on', x === b)); o.querySelectorAll('.ptab').forEach(t => t.classList.toggle('hidden', t.dataset.t !== b.dataset.t)); });
     const setNum = (id, key, lo, hi) => o.querySelector(id).onchange = (e) => { const v = Math.max(lo, Math.min(hi, +e.target.value || lo)); P.settings[key] = v; e.target.value = v; save(); };
-    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#cps', 'cardsPerSession', 3, 15); setNum('#brk', 'breakMinutes', 0, 600);
+    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#stper', 'stickerPer', 1, 5); setNum('#cps', 'cardsPerSession', 3, 15); setNum('#brk', 'breakMinutes', 0, 600);
     o.querySelector('#hints').onchange = (e) => { P.settings.hints = e.target.checked; save(); };
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
@@ -372,7 +386,7 @@
     o.querySelector('#export').onclick = () => { const txt = JSON.stringify(P); o.querySelector('#json').value = txt; const b = new Blob([txt], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `zaineb-progress-${E.dateKey()}.json`; a.click(); };
     o.querySelector('#import').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { const p = JSON.parse(await f.text()); if (!p.cards) throw 0; if (confirm('استبدال التقدم الحالي بالملف؟')) { P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); save(); o.remove(); renderHome(); } } catch (err) { alert('ملف غير صالح'); } };
     fetch('credits.json').then(r => r.json()).then(cr => {
-      o.querySelector('#credits').innerHTML = `<p>${cr.illustrations}</p><table class="ptable" dir="ltr">${cr.photos.map(p => `<tr><td><img src="img/${p.asset}.webp" width="40"></td><td>${p.title || p.asset}</td><td>${p.creator || ''}</td><td><a href="${p.license_url}" target="_blank">${p.license}</a></td><td>${p.link ? `<a href="${p.link}" target="_blank">${p.source}</a>` : p.source} · ${p.via}</td></tr>`).join('')}</table>`;
+      o.querySelector('#credits').innerHTML = `<p>${cr.illustrations}</p><p>الملصقات: Microsoft Fluent Emoji 3D (MIT) مع إطار وأوجه مضافة، والجيلي اللامع مرسوم خصيصاً للتطبيق. الأصوات مصنوعة داخل التطبيق.</p><table class="ptable" dir="ltr">${cr.photos.map(p => `<tr><td><img src="img/${p.asset}.webp" width="40"></td><td>${p.title || p.asset}</td><td>${p.creator || ''}</td><td><a href="${p.license_url}" target="_blank">${p.license}</a></td><td>${p.link ? `<a href="${p.link}" target="_blank">${p.source}</a>` : p.source} · ${p.via}</td></tr>`).join('')}</table>`;
     }).catch(() => {});
   }
 
@@ -393,14 +407,17 @@
 
   /* ---------- boot ---------- */
   async function boot() {
-    [DATA, MEDIA] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json())]);
+    let stk; [DATA, MEDIA, stk] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json())]);
+    STICKERS = stk.stickers;
     P = load();
     await Voice.init();
     await maybeRestoreFromLink();
+    Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
+    Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); save();
     renderHome();
     const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
     if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) navigator.serviceWorker.register('sw.js').catch(() => {});
-    window.ZP = { openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
+    window.ZP = { get Book() { return Book; }, get stickers() { return STICKERS; }, openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
   }
   boot();
 })();

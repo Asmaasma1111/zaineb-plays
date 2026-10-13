@@ -229,3 +229,44 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 @keyframes refuse { 0%, 100% { transform: rotate(8deg) translate(0, 6px) } 50% { transform: rotate(-8deg) translate(0, 6px) } }
 .m-refuse .m-zzz text { animation-duration: 1.2s; }
 .zbubble { max-width: 260px; }
+
+/* ---------- sticker book ---------- */
+.btn-book { display: flex; align-items: center; gap: 8px; min-width: 120px; min-height: 64px; padding: 4px 18px; border-radius: 999px; background: #fff; box-shadow: 0 5px 0 #e7d9c8, var(--shadow); font-size: 28px; font-weight: 800; }
+.btn-book:active { transform: translateY(4px); box-shadow: 0 1px 0 #e7d9c8, var(--shadow); }
+.sticker-ico { color: #FF8FA3; font-size: 34px; line-height: 1; }
+.book { justify-content: flex-start; }
+.book .btitle { font-size: 40px; font-weight: 800; text-shadow: 0 3px 0 #fff; }
+.bookarea { position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.slot { width: min(300px, 36vh); height: min(300px, 36vh); border-radius: 36px; display: flex; align-items: center; justify-content: center; }
+.slot.got { cursor: pointer; transition: transform .15s; } .slot.got:active { transform: scale(.94); }
+.slot.got img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(50,90,120,.22)); }
+.slot.none { visibility: hidden; }
+.slot.empty { background: rgba(255,255,255,.45); border: 6px dashed rgba(255,255,255,.95); }
+.slot.empty .q { width: 54%; height: 54%; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 90px; font-weight: 800; color: #9ED3F0; box-shadow: var(--shadow); animation: qbounce 2.2s ease-in-out infinite; }
+@keyframes qbounce { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
+.arrow { width: 110px; height: 150px; border-radius: 40px; background: #fff; font-size: 90px; font-weight: 800; color: var(--coral); box-shadow: 0 8px 0 #e7d9c8, var(--shadow); line-height: 1; }
+.arrow[disabled] { opacity: .25; } .arrow { direction: ltr; font-size: 70px; }
+.arrow:active:not([disabled]) { transform: translateY(5px); box-shadow: 0 3px 0 #e7d9c8, var(--shadow); }
+.pager { z-index: 1; font-size: 22px; color: var(--ink-soft); margin-bottom: 14px; }
+/* award */
+.sticker-award .big-sticker img { width: min(380px, 46vh); height: min(380px, 46vh); object-fit: contain; animation: pop .9s ease; filter: drop-shadow(0 12px 14px rgba(50,90,120,.25)); }
+.sticker-award .count { font-size: 40px; font-weight: 800; }
+.sticker-award .big-sticker.fly { animation: fly-away .9s ease-in forwards; }
+@keyframes fly-away { to { transform: translate(-40vw, -40vh) scale(.15); opacity: .2 } }
+/* tap: the sticker comes alive, almost full screen */
+.slot.alive { position: fixed; inset: 0; z-index: 30; width: auto; height: auto; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.slot.alive img { width: min(80vh, 80vw); height: min(80vh, 80vw); object-fit: contain; filter: drop-shadow(0 16px 20px rgba(50,90,120,.3)); }
+.slot.alive.glitter img { animation: jelly 2.1s ease-in-out forwards; }
+.slot.alive.animal img { animation: bouncey 2.1s ease-in-out forwards; }
+.slot.alive.food img { animation: wobble 2.1s ease-in-out forwards; }
+.slot.alive.sparkly img { animation: spinny 2.1s ease-in-out forwards; }
+.slot.alive.back img { animation: shrink-back .6s ease-in forwards; }
+@keyframes jelly { 0% { transform: scale(.3) } 18% { transform: scale(1.1, .85) } 32% { transform: scale(.9, 1.12) } 46% { transform: scale(1.06, .94) } 60% { transform: scale(.97, 1.03) } 100% { transform: scale(1) } }
+@keyframes bouncey { 0% { transform: scale(.3) translateY(0) } 20% { transform: scale(1.05) translateY(-6%) } 38% { transform: scale(1) translateY(3%) } 55% { transform: scale(1.03) translateY(-10%) } 72% { transform: scale(1) translateY(2%) } 100% { transform: scale(1) translateY(0) } }
+@keyframes wobble { 0% { transform: scale(.3) rotate(0) } 20% { transform: scale(1.08) rotate(-8deg) } 40% { transform: scale(.98) rotate(7deg) } 60% { transform: scale(1.04) rotate(-5deg) } 80% { transform: scale(1) rotate(3deg) } 100% { transform: scale(1) rotate(0) } }
+@keyframes spinny { 0% { transform: scale(.3) rotate(0) } 50% { transform: scale(1.06) rotate(360deg) } 70% { transform: scale(.98) rotate(372deg) } 100% { transform: scale(1) rotate(360deg) } }
+@keyframes shrink-back { to { transform: scale(.2); opacity: 0 } }
+.burst { position: fixed; inset: 0; pointer-events: none; z-index: 31; }
+.burst span { position: absolute; left: 50%; top: 50%; animation: fly 2s ease-out forwards; }
+@keyframes fly { 0% { transform: translate(-50%, -50%) scale(.3); opacity: 1 } 70% { opacity: 1 } 100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4) rotate(300deg); opacity: 0 } }

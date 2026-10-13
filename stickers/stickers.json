@@ -1,0 +1,198 @@
+{
+ "v": 1,
+ "perSessions": 1,
+ "stickers": [
+  {
+   "file": "01-panda.webp",
+   "key": "panda",
+   "name": "باندا",
+   "kind": "animal"
+  },
+  {
+   "file": "02-strawberry.webp",
+   "key": "strawberry",
+   "name": "فراولة",
+   "kind": "food"
+  },
+  {
+   "file": "03-sq-pink.svg",
+   "key": "sq-pink",
+   "name": "جيلي وردي",
+   "kind": "glitter"
+  },
+  {
+   "file": "04-star.webp",
+   "key": "star",
+   "name": "نجمة",
+   "kind": "sparkly"
+  },
+  {
+   "file": "05-cat.webp",
+   "key": "cat",
+   "name": "قطة",
+   "kind": "animal"
+  },
+  {
+   "file": "06-doughnut.webp",
+   "key": "doughnut",
+   "name": "دونات",
+   "kind": "food"
+  },
+  {
+   "file": "07-rainbow.webp",
+   "key": "rainbow",
+   "name": "قوس قزح",
+   "kind": "sparkly"
+  },
+  {
+   "file": "08-rabbit.webp",
+   "key": "rabbit",
+   "name": "أرنب",
+   "kind": "animal"
+  },
+  {
+   "file": "09-dog.webp",
+   "key": "dog",
+   "name": "كلب",
+   "kind": "animal"
+  },
+  {
+   "file": "10-ice-cream.webp",
+   "key": "ice-cream",
+   "name": "آيس كريم",
+   "kind": "food"
+  },
+  {
+   "file": "11-sq-heart.svg",
+   "key": "sq-heart",
+   "name": "قلب جيلي",
+   "kind": "glitter"
+  },
+  {
+   "file": "12-cow.webp",
+   "key": "cow",
+   "name": "بقرة",
+   "kind": "animal"
+  },
+  {
+   "file": "13-penguin.webp",
+   "key": "penguin",
+   "name": "بطريق",
+   "kind": "animal"
+  },
+  {
+   "file": "14-cupcake.webp",
+   "key": "cupcake",
+   "name": "كب كيك",
+   "kind": "food"
+  },
+  {
+   "file": "15-sparkling-heart.webp",
+   "key": "sparkling-heart",
+   "name": "قلب لامع",
+   "kind": "sparkly"
+  },
+  {
+   "file": "16-fish.webp",
+   "key": "fish",
+   "name": "سمكة",
+   "kind": "animal"
+  },
+  {
+   "file": "17-hatching-chick.webp",
+   "key": "hatching-chick",
+   "name": "فلوس",
+   "kind": "animal"
+  },
+  {
+   "file": "18-peach.webp",
+   "key": "peach",
+   "name": "خوخة",
+   "kind": "food"
+  },
+  {
+   "file": "19-sq-cloud.svg",
+   "key": "sq-cloud",
+   "name": "سحابة جيلي",
+   "kind": "glitter"
+  },
+  {
+   "file": "20-duck.webp",
+   "key": "duck",
+   "name": "بطة",
+   "kind": "animal"
+  },
+  {
+   "file": "21-hamster.webp",
+   "key": "hamster",
+   "name": "هامستر",
+   "kind": "animal"
+  },
+  {
+   "file": "22-cherries.webp",
+   "key": "cherries",
+   "name": "كرز",
+   "kind": "food"
+  },
+  {
+   "file": "23-glowing-star.webp",
+   "key": "glowing-star",
+   "name": "نجمة تلمع",
+   "kind": "sparkly"
+  },
+  {
+   "file": "24-koala.webp",
+   "key": "koala",
+   "name": "كوالا",
+   "kind": "animal"
+  },
+  {
+   "file": "25-pig.webp",
+   "key": "pig",
+   "name": "خنزير صغير",
+   "kind": "animal"
+  },
+  {
+   "file": "26-unicorn.webp",
+   "key": "unicorn",
+   "name": "يونيكورن",
+   "kind": "sparkly"
+  },
+  {
+   "file": "27-sq-bunny.svg",
+   "key": "sq-bunny",
+   "name": "أرنوب جيلي",
+   "kind": "glitter"
+  },
+  {
+   "file": "28-frog.webp",
+   "key": "frog",
+   "name": "ضفدع",
+   "kind": "animal"
+  },
+  {
+   "file": "29-sheep.webp",
+   "key": "sheep",
+   "name": "خروف",
+   "kind": "animal"
+  },
+  {
+   "file": "30-balloon.webp",
+   "key": "balloon",
+   "name": "بالون",
+   "kind": "sparkly"
+  },
+  {
+   "file": "31-turtle.webp",
+   "key": "turtle",
+   "name": "سلحفاة",
+   "kind": "animal"
+  },
+  {
+   "file": "32-dolphin.webp",
+   "key": "dolphin",
+   "name": "دلفين",
+   "kind": "animal"
+  }
+ ]
+}
