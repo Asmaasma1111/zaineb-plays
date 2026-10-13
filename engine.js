@@ -3,7 +3,7 @@
 (function (root) {
   const BOX_DAYS = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 };   // box -> days until due
   const KNOWN_BOX = 3;
-  const DEFAULT_SETTINGS = { v: 2, sessionsPerDay: 2, cardsPerSession: 8, breakMinutes: 20, hints: true, unlockRatio: 0.8, bigPickAfter: 5 };
+  const DEFAULT_SETTINGS = { v: 3, sessionsPerDay: 2, cardsPerSession: 10, breakMinutes: 240, hints: true, unlockRatio: 0.8, bigPickAfter: 5 };
   const DEFAULT_MISSIONS = ['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!'];
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }

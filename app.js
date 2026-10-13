@@ -6,7 +6,7 @@
   let DATA = null, MEDIA = null, P = null, S = null;   // S = current session
 
   /* ---------- storage ---------- */
-  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } }
 
   /* ---------- audio: recorded clips through one unlocked <audio>; device voice only when a clip is missing ---------- */
@@ -43,11 +43,24 @@
     snore: null,
     snoreStart() { const c = this.get(); if (!c || this.snore) return; if (c.state !== 'running') { c.resume().catch(() => {}); }
       const len = c.sampleRate * 2; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-      const src = c.createBufferSource(); src.buffer = buf; src.loop = true; const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 260; bp.Q.value = 1.2;
-      const g = c.createGain(); g.gain.value = 0; const lfo = c.createOscillator(); lfo.frequency.value = 0.32; const lg = c.createGain(); lg.gain.value = 0.09; lfo.connect(lg).connect(g.gain);
-      const base = c.createConstantSource(); base.offset.value = 0.09; base.connect(g.gain);
-      src.connect(bp).connect(g).connect(c.destination); src.start(); lfo.start(); base.start(); this.snore = { src, lfo, base, g }; },
-    snoreStop() { if (!this.snore) return; const s = this.snore; this.snore = null; try { s.g.gain.setTargetAtTime(0, this.ctx.currentTime, .15); setTimeout(() => { s.src.stop(); s.lfo.stop(); s.base.stop(); }, 600); } catch (e) {} },
+      const master = c.createGain(); master.gain.value = 1; master.connect(c.destination); const st = { master, timer: null, nodes: [] };
+      const cycle = () => {
+        const t0 = c.currentTime;
+        // inhale: a low rasp — buzzing tone through a lowpass, fluttering at ~24 Hz like a soft palate
+        const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(78, t0); o.frequency.linearRampToValueAtTime(96, t0 + 1.1);
+        const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 420; lp.Q.value = 2;
+        const fl = c.createOscillator(); fl.frequency.value = 24; const flg = c.createGain(); flg.gain.value = .5; const bias = c.createConstantSource(); bias.offset.value = .5;
+        const tg = c.createGain(); tg.gain.value = 0; fl.connect(flg).connect(tg.gain); bias.connect(tg.gain);
+        const env = c.createGain(); env.gain.setValueAtTime(0, t0); env.gain.linearRampToValueAtTime(.11, t0 + .35); env.gain.setValueAtTime(.11, t0 + .9); env.gain.linearRampToValueAtTime(0, t0 + 1.3);
+        o.connect(lp).connect(tg).connect(env).connect(master); o.start(t0); fl.start(t0); bias.start(t0); o.stop(t0 + 1.4); fl.stop(t0 + 1.4); bias.stop(t0 + 1.4);
+        // exhale: a soft breath of filtered noise
+        const n = c.createBufferSource(); n.buffer = buf; const nl = c.createBiquadFilter(); nl.type = 'lowpass'; nl.frequency.value = 700;
+        const ne = c.createGain(); ne.gain.setValueAtTime(0, t0 + 1.7); ne.gain.linearRampToValueAtTime(.035, t0 + 2.0); ne.gain.linearRampToValueAtTime(0, t0 + 2.8);
+        n.connect(nl).connect(ne).connect(master); n.start(t0 + 1.7); n.stop(t0 + 2.9);
+        st.timer = setTimeout(cycle, 4200 + Math.random() * 600);
+      };
+      cycle(); this.snore = st; },
+    snoreStop() { if (!this.snore) return; const s = this.snore; this.snore = null; clearTimeout(s.timer); try { s.master.gain.setTargetAtTime(0, this.ctx.currentTime, .1); setTimeout(() => s.master.disconnect(), 500); } catch (e) {} },
     wake() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const o = c.createOscillator(), v = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(220, t0); o.frequency.exponentialRampToValueAtTime(440, t0 + .7); o.frequency.exponentialRampToValueAtTime(330, t0 + 1.1);
       v.gain.setValueAtTime(0, t0); v.gain.linearRampToValueAtTime(.16, t0 + .15); v.gain.linearRampToValueAtTime(.001, t0 + 1.2); o.connect(v).connect(c.destination); o.start(t0); o.stop(t0 + 1.25); [660, 880, 1100].forEach((f, i) => this.tone(f, t0 + 1.2 + i * .1, .25, .12)); },
     tune: null,
@@ -334,8 +347,8 @@
       </div>
       <div class="ptab hidden" data-t="set">
         <label>حصص في اليوم <input type="number" min="1" max="6" id="spd" value="${st.sessionsPerDay}"></label>
-        <label>بطاقات في الحصة <input type="number" min="3" max="12" id="cps" value="${st.cardsPerSession}"></label>
-        <label>استراحة بين الحصتين (دقائق) <input type="number" min="0" max="240" id="brk" value="${st.breakMinutes}"></label>
+        <label>بطاقات في الحصة <input type="number" min="3" max="15" id="cps" value="${st.cardsPerSession}"></label>
+        <label>نوم زوزو بين الحصتين (دقائق؛ 240 = حصة الصباح وحصة العشية) <input type="number" min="0" max="600" id="brk" value="${st.breakMinutes}"></label>
         <label><input type="checkbox" id="hints" ${st.hints ? 'checked' : ''}> إظهار تلميحات الكبار تحت البطاقة</label>
         <p><button class="btn-adult" id="unlock" ${next ? '' : 'disabled'}>فتح المرحلة ${next ? next.stage : ''} يدوياً</button></p>
         <p><select id="resetcard"><option value="">— إعادة بطاقة واحدة —</option>${DATA.cards.filter(c => P.cards[c.id]).map(c => `<option value="${c.id}">${c.id} ${c.word}</option>`).join('')}</select> <button class="btn-adult" id="resetone">إعادة</button></p>
@@ -351,7 +364,7 @@
     o.querySelector('#close').onclick = () => { o.remove(); renderHome(); };
     o.querySelectorAll('.ptabs button').forEach(b => b.onclick = () => { o.querySelectorAll('.ptabs button').forEach(x => x.classList.toggle('on', x === b)); o.querySelectorAll('.ptab').forEach(t => t.classList.toggle('hidden', t.dataset.t !== b.dataset.t)); });
     const setNum = (id, key, lo, hi) => o.querySelector(id).onchange = (e) => { const v = Math.max(lo, Math.min(hi, +e.target.value || lo)); P.settings[key] = v; e.target.value = v; save(); };
-    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#cps', 'cardsPerSession', 3, 12); setNum('#brk', 'breakMinutes', 0, 240);
+    setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#cps', 'cardsPerSession', 3, 15); setNum('#brk', 'breakMinutes', 0, 600);
     o.querySelector('#hints').onchange = (e) => { P.settings.hints = e.target.checked; save(); };
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };

@@ -61,8 +61,8 @@ test('daily cap and break: 2 sessions a day, then rest; break between sessions',
   assert.ok(E.canStart(p, d).ok);
   E.finishSession(p, [], '2026-10-09', d, 'm');
   const r1 = E.canStart(p, new Date(2026, 9, 9, 9, 5)); assert.ok(!r1.ok && r1.reason === 'break');
-  assert.ok(E.canStart(p, new Date(2026, 9, 9, 9, 30)).ok);
-  E.finishSession(p, [], '2026-10-09', new Date(2026, 9, 9, 9, 30), 'm');
+  assert.ok(E.canStart(p, new Date(2026, 9, 9, 13, 30)).ok);
+  E.finishSession(p, [], '2026-10-09', new Date(2026, 9, 9, 13, 30), 'm');
   const r2 = E.canStart(p, new Date(2026, 9, 9, 15, 0)); assert.ok(!r2.ok && r2.reason === 'cap');
   assert.ok(E.canStart(p, new Date(2026, 9, 10, 8, 0)).ok, 'next day is fine');
   assert.equal(p.stars, 2);
@@ -93,11 +93,12 @@ test('practice: N cards from one open stage, due and weakest first, nothing from
   const s4 = E.buildPractice(p, cards, levels, 4, t, seeded(8)); assert.equal(s4[s4.length - 1].type, 'do', 'movement card last in stage 4');
 });
 
-test('bigger sessions: 8 cards by default, about 40% review, rest new', () => {
+test('bigger sessions: 10 cards by default, about 40% review, rest new; 4-hour nap between sessions', () => {
   const p = E.emptyProgress(); const t = '2026-10-09';
-  assert.equal(p.settings.cardsPerSession, 8);
-  const s0 = E.buildSession(p, cards, levels, t, seeded(11)); assert.equal(s0.length, 8);
+  assert.equal(p.settings.cardsPerSession, 10); assert.equal(p.settings.breakMinutes, 240);
+  const s0 = E.buildSession(p, cards, levels, t, seeded(11)); assert.equal(s0.length, 10);
   s0.forEach(c => E.recordAnswer(p, c.id, 'wrong', t, 0)); E.finishSession(p, s0, t, new Date(2026, 9, 9, 10), 'm');
-  const s1 = E.buildSession(p, cards, levels, t, seeded(12)); assert.equal(s1.length, 8);
-  assert.equal(s1.filter(c => p.cards[c.id]).length, 3, 'three reviews'); assert.equal(s1.filter(c => !p.cards[c.id]).length, 5, 'five new');
+  const s1 = E.buildSession(p, cards, levels, t, seeded(12)); assert.equal(s1.length, 10);
+  assert.equal(s1.filter(c => p.cards[c.id]).length, 4, 'four reviews'); assert.equal(s1.filter(c => !p.cards[c.id]).length, 6, 'six new');
+  assert.ok(!E.canStart(p, new Date(2026, 9, 9, 13, 0)).ok, 'still napping 3 h later'); assert.ok(E.canStart(p, new Date(2026, 9, 9, 14, 30)).ok, 'afternoon session after 4 h');
 });
