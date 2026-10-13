@@ -369,7 +369,7 @@
     history.replaceState(null, '', location.pathname);
     try {
       const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/'); const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-      const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bin); w.close();
+      const ds = new DecompressionStream('deflate'); const w = ds.writable.getWriter(); w.write(bin); w.close();
       const txt = await new Response(ds.readable).text(); const p = JSON.parse(txt); if (!p.cards) throw 0;
       const mine = P.sessionCount || 0;
       if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return;
