@@ -363,11 +363,27 @@
     }).catch(() => {});
   }
 
+  /* ---------- restore progress from a link (#restore=...) made on another device ---------- */
+  async function maybeRestoreFromLink() {
+    const m = location.hash.match(/#restore=([A-Za-z0-9_-]+)/); if (!m) return;
+    history.replaceState(null, '', location.pathname);
+    try {
+      const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/'); const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      const ds = new DecompressionStream('deflate-raw'); const w = ds.writable.getWriter(); w.write(bin); w.close();
+      const txt = await new Response(ds.readable).text(); const p = JSON.parse(txt); if (!p.cards) throw 0;
+      const mine = P.sessionCount || 0;
+      if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return;
+      P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); save();
+      alert(`تم! ${P.stars} نجوم و ${P.sessionCount} حصص رجعت لزينب.`);
+    } catch (e) { alert('الرابط ما خدمش. جربي مرة أخرى.'); }
+  }
+
   /* ---------- boot ---------- */
   async function boot() {
     [DATA, MEDIA] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json())]);
     P = load();
     await Voice.init();
+    await maybeRestoreFromLink();
     renderHome();
     const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
     if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) navigator.serviceWorker.register('sw.js').catch(() => {});
