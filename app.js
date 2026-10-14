@@ -3,7 +3,7 @@
   const E = window.Engine, M = window.Mascot;
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
-  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book = null;   // S = current session
+  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book = null, CLOUDS = {};   // S = current session
 
   /* ---------- storage ---------- */
   function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
@@ -81,8 +81,11 @@
 
   /* ---------- helpers ---------- */
   function h(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; }
-  function screen(cls, inner) { $app.innerHTML = ''; const s = h(`<section class="screen ${cls}">${bg()}${inner}</section>`); $app.appendChild(s); return s; }
-  function bg() { return `<div class="bg"><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="hill h1"></div><div class="hill h2"></div></div>`; }
+  function screen(cls, inner, scene) { $app.innerHTML = ''; const s = h(`<section class="screen ${cls}">${bg(scene)}${inner}</section>`); $app.appendChild(s); return s; }
+  function bg(scene) {
+    scene = scene || 'day'; const cl = (CLOUDS['bg-' + scene] || []).map((c, i) => `<img class="cloud3d" src="img/zouzou3d/${c.file}" alt="" style="left:${c.x}%;top:${c.y}%;width:${c.w}%;animation-duration:${38 + i * 11}s;animation-delay:${-i * 7}s">`).join('');
+    return `<div class="bg bg3d" data-scene="${scene}"><div class="scene"><img class="sky" src="img/zouzou3d/bg-${scene}.webp" alt="">${cl}</div></div>`;
+  }
   function confetti(n) {
     const c = h('<div class="confetti"></div>');
     for (let i = 0; i < (n || 18); i++) { const s = h(`<span>★</span>`); s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 30 + '%'; s.style.animationDelay = (Math.random() * .4) + 's'; s.style.color = ['#F5B820', '#FF8A71', '#5FAE52', '#6FA8DC'][i % 4]; c.appendChild(s); }
@@ -105,13 +108,13 @@
     const bubble = can.ok ? (P.sessionCount === 0 ? 'أهلاً زينب! نلعبو؟' : 'يا زينب! نلعبو مرة أخرى؟')
                  : (can.reason === 'cap' ? DATA.feedback_lines.rest : 'نرتاحو شويا... ونعاودو من بعد!');
     const s = screen('home', `
-      <div class="topbar"><div class="stars-row"><span class="star">★</span><span>${P.stars}</span></div>
-        <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><span class="sticker-ico">✿</span><span>${((P.stickers || {}).got || []).length}</span></button></div>
+      <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span></div>
+        <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><img class="book-img" src="img/zouzou3d/sticker-book.webp" alt=""><span>${((P.stickers || {}).got || []).length}</span></button></div>
       <div class="hero">
         <div class="mascot-wrap"><div class="bubble">${bubble}</div><div class="mascot-slot" data-size="260"></div></div>
         <button class="btn-big" id="start" ${can.ok ? '' : 'disabled'}>${can.ok ? 'نلعبو! ▶' : (can.reason === 'cap' ? 'غدوة إن شاء الله' : 'نرتاحو شويا')}</button>
       </div>
-      ${renderMap(cur)}`);
+      ${renderMap(cur)}`, can.ok ? 'day' : 'night');
     const slot = s.querySelector('.mascot-slot'); setMascot(slot, can.ok ? 'idle' : 'sleep');
     longPress(slot, 3000, openParent);
     if (!can.ok) { Sfx.snoreStart(); s.addEventListener('pointerdown', () => Sfx.snoreStart(), { once: true }); } else Sfx.snoreStop();
@@ -328,7 +331,7 @@
     const mc = played.find(c => c.mission === text); const di = E.DEFAULT_MISSIONS.indexOf(text);
     const mkey = mc ? `mission:${mc.id}` : `mission:default:${di}`;
     E.finishSession(P, played, today, now, text); P.today = today; Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); save();
-    const s = screen('end', `<div class="center"><div class="bigstar">★</div><h2 class="h">نجمة جديدة في دفتر النجوم!</h2><div class="stars-row"><span class="star">★</span><span>${P.stars}</span></div><div class="mascot-slot" data-size="220"></div></div>`);
+    const s = screen('end', `<div class="center"><img class="bigstar-img" src="img/zouzou3d/star.webp" alt=""><h2 class="h">نجمة جديدة في دفتر النجوم!</h2><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span></div><div class="mascot-slot" data-size="220"></div></div>`);
     setMascot(s.querySelector('.mascot-slot'), 'clap'); confetti(30); Sfx.sparkle();
     await Voice.play('ui:4', 'خذيتي نجمة!'); await wait(1500);
     if (!$app.querySelector('.end')) return;
@@ -407,7 +410,7 @@
 
   /* ---------- boot ---------- */
   async function boot() {
-    let stk; [DATA, MEDIA, stk] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json())]);
+    let stk; [DATA, MEDIA, stk, CLOUDS] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
     STICKERS = stk.stickers;
     P = load();
     await Voice.init();

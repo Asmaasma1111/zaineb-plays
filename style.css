@@ -304,3 +304,47 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .sticker-award .gift-stage::before { content: ''; position: absolute; inset: -12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 236, 170, .9) 0%, rgba(255, 236, 170, .35) 40%, rgba(255, 236, 170, 0) 70%); z-index: 0; }
 .sticker-award .h { color: #3E3230; text-shadow: 0 3px 0 #fff, 0 10px 24px rgba(255, 200, 80, .5); }
 .rays { background: repeating-conic-gradient(from 0deg, rgba(255, 214, 90, .85) 0deg 10deg, rgba(255, 214, 90, 0) 10deg 28deg); }
+
+/* ---------- 3D Zouzou (images) ---------- */
+.mascot.m3d { position: relative; display: inline-block; overflow: visible; }
+.mascot.m3d img { width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 10px 12px rgba(40, 60, 90, .25)); }
+.m3d.m-tilt { animation: tilt3d 1.2s ease-in-out 1 forwards; transform-origin: 50% 80%; }
+@keyframes tilt3d { 0% { transform: rotate(0) } 40% { transform: rotate(-9deg) } 100% { transform: rotate(-7deg) } }
+.m3d.m-wave { animation: wave3d .6s ease-in-out 3; transform-origin: 50% 90%; }
+@keyframes wave3d { 0%, 100% { transform: rotate(0) } 50% { transform: rotate(5deg) translateY(-4%) } }
+.m3d.m-refuse { animation: refuse3d 1s ease-in-out 3; transform-origin: 50% 85%; }
+@keyframes refuse3d { 0%, 100% { transform: rotate(4deg) } 50% { transform: rotate(-4deg) } }
+.m3d .zz { position: absolute; right: -4%; top: 6%; font-family: 'Baloo Bhaijaan 2', sans-serif; font-weight: 800; color: #6FA8DC; font-size: 22%; line-height: 1; animation: zz 2.5s ease-in-out infinite; opacity: 0; }
+.m3d .zz:nth-child(3) { right: -14%; top: -4%; font-size: 28%; animation-delay: .5s; }
+.m3d .zz:nth-child(4) { right: -26%; top: -16%; font-size: 34%; animation-delay: 1s; }
+.map .stop .mini .m3d { width: 64px; height: 64px; }
+
+/* ---------- 3D backgrounds with drifting clouds ---------- */
+.bg3d { background: #CFEBFA; }
+.bg3d[data-scene="award"] { background: #FFE9C8; } .bg3d[data-scene="night"] { background: #2E4A7A; }
+.bg3d .scene { position: absolute; top: 0; height: 100%; aspect-ratio: 16 / 9; left: 50%; transform: translateX(-54%); }
+.bg3d .sky { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cloud3d { position: absolute; display: block; animation: cloud-drift 50s ease-in-out infinite alternate; will-change: transform; }
+@keyframes cloud-drift { 0% { transform: translate(0, 0) } 50% { transform: translate(2.5%, -1.5%) } 100% { transform: translate(5%, 0.5%) } }
+@media (prefers-reduced-motion: reduce) { .cloud3d { animation: none; } }
+
+/* ---------- 3D icons ---------- */
+.star-img { width: 40px; height: 40px; object-fit: contain; }
+.book-img { width: 52px; height: 52px; object-fit: contain; }
+.bigstar-img { width: 220px; height: 220px; object-fit: contain; animation: pop .8s ease; filter: drop-shadow(0 12px 16px rgba(60, 60, 20, .3)); }
+
+/* ---------- 3D gift ---------- */
+.gift3d { position: absolute; inset: 0; }
+.gift3d img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 18px rgba(60, 30, 20, .3)); }
+.gift3d .g-shadow { display: none; }
+.gift3d .g-open { opacity: 0; }
+.gift3d .g-lid { opacity: 0; top: -22%; }
+.gift.open .g-closed { animation: fadeout .25s ease-out .1s forwards; }
+.gift.open .g-open { animation: fadein .25s ease-out .1s forwards; }
+.gift.open .g-lid { opacity: 1; animation: lidfly 1.1s ease-out forwards; }
+@keyframes fadeout { to { opacity: 0 } } @keyframes fadein { to { opacity: 1 } }
+@keyframes lidfly { 0% { transform: translateY(22%) rotate(0); opacity: 1 } 30% { transform: translateY(-30%) rotate(-12deg); opacity: 1 } 100% { transform: translate(45%, -200%) rotate(35deg); opacity: 0 } }
+/* night scene: light title; zzz sized to the mascot */
+.screen:has(.bg3d[data-scene="night"]) .title { color: #fff; text-shadow: 0 3px 0 rgba(0, 0, 0, .25); }
+.mascot.m3d { container-type: inline-size; }
+.m3d .zz { font-size: 15cqw; } .m3d .zz:nth-child(3) { font-size: 19cqw; } .m3d .zz:nth-child(4) { font-size: 24cqw; }

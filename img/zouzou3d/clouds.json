@@ -1,0 +1,62 @@
+{
+ "bg-day": [
+  {
+   "file": "bg-day-cloud1.webp",
+   "x": 26.61,
+   "y": 19.34,
+   "w": 16.87
+  },
+  {
+   "file": "bg-day-cloud2.webp",
+   "x": 68.3,
+   "y": 2.02,
+   "w": 24.16
+  },
+  {
+   "file": "bg-day-cloud3.webp",
+   "x": 85.23,
+   "y": 31.14,
+   "w": 14.35
+  }
+ ],
+ "bg-award": [
+  {
+   "file": "bg-award-cloud1.webp",
+   "x": 26.61,
+   "y": 19.34,
+   "w": 16.87
+  },
+  {
+   "file": "bg-award-cloud2.webp",
+   "x": 68.3,
+   "y": 2.02,
+   "w": 24.16
+  },
+  {
+   "file": "bg-award-cloud3.webp",
+   "x": 85.23,
+   "y": 31.14,
+   "w": 14.35
+  }
+ ],
+ "bg-night": [
+  {
+   "file": "bg-night-cloud1.webp",
+   "x": 26.61,
+   "y": 19.34,
+   "w": 16.87
+  },
+  {
+   "file": "bg-night-cloud2.webp",
+   "x": 68.3,
+   "y": 2.02,
+   "w": 24.16
+  },
+  {
+   "file": "bg-night-cloud3.webp",
+   "x": 85.23,
+   "y": 31.14,
+   "w": 14.35
+  }
+ ]
+}

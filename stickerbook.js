@@ -33,23 +33,13 @@
     let page = 0, busy = false;
 
     /* --- award: "زينب ربحتي ملصق!" --- */
-    const GIFT = `<svg class="gift-svg" viewBox="0 0 400 400"><defs>
-      <linearGradient id="gbox" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9F86"/><stop offset=".55" stop-color="#FF6F57"/><stop offset="1" stop-color="#D9452F"/></linearGradient>
-      <linearGradient id="glid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB29E"/><stop offset="1" stop-color="#F0614A"/></linearGradient>
-      <linearGradient id="grib" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFE98A"/><stop offset=".5" stop-color="#FFC83D"/><stop offset="1" stop-color="#E8A300"/></linearGradient>
-      <radialGradient id="gshine" cx="30%" cy="20%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
-      <ellipse cx="200" cy="380" rx="150" ry="18" fill="#2a4a66" opacity=".18"/>
-      <g class="gift-lid"><rect x="56" y="118" width="288" height="74" rx="20" fill="url(#glid)" stroke="#8a2f1f" stroke-width="5"/><rect x="176" y="118" width="48" height="74" fill="url(#grib)" stroke="#9a6a00" stroke-width="4"/>
-      <path d="M200 120 C148 58 104 70 128 106 C150 134 190 122 200 120 Z" fill="url(#grib)" stroke="#9a6a00" stroke-width="5" stroke-linejoin="round"/><path d="M200 120 C252 58 296 70 272 106 C250 134 210 122 200 120 Z" fill="url(#grib)" stroke="#9a6a00" stroke-width="5" stroke-linejoin="round"/>
-      <circle cx="200" cy="120" r="14" fill="#FFE98A" stroke="#9a6a00" stroke-width="4"/><rect x="56" y="118" width="288" height="74" rx="20" fill="url(#gshine)"/></g>
-      <g class="gift-box"><rect x="78" y="186" width="244" height="190" rx="24" fill="url(#gbox)" stroke="#8a2f1f" stroke-width="5"/><rect x="176" y="186" width="48" height="190" fill="url(#grib)" stroke="#9a6a00" stroke-width="4"/>
-      <rect x="78" y="186" width="244" height="190" rx="24" fill="url(#gshine)"/><circle cx="130" cy="262" r="14" fill="#fff" opacity=".45"/><circle cx="292" cy="330" r="9" fill="#fff" opacity=".4"/></g></svg>`;
+    const GIFT = `<div class="gift3d"><img class="g-shadow" src="img/zouzou3d/gift-open-box.webp" alt="" aria-hidden="true"><img class="g-open" src="img/zouzou3d/gift-open-box.webp" alt=""><img class="g-closed" src="img/zouzou3d/gift-closed.webp" alt=""><img class="g-lid" src="img/zouzou3d/gift-lid.webp" alt=""></div>`;
     async function award(entry, done) {
       const P = getP(); const c = catalog[entry.i]; const n = entry.i + 1;
       const s = screen('end sticker-award', `<div class="center"><h2 class="h">زينب ربحتي ملصق!</h2>
         <div class="gift-stage"><div class="rays"></div><div class="gift wobble" id="gift">${GIFT}</div><div class="big-sticker ${cls(c)} hidden">${img(c)}</div></div>
         <div class="count" id="count">افتحي الهدية!</div><button class="btn-big green hidden" id="stick">نلصقوه في الدفتر ✓</button></div>
-        <div class="zouzou"><div class="zbubble">زينب ربحتي ملصق!</div><div class="mascot-slot"></div></div><div class="burst" id="burst"></div>`);
+        <div class="zouzou"><div class="zbubble">زينب ربحتي ملصق!</div><div class="mascot-slot"></div></div><div class="burst" id="burst"></div>`, 'award');
       setMascot(s.querySelector('.zouzou .mascot-slot'), 'clap', 190); Sfx.sparkle();
       Voice.play('st:win', 'زينب ربحتي ملصق!');
       // the gift opens on a tap, or by itself after a few seconds

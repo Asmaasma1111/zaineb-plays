@@ -52,5 +52,11 @@
   ${zzz}
 </svg>`;
   }
-  window.Mascot = { svg };
+  const POSE = { idle: 'idle', happy: 'wave', clap: 'clap', tilt: 'tilt', sleep: 'sleep', wave: 'wave', refuse: 'refuse' };
+  function img3d(state, opts) {
+    state = state || 'idle'; opts = opts || {}; const size = opts.size || 220; const pose = POSE[state] || 'idle';
+    const zzz = (state === 'sleep' || state === 'refuse') ? '<span class="zz">z</span><span class="zz">z</span><span class="zz">z</span>' : '';
+    return `<div class="mascot m3d m-${state}" style="width:${size}px;height:${size}px" role="img" aria-label="زوزو"><img src="img/zouzou3d/${pose}.webp" alt="" draggable="false">${zzz}</div>`;
+  }
+  window.Mascot = { svg: img3d, drawn: svg };
 })();
