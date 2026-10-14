@@ -52,7 +52,7 @@
   ${zzz}
 </svg>`;
   }
-  const POSE = { idle: 'idle', happy: 'wave', clap: 'clap', tilt: 'tilt', sleep: 'sleep', wave: 'wave', refuse: 'refuse' };
+  const POSE = { idle: 'idle', happy: 'wave', clap: 'clap', tilt: 'tilt', sleep: 'sleep-pillow', wave: 'wave', refuse: 'refuse' };
   function img3d(state, opts) {
     state = state || 'idle'; opts = opts || {}; const size = opts.size || 220; const pose = POSE[state] || 'idle';
     const zzz = (state === 'sleep' || state === 'refuse') ? '<span class="zz">z</span><span class="zz">z</span><span class="zz">z</span>' : '';
