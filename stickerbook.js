@@ -29,23 +29,23 @@
     const cls = (c) => c.kind === 'glitter' ? 'glitter' : c.kind === 'food' ? 'food' : c.kind === 'sparkly' ? 'sparkly' : 'animal';
     const img = (c) => `<img src="stickers/${c.file}" alt="${c.name}" draggable="false">`;
     const countKey = (n) => `st:count:${Math.min(n, 40)}`;
-    const countText = (n) => n === 1 ? 'عندك ملصق واحد!' : n === 2 ? 'عندك زوج ملصقات!' : n <= 10 ? `عندك ${n} ملصقات!` : `عندك ${n} ملصق!`;
+    const countText = (n) => n === 1 ? 'عندك مُلصق واحد!' : n === 2 ? 'عندك زوج مُلصقات!' : n <= 10 ? `عندك ${n} مُلصقات!` : `عندك ${n} مُلصق!`;
     let page = 0, busy = false;
 
-    /* --- award: "زينب ربحتي ملصق!" --- */
+    /* --- award: "زينب ربحتي مُلصق!" --- */
     const GIFT = `<div class="gift3d"><img class="g-shadow" src="img/zouzou3d/gift-open-box.webp" alt="" aria-hidden="true"><img class="g-open" src="img/zouzou3d/gift-open-box.webp" alt=""><img class="g-closed" src="img/zouzou3d/gift-closed.webp" alt=""><img class="g-lid" src="img/zouzou3d/gift-lid.webp" alt=""></div>`;
     async function award(entry, done) {
       const P = getP(); const c = catalog[entry.i]; const n = entry.i + 1;
-      const s = screen('end sticker-award', `<div class="center"><h2 class="h">زينب ربحتي ملصق!</h2>
+      const s = screen('end sticker-award', `<div class="center"><h2 class="h">زينب ربحتي مُلصق!</h2>
         <div class="gift-stage"><div class="rays"></div><div class="gift wobble" id="gift">${GIFT}</div><div class="big-sticker ${cls(c)} hidden">${img(c)}</div></div>
         <div class="count" id="count">افتحي الهدية!</div><button class="btn-big green hidden" id="stick">نلصقوه في الدفتر ✓</button></div>
-        <div class="zouzou"><div class="zbubble">زينب ربحتي ملصق!</div><div class="mascot-slot"></div></div><div class="burst" id="burst"></div>`, 'award');
+        <div class="zouzou"><div class="zbubble">زينب ربحتي مُلصق!</div><div class="mascot-slot"></div></div><div class="burst" id="burst"></div>`, 'award');
       setMascot(s.querySelector('.zouzou .mascot-slot'), 'clap', 190); Sfx.sparkle();
-      Voice.play('st:win', 'زينب ربحتي ملصق!');
-      // the gift opens on a tap, or by itself after a few seconds
-      await new Promise(res => { s.querySelector('#gift').onclick = res; setTimeout(res, 4500); });
+      Voice.play('st:win', 'زينب ربحتي مُلصق!'); Voice.play('st:open', 'افتحي الهدية!');
+      // the gift opens only when she taps it
+      await new Promise(res => { s.querySelector('#gift').onclick = res; });                       // she opens it herself
       const gift = s.querySelector('#gift'); gift.classList.remove('wobble'); gift.classList.add('open'); s.querySelector('.rays').classList.add('on');
-      Sfx.stickerSound('sparkly'); confetti(40); burst(s.querySelector('#burst'), 'sparkly');
+      Sfx.fanfare(); confetti(60); burst(s.querySelector('#burst'), 'sparkly'); setTimeout(() => burst(s.querySelector('#burst'), 'glitter'), 500); setMascot(s.querySelector('.zouzou .mascot-slot'), 'clap', 190);
       await new Promise(r => setTimeout(r, 500));
       const big = s.querySelector('.big-sticker'); big.classList.remove('hidden'); big.classList.add('rise'); Sfx.stickerSound(cls(c));
       await new Promise(r => setTimeout(r, 1100));
@@ -75,7 +75,7 @@
         slots.push(!c ? '<div class="slot none"></div>' : have ? `<div class="slot got ${cls(c)}" data-i="${i}">${img(c)}</div>` : '<div class="slot empty"><div class="q">؟</div></div>');
       }
       const s = screen('book', `
-        <div class="topbar"><button class="btn-home" id="home">⌂</button><div class="btitle">دفتر الملصقات</div><div class="stars-row"><span class="sticker-ico">✿</span><span>${got.length}</span></div></div>
+        <div class="topbar"><button class="btn-home" id="home">⌂</button><div class="btitle">دفتر المُلصقات</div><div class="stars-row"><span class="sticker-ico">✿</span><span>${got.length}</span></div></div>
         <div class="bookarea"><button class="arrow" id="prev" ${page <= 0 ? 'disabled' : ''}>❯</button><div class="grid2" id="grid">${slots.join('')}</div><button class="arrow" id="next" ${page >= pages - 1 ? 'disabled' : ''}>❮</button></div>
         <div class="pager">صفحة ${page + 1} من ${pages}</div>
         <div class="zouzou"><div class="zbubble" hidden></div><div class="mascot-slot"></div></div><div class="burst" id="burst"></div>`);
@@ -86,7 +86,7 @@
       s.querySelector('#next').onclick = () => turn(1); s.querySelector('#prev').onclick = () => turn(-1);
       let x0 = null; s.addEventListener('pointerdown', e => { x0 = e.clientX; }); s.addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 70) turn(dx > 0 ? 1 : -1); });
       s.querySelectorAll('.slot.got').forEach(slot => slot.addEventListener('click', () => play(slot, s)));
-      if (!book.greeted) { book.greeted = true; Voice.play('st:book', 'هذا دفتر الملصقات تاعك!'); const b = s.querySelector('.zbubble'); b.textContent = 'هذا دفتر الملصقات تاعك!'; b.hidden = false; setTimeout(() => { b.hidden = true; }, 3500); }
+      if (!book.greeted) { book.greeted = true; Voice.play('st:book', 'هذا دفتر المُلصقات تاعك!'); const b = s.querySelector('.zbubble'); b.textContent = 'هذا دفتر المُلصقات تاعك!'; b.hidden = false; setTimeout(() => { b.hidden = true; }, 3500); }
     }
 
     /* --- tapping a sticker: it grows almost full-screen, wobbles or spins by kind, bursts, Zouzou cheers --- */
@@ -97,7 +97,7 @@
       Sfx.stickerSound(kind);
       setTimeout(() => burst(s.querySelector('#burst'), kind), 300);
       const z = s.querySelector('.zouzou .mascot-slot'); const b = s.querySelector('.zbubble');
-      const line = play.n++ % 2 ? ['st:giggle', 'هههه!'] : ['st:look', 'واو! شوفي الملصق!'];
+      const line = play.n++ % 2 ? ['st:giggle', 'هههه!'] : ['st:look', 'واو! شوفي المُلصق!'];
       setMascot(z, 'clap'); b.textContent = line[1]; b.hidden = false; Voice.play(line[0], line[1]);
       setTimeout(() => { ghost.classList.add('back'); }, 2100);
       setTimeout(() => { ghost.remove(); setMascot(z, 'idle'); b.hidden = true; busy = false; }, 2700);

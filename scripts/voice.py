@@ -20,7 +20,7 @@ STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking s
          "pronounce ج as the French j; ضُرك = ḍork; نتي = nti; كيما = kīma; واش = wāsh; ما عندهاش = ma ʿandhāsh. Short vowels are "
          "reduced like in Algerian speech. Laugh gently where the text says هههه. Each paragraph is a separate line: pause about two seconds between paragraphs.")
 STYLE = os.environ.get('STYLE', STYLE)
-KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة'}      # Standard-Arabic labels and loans that keep q in Sétif
+KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة', 'ملصق', 'الملصق', 'ملصقات', 'الملصقات', 'ملصقين'}      # Standard-Arabic labels and loans that keep q in Sétif
 def tts_form(text):
     """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
     out = []
@@ -28,6 +28,7 @@ def tts_form(text):
         base = TASHKEEL.sub('', re.sub(r'[^\u0621-\u064A\u064B-\u0652\u0670]', '', tok))
         out.append(tok if base in KEEP_Q else tok.replace('ق', 'ڨ'))
     t = ' '.join(out).replace(' / ', '... ')      # slashed labels: a pause, not a slash the voice may skip
+    t = re.sub(r'(?<![\u0621-\u064A])(ال)?م[ُ]?ل[ْ]?ص[َ]?ق(ات|ين)?(?![\u0621-\u064A])', lambda m: (m.group(1) or '') + 'مُلْصَق' + (m.group(2) or ''), t)   # مُلْصَق: damma, no shadda
     t = re.sub(r'(?<![\u0621-\u064A])([وف]?)درك(?![\u0621-\u064A])', r'\1ضُرك', t)
     t = re.sub(r'(?<![\u0621-\u064A])اثنين(?![\u0621-\u064A])', 'زوج', t)
     t = re.sub(r'(?<![\u0621-\u064A])اِثْنَان(?![\u0621-\u064A])', 'زوج', t)
@@ -96,8 +97,8 @@ def cmd_lines(a):
             'واحد وعشرين ملصق', 'زوج وعشرين ملصق', 'ثلاثة وعشرين ملصق', 'أربعة وعشرين ملصق', 'خمسة وعشرين ملصق', 'ستة وعشرين ملصق', 'سبعة وعشرين ملصق', 'ثمانية وعشرين ملصق',
             'تسعة وعشرين ملصق', 'ثلاثين ملصق', 'واحد وثلاثين ملصق', 'زوج وثلاثين ملصق', 'ثلاثة وثلاثين ملصق', 'أربعة وثلاثين ملصق', 'خمسة وثلاثين ملصق', 'ستة وثلاثين ملصق',
             'سبعة وثلاثين ملصق', 'ثمانية وثلاثين ملصق', 'تسعة وثلاثين ملصق', 'أربعين ملصق']
-    for i, t in enumerate(nums): add(f'st:count:{i+1}', f'عندك {t}!', 'st')
-    for k, t in [('st:win', 'زينب ربحتي ملصق!'), ('st:look', 'واو! شوفي الملصق!'), ('st:stick', 'نلصقوه في الدفتر!'), ('st:giggle', 'هههه!'), ('st:book', 'هذا دفتر الملصقات تاعك!'), ('st:open', 'افتحي الهدية!')]: add(k, t, 'st')
+    for i, t in enumerate(nums): add(f'st:count:{i+1}', f'عندك {t}!'.replace('ملصق', 'مُلصق'), 'st')
+    for k, t in [('st:win', 'زينب ربحتي مُلصق!'), ('st:look', 'واو! شوفي المُلصق!'), ('st:stick', 'نلصقوه في الدفتر!'), ('st:giggle', 'هههه!'), ('st:book', 'هذا دفتر المُلصقات تاعك!'), ('st:open', 'افتحي الهدية!')]: add(k, t, 'st')
     for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'ششش... خمس دقايق أخرين... زززز', 'آآآه... راني فقت! نلعبو؟']): add(f'ui:{i}', t, 'ui')
     # batches: keep order, cap by characters so every take stays ~1.5-2 min
     batches, cur, chars = [], [], 0

@@ -74,6 +74,9 @@
     pageTurn() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const len = c.sampleRate * .5; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       const n = c.createBufferSource(); n.buffer = buf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(900, t0); f.frequency.exponentialRampToValueAtTime(2400, t0 + .3); f.Q.value = .8;
       const g = c.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.12, t0 + .08); g.gain.linearRampToValueAtTime(0, t0 + .4); n.connect(f).connect(g).connect(c.destination); n.start(t0); n.stop(t0 + .45); },
+    fanfare() { const c = this.get(); if (!c) return; const t0 = c.currentTime;
+      const notes = [[523, 0, .18], [659, .15, .18], [784, .3, .18], [1047, .45, .5], [784, .95, .14], [1047, 1.1, .7], [1319, 1.1, .7], [1568, 1.1, .9]];
+      notes.forEach(([f, at, d]) => this.tone(f, t0 + at, d, .2)); [2093, 2637, 3136].forEach((f, i) => this.tone(f, t0 + 1.3 + i * .12, .4, .1)); },
     tune: null,
     startTune() { const c = this.get(); if (!c) return; this.stopTune(); const notes = [523, 587, 659, 523, 659, 698, 784, 784, 698, 659, 587, 523, 587, 659, 523]; let i = 0; const step = () => { this.tone(notes[i % notes.length], c.currentTime, .22, .16); i++; }; step(); this.tune = setInterval(step, 240); },
     stopTune() { if (this.tune) { clearInterval(this.tune); this.tune = null; } }
@@ -357,7 +360,7 @@
       <div class="ptabs"><button data-t="prog" class="on">التقدم</button><button data-t="set">الإعدادات</button><button data-t="data">نسخة احتياطية</button><button data-t="cred">المصادر</button></div>
       <div class="ptab" data-t="prog">
         <table class="ptable">${stageRows}</table>
-        <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>الملصقات:</b> ${((P.stickers || {}).got || []).length} / ${STICKERS.length} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
+        <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>المُلصقات:</b> ${((P.stickers || {}).got || []).length} / ${STICKERS.length} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
         <p><b>الكلمات المعروفة (${known.length}):</b> ${known.join('، ') || '—'}</p>
         <p><b>دفتر النجوم:</b> ${P.starBook.map(s => '★').join('') || '—'}</p>
       </div>
@@ -365,7 +368,7 @@
         <label>حصص في اليوم <input type="number" min="1" max="6" id="spd" value="${st.sessionsPerDay}"></label>
         <label>بطاقات في الحصة <input type="number" min="3" max="15" id="cps" value="${st.cardsPerSession}"></label>
         <label>نوم زوزو بين الحصتين (دقائق؛ 240 = حصة الصباح وحصة العشية) <input type="number" min="0" max="600" id="brk" value="${st.breakMinutes}"></label>
-        <label>حصص لكل ملصق (1 = ملصق بعد كل حصة) <input type="number" min="1" max="5" id="stper" value="${st.stickerPer || 1}"></label>
+        <label>حصص لكل مُلصق (1 = مُلصق بعد كل حصة) <input type="number" min="1" max="5" id="stper" value="${st.stickerPer || 1}"></label>
         <label><input type="checkbox" id="hints" ${st.hints ? 'checked' : ''}> إظهار تلميحات الكبار تحت البطاقة</label>
         <p><button class="btn-adult" id="unlock" ${next ? '' : 'disabled'}>فتح المرحلة ${next ? next.stage : ''} يدوياً</button></p>
         <p><select id="resetcard"><option value="">— إعادة بطاقة واحدة —</option>${DATA.cards.filter(c => P.cards[c.id]).map(c => `<option value="${c.id}">${c.id} ${c.word}</option>`).join('')}</select> <button class="btn-adult" id="resetone">إعادة</button></p>
