@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "zaineb", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8160", "--bind", "127.0.0.1"], "port": 8160 }
+  ]
+}

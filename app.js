@@ -115,7 +115,8 @@
         <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><img class="book-img" src="img/zouzou3d/sticker-book.webp" alt=""><span>${((P.stickers || {}).got || []).length}</span></button></div>
       <div class="hero">
         <div class="mascot-wrap"><div class="bubble">${bubble}</div><div class="mascot-slot" data-size="260"></div></div>
-        <button class="btn-big" id="start" ${can.ok ? '' : 'disabled'}>${can.ok ? 'نلعبو! ▶' : (can.reason === 'cap' ? 'غدوة إن شاء الله' : 'نرتاحو شويا')}</button>
+        <div class="start-col"><button class="btn-big" id="start" ${can.ok ? '' : 'disabled'}>${can.ok ? 'نلعبو! ▶' : (can.reason === 'cap' ? 'غدوة إن شاء الله' : 'نرتاحو شويا')}</button>
+        ${can.ok ? '' : '<div class="wait-chip" id="wait"></div>'}</div>
       </div>
       ${renderMap(cur)}`, can.ok ? 'day' : 'night');
     const slot = s.querySelector('.mascot-slot'); setMascot(slot, can.ok ? 'idle' : 'sleep');
@@ -134,7 +135,19 @@
       if (!E.canStart(P, new Date()).ok) { el.classList.add('wiggle'); setTimeout(() => el.classList.remove('wiggle'), 1300); return; }
       Voice.unlock(); Sfx.get(); Sfx.snoreStop(); Sfx.pop(); startSession(+el.dataset.stage);
     }));
-    if (!can.ok && can.reason === 'break') setTimeout(() => { if ($app.querySelector('.home')) renderHome(); }, Math.min(can.waitMs + 500, 60000));
+    if (!can.ok) {                                                              // the countdown until she can play again
+      const chip = s.querySelector('#wait');
+      const tick = () => {
+        if (!$app.contains(chip)) return clearInterval(tm);
+        const now = new Date(); const c2 = E.canStart(P, now);
+        if (c2.ok) return renderHome();
+        const ms = c2.reason === 'break' ? c2.waitMs : (new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now);
+        const mins = Math.ceil(ms / 60000); const h = Math.floor(mins / 60), m = mins % 60;
+        chip.textContent = '⏰ نلعبو مرة أخرى بعد ' + (h ? `${h} سا و ` : '') + `${m} د`;
+      };
+      tick(); const tm = setInterval(tick, 30000);
+    }
+    if (window.__pendingReload) location.reload();                               // a new version waited for the session to end
   }
   function renderMap(cur) {
     const pts = [[7, 30], [24, 62], [42, 30], [60, 62], [78, 30], [94, 62]];
@@ -383,6 +396,10 @@
         <p><button class="btn-adult danger" id="resetall">مسح كل التقدم</button></p>
       </div>
       <div class="ptab hidden" data-t="data">
+        <p><b>كود التقدم</b> — انسخيه من الجهاز (أو من سفاري) الذي فيه التقدم الصحيح، والصقيه هنا في التطبيق الآخر. على الآيباد، التطبيق على الشاشة الرئيسية وسفاري لهما حفظ منفصل.</p>
+        <p><button class="btn-adult" id="copycode">نسخ كود التقدم (${P.stars} نجوم)</button></p>
+        <textarea id="code" rows="3" readonly placeholder="الكود يظهر هنا بعد الضغط على الزر"></textarea>
+        <p><textarea id="paste" rows="3" placeholder="الصقي كود التقدم هنا"></textarea> <button class="btn-adult" id="applycode">استرجاع من الكود</button></p>
         <p><button class="btn-adult" id="export">تصدير التقدم (JSON)</button> <label class="btn-adult">استيراد <input type="file" id="import" accept="application/json" hidden></label></p>
         <textarea id="json" rows="6" readonly></textarea>
       </div>
@@ -397,6 +414,8 @@
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
     o.querySelector('#resetall').onclick = () => { if (confirm('مسح كل تقدم زينب؟ لا يمكن التراجع.')) { P = E.emptyProgress(); save(); o.remove(); renderHome(); } };
+    o.querySelector('#copycode').onclick = async () => { const tok = await makeRestoreCode(); const ta = o.querySelector('#code'); ta.value = tok; ta.select(); try { await navigator.clipboard.writeText(tok); o.querySelector('#copycode').textContent = 'تم النسخ ✓'; } catch (e) { o.querySelector('#copycode').textContent = 'حددي الكود وانسخيه'; } };
+    o.querySelector('#applycode').onclick = async () => { const tok = o.querySelector('#paste').value; if (!tok.trim()) return; if (await applyRestoreCode(tok, false)) { o.remove(); renderHome(); } };
     o.querySelector('#export').onclick = () => { const txt = JSON.stringify(P); o.querySelector('#json').value = txt; const b = new Blob([txt], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `zaineb-progress-${E.dateKey()}.json`; a.click(); };
     o.querySelector('#import').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { const p = JSON.parse(await f.text()); if (!p.cards) throw 0; if (confirm('استبدال التقدم الحالي بالملف؟')) { P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); save(); o.remove(); renderHome(); } } catch (err) { alert('ملف غير صالح'); } };
     fetch('credits.json').then(r => r.json()).then(cr => {
@@ -408,15 +427,28 @@
   async function maybeRestoreFromLink() {
     const m = location.hash.match(/#restore=([A-Za-z0-9_-]+)/); if (!m) return;
     history.replaceState(null, '', location.pathname);
+    let used = ''; try { used = localStorage.getItem(KEY + ':restored') || ''; } catch (e) {}
+    if (used === m[1].slice(-40)) return;                                       // this code was already applied here: ignore it
+    await applyRestoreCode(m[1], true);
+  }
+  async function decodeRestoreCode(tok) {
+    const b64 = tok.trim().replace(/^.*#restore=/, '').replace(/-/g, '+').replace(/_/g, '/'); const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const ds = new DecompressionStream('deflate'); const w = ds.writable.getWriter(); w.write(bin); w.close();
+    const p = JSON.parse(await new Response(ds.readable).text()); if (!p.cards) throw 0; return p;
+  }
+  async function makeRestoreCode() {
+    const cs = new CompressionStream('deflate'); const w = cs.writable.getWriter(); w.write(new TextEncoder().encode(JSON.stringify(P))); w.close();
+    const buf = new Uint8Array(await new Response(cs.readable).arrayBuffer()); let s = ''; buf.forEach(b => { s += String.fromCharCode(b); });
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  async function applyRestoreCode(tok, fromLink) {
     try {
-      const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/'); const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-      const ds = new DecompressionStream('deflate'); const w = ds.writable.getWriter(); w.write(bin); w.close();
-      const txt = await new Response(ds.readable).text(); const p = JSON.parse(txt); if (!p.cards) throw 0;
-      const mine = P.sessionCount || 0;
-      if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return;
+      const p = await decodeRestoreCode(tok); const mine = P.sessionCount || 0;
+      if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return false;
       P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); if (STICKERS) Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();
-      alert(`تم! ${P.stars} نجوم و ${P.sessionCount} حصص رجعت لزينب.`);
-    } catch (e) { alert('الرابط ما خدمش. جربي مرة أخرى.'); }
+      try { localStorage.setItem(KEY + ':restored', tok.trim().replace(/^.*#restore=/, '').slice(-40)); } catch (e) {}
+      alert(`تم! ${P.stars} نجوم و ${P.sessionCount} حصص رجعت لزينب.`); return true;
+    } catch (e) { alert(fromLink ? 'الرابط ما خدمش. جربي مرة أخرى.' : 'الكود ما خدمش. تأكدي أنك لصقتي الكود كامل.'); return false; }
   }
 
   /* ---------- boot ---------- */
@@ -432,7 +464,7 @@
     const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
     if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) {
       let had = !!navigator.serviceWorker.controller;
-      navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !window.__reloaded) { window.__reloaded = true; location.reload(); } had = true; });   // a new version took over: load it
+      navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !window.__reloaded) { window.__reloaded = true; if (S) window.__pendingReload = true; else location.reload(); } had = true; });   // a new version took over: load it
       navigator.serviceWorker.register('sw.js').then(reg => { reg.update().catch(() => {}); }).catch(() => {});
     }
     window.ZP = { get Book() { return Book; }, get stickers() { return STICKERS; }, openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
