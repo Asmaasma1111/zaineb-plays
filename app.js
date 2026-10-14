@@ -403,7 +403,7 @@
       const txt = await new Response(ds.readable).text(); const p = JSON.parse(txt); if (!p.cards) throw 0;
       const mine = P.sessionCount || 0;
       if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return;
-      P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); save();
+      P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); if (STICKERS) Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();
       alert(`تم! ${P.stars} نجوم و ${P.sessionCount} حصص رجعت لزينب.`);
     } catch (e) { alert('الرابط ما خدمش. جربي مرة أخرى.'); }
   }
@@ -416,7 +416,7 @@
     await Voice.init();
     await maybeRestoreFromLink();
     Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
-    Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); save();
+    Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();   // stickers earned before this version go straight into the book, no award flood
     renderHome();
     const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
     if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) navigator.serviceWorker.register('sw.js').catch(() => {});
