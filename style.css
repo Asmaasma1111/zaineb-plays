@@ -348,3 +348,16 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .screen:has(.bg3d[data-scene="night"]) .title { color: #fff; text-shadow: 0 3px 0 rgba(0, 0, 0, .25); }
 .mascot.m3d { container-type: inline-size; }
 .m3d .zz { font-size: 15cqw; } .m3d .zz:nth-child(3) { font-size: 19cqw; } .m3d .zz:nth-child(4) { font-size: 24cqw; }
+
+/* ---------- stickers alive in their slots ---------- */
+.slot.got img { animation: sticker-breathe 4.2s ease-in-out infinite; transform-origin: 50% 85%; }
+@keyframes sticker-breathe { 0%, 100% { transform: translateY(0) rotate(-1.5deg) scale(1) } 50% { transform: translateY(-3%) rotate(1.5deg) scale(1.03, .98) } }
+.slot.got img.live-animal { animation: live-hop 2s cubic-bezier(.3, 1.4, .5, 1) 1; }
+@keyframes live-hop { 0% { transform: scale(1) } 12% { transform: scale(1.15, .8) } 30% { transform: translateY(-45%) rotate(-10deg) scale(.95, 1.1) } 45% { transform: translateY(0) scale(1.12, .85) } 58% { transform: translateY(-25%) rotate(8deg) } 70% { transform: translateY(0) scale(1.08, .9) } 82% { transform: rotate(-5deg) } 92% { transform: rotate(4deg) } 100% { transform: rotate(0) scale(1) } }
+.slot.got img.live-food { animation: live-roll 2s ease-in-out 1; }
+@keyframes live-roll { 0% { transform: rotate(0) } 15% { transform: rotate(-22deg) translateX(-10%) scale(1.08) } 35% { transform: rotate(24deg) translateX(10%) scale(1.1) } 55% { transform: rotate(-16deg) translateX(-6%) } 72% { transform: rotate(10deg) translateX(4%) } 86% { transform: rotate(-5deg) } 100% { transform: rotate(0) } }
+.slot.got img.live-glitter { animation: live-jelly 2s ease-in-out 1; transform-origin: 50% 100%; }
+@keyframes live-jelly { 0% { transform: scale(1) } 15% { transform: scale(1.3, .65) } 30% { transform: scale(.8, 1.3) translateY(-30%) } 45% { transform: scale(1.2, .85) } 60% { transform: scale(.92, 1.1) translateY(-10%) } 75% { transform: scale(1.08, .95) } 90% { transform: scale(.98, 1.02) } 100% { transform: scale(1) } }
+.slot.got img.live-sparkly { animation: live-spin 2s ease-in-out 1; }
+@keyframes live-spin { 0% { transform: rotate(0) scale(1) } 30% { transform: rotate(180deg) scale(1.25) } 60% { transform: rotate(360deg) scale(1.1) } 80% { transform: rotate(380deg) scale(1.15) } 100% { transform: rotate(360deg) scale(1) } }
+.burst span { font-size: 40px; }

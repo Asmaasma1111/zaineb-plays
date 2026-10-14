@@ -85,30 +85,45 @@
       const turn = (d) => { const np = page + d; if (np < 0 || np >= pages) return; page = np; Sfx.pageTurn(); book(); };
       s.querySelector('#next').onclick = () => turn(1); s.querySelector('#prev').onclick = () => turn(-1);
       let x0 = null; s.addEventListener('pointerdown', e => { x0 = e.clientX; }); s.addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 70) turn(dx > 0 ? 1 : -1); });
-      s.querySelectorAll('.slot.got').forEach(slot => slot.addEventListener('click', () => play(slot, s)));
+      s.querySelectorAll('.slot.got').forEach((slot, i) => {
+        slot.querySelector('img').style.animationDelay = (-i * 1.3) + 's';
+        let t = null, held = false;
+        slot.addEventListener('pointerdown', () => { held = false; t = setTimeout(() => { held = true; zoom(slot, s); }, 650); });
+        ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => slot.addEventListener(ev, () => clearTimeout(t)));
+        slot.addEventListener('click', () => { if (!held) play(slot, s); });
+      });
       if (!book.greeted) { book.greeted = true; Voice.play('st:book', 'هذا دفتر المُلصقات تاعك!'); const b = s.querySelector('.zbubble'); b.textContent = 'هذا دفتر المُلصقات تاعك!'; b.hidden = false; setTimeout(() => { b.hidden = true; }, 3500); }
     }
 
-    /* --- tapping a sticker: it grows almost full-screen, wobbles or spins by kind, bursts, Zouzou cheers --- */
+    /* --- tapping a sticker: it comes alive in its place (hop, wiggle, squash, spin by kind); press-and-hold = big zoom --- */
     function play(slot, s) {
       if (busy) return; busy = true;
-      const c = catalog[+slot.dataset.i]; const kind = cls(c);
-      const ghost = h(`<div class="slot alive ${kind}">${img(c)}</div>`); $app.appendChild(ghost);
+      const c = catalog[+slot.dataset.i]; const kind = cls(c); const im = slot.querySelector('img');
       Sfx.stickerSound(kind);
-      setTimeout(() => burst(s.querySelector('#burst'), kind), 300);
+      const r = slot.getBoundingClientRect(); const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      setTimeout(() => burst(s.querySelector('#burst'), kind, cx, cy, 26), 150); setTimeout(() => burst(s.querySelector('#burst'), kind, cx, cy, 16), 800);
+      im.classList.remove('live-' + kind); void im.offsetWidth; im.classList.add('live-' + kind);
       const z = s.querySelector('.zouzou .mascot-slot'); const b = s.querySelector('.zbubble');
       const line = play.n++ % 2 ? ['st:giggle', 'هههه!'] : ['st:look', 'واو! شوفي المُلصق!'];
       setMascot(z, 'clap'); b.textContent = line[1]; b.hidden = false; Voice.play(line[0], line[1]);
-      setTimeout(() => { ghost.classList.add('back'); }, 2100);
-      setTimeout(() => { ghost.remove(); setMascot(z, 'idle'); b.hidden = true; busy = false; }, 2700);
+      setTimeout(() => { im.classList.remove('live-' + kind); setMascot(z, 'idle'); b.hidden = true; busy = false; }, 2200);
     }
     play.n = 0;
-    function burst(el, kind) {
+    function zoom(slot, s) {           // press-and-hold: the sticker fills the screen
+      if (busy) return; busy = true;
+      const c = catalog[+slot.dataset.i]; const kind = cls(c);
+      const ghost = h(`<div class="slot alive ${kind}">${img(c)}</div>`); $app.appendChild(ghost);
+      Sfx.stickerSound(kind); setTimeout(() => burst(s.querySelector('#burst'), kind), 300);
+      setTimeout(() => { ghost.classList.add('back'); }, 2100);
+      setTimeout(() => { ghost.remove(); busy = false; }, 2700);
+    }
+    function burst(el, kind, cx, cy, n) {
       const chars = kind === 'glitter' ? ['✦', '♥', '✧', '●'] : kind === 'food' ? ['♥', '●', '★', '✦'] : kind === 'sparkly' ? ['★', '✦', '✧', '★'] : ['★', '♥', '✦', '●'];
       const colors = ['#F5B820', '#FF8A71', '#FF8FA3', '#6FA8DC', '#5FAE52', '#C58BFF'];
-      for (let i = 0; i < 48; i++) {
+      for (let i = 0; i < (n || 48); i++) {
         const sp = document.createElement('span'); sp.textContent = chars[i % chars.length];
-        const a = Math.random() * 6.283, r = 300 + Math.random() * 380;
+        if (cx != null) { sp.style.left = cx + 'px'; sp.style.top = cy + 'px'; }
+        const a = Math.random() * 6.283, r = (cx != null ? 120 : 300) + Math.random() * (cx != null ? 220 : 380);
         sp.style.setProperty('--dx', Math.cos(a) * r + 'px'); sp.style.setProperty('--dy', Math.sin(a) * r + 'px');
         sp.style.color = colors[i % colors.length]; sp.style.fontSize = (44 + Math.random() * 40) + 'px'; sp.style.animationDelay = (Math.random() * .35) + 's';
         el.appendChild(sp); setTimeout(() => sp.remove(), 2300);
