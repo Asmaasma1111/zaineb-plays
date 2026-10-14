@@ -89,7 +89,7 @@ def cmd_lines(a):
         if c.get('mission'): add(f'mission:{c["id"]}', c['mission'], 'mission')
     for i, t in enumerate(d['feedback_lines']['correct']): add(f'fb:correct:{i}', t, 'fb')
     for i, t in enumerate(d['feedback_lines']['try_again']): add(f'fb:try:{i}', t, 'fb')
-    add('fb:session_end', d['feedback_lines']['session_end'], 'fb'); add('fb:rest', d['feedback_lines']['rest'], 'fb')
+    add('fb:session_end', d['feedback_lines']['session_end'], 'fb'); add('fb:rest', d['feedback_lines']['rest'], 'fb'); add('fb:stage_done', d['feedback_lines']['stage_done'], 'fb')
     for i, t in enumerate(['واحد', 'اثنين', 'ثلاثة', 'أربعة', 'خمسة']): add(f'count:{i+1}', t, 'count')
     for i, t in enumerate(['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!']): add(f'mission:default:{i}', t, 'mission')
     nums = ['ملصق واحد', 'زوج ملصقات', 'ثلاثة ملصقات', 'أربعة ملصقات', 'خمسة ملصقات', 'ستة ملصقات', 'سبعة ملصقات', 'ثمانية ملصقات', 'تسعة ملصقات', 'عشرة ملصقات',
@@ -99,7 +99,7 @@ def cmd_lines(a):
             'سبعة وثلاثين ملصق', 'ثمانية وثلاثين ملصق', 'تسعة وثلاثين ملصق', 'أربعين ملصق']
     for i, t in enumerate(nums): add(f'st:count:{i+1}', f'عندك {t}!'.replace('ملصق', 'مُلصق'), 'st')
     for k, t in [('st:win', 'زينب ربحتي مُلصق!'), ('st:look', 'واو! شوفي المُلصق!'), ('st:stick', 'نلصقوه في الدفتر!'), ('st:giggle', 'هههه!'), ('st:book', 'هذا دفتر المُلصقات تاعك!'), ('st:open', 'افتحي الهدية!')]: add(k, t, 'st')
-    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'ششش... خمس دقايق أخرين... زززز', 'آآآه... راني فقت! نلعبو؟']): add(f'ui:{i}', t, 'ui')
+    for i, t in enumerate(['أهلاً زينب! نلعبو؟', 'يا زينب! نلعبو مرة أخرى؟', 'نرتاحو شويا... ونعاودو من بعد!', 'بدلنا اللعبة!', 'خذيتي نجمة!', 'آني راقد زينب... مباعدة نلعبوا... زززز', 'آآآه... راني فقت! نلعبو؟']): add(f'ui:{i}', t, 'ui')
     # batches: keep order, cap by characters so every take stays ~1.5-2 min
     batches, cur, chars = [], [], 0
     for l in lines:

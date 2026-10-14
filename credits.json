@@ -142,19 +142,6 @@
    "via": "Openverse"
   },
   {
-   "asset": "milk",
-   "cards": [
-    "1-11"
-   ],
-   "title": "Two Glasses of Milk",
-   "creator": "Alabama Extension",
-   "source": "flickr",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://www.flickr.com/photos/184594136@N08/52633675771",
-   "via": "Openverse"
-  },
-  {
    "asset": "bread",
    "cards": [
     "1-12",
@@ -339,47 +326,6 @@
    "license": "Public Domain Mark",
    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
    "link": "https://www.flickr.com/photos/10120408@N08/27880430650",
-   "via": "Openverse"
-  },
-  {
-   "asset": "cat-under-table",
-   "cards": [
-    "4-03"
-   ],
-   "title": "Free ginger cat sitting image",
-   "creator": null,
-   "source": "rawpixel",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://www.rawpixel.com/image/5910964/photo-image-public-domain-cat-cute",
-   "via": "Openverse"
-  },
-  {
-   "asset": "full-glass",
-   "cards": [
-    "4-05",
-    "6-05"
-   ],
-   "title": "Glass of water ouside",
-   "creator": "Kurt Kaiser",
-   "source": "wikimedia",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://commons.wikimedia.org/w/index.php?curid=105399729",
-   "via": "Openverse"
-  },
-  {
-   "asset": "empty-glass",
-   "cards": [
-    "4-05",
-    "6-05"
-   ],
-   "title": "Empty Glass",
-   "creator": "z0rc",
-   "source": "flickr",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://www.flickr.com/photos/134252087@N02/20015868192",
    "via": "Openverse"
   },
   {
@@ -609,32 +555,6 @@
    "via": "Openverse"
   },
   {
-   "asset": "sun",
-   "cards": [
-    "6-04"
-   ],
-   "title": "sun blazes clear sky hillside",
-   "creator": null,
-   "source": "rawpixel",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://www.rawpixel.com/image/5974899/the-sun-blazes-clear-sky-over-hillside",
-   "via": "Openverse"
-  },
-  {
-   "asset": "pouring-water",
-   "cards": [
-    "6-05"
-   ],
-   "title": "Emptying a glass bottle (Unsplash).jpg",
-   "creator": "Benjamin Voros <a rel=\"nofollow\" class=\"external text\" href=\"https://unsplash.com/@vorosbenisop\">vorosbenisop</a>",
-   "source": "wikimedia commons",
-   "license": "CC0 1.0",
-   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-   "link": "https://commons.wikimedia.org/wiki/File:Emptying_a_glass_bottle_(Unsplash).jpg",
-   "via": "Wikimedia Commons"
-  },
-  {
    "asset": "box",
    "cards": [
     "6-07"
@@ -685,6 +605,112 @@
    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
    "link": "https://www.flickr.com/photos/50398299@N08/15831399794",
    "via": "Openverse"
+  },
+  {
+   "asset": "face-eye",
+   "cards": [
+    "1-13"
+   ],
+   "title": "Portrait of Young Boy Smiling with Blue Eyes",
+   "creator": "Boko Shots",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/31831607/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "face-nose",
+   "cards": [
+    "1-14"
+   ],
+   "title": "Boy in a Blue Shirt Picking His Nose",
+   "creator": "Yan Krukau",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/8430407/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "milk",
+   "cards": [
+    "1-11"
+   ],
+   "title": "Clear Milk Glass",
+   "creator": "Pixabay",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/236010/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "cat-under-table",
+   "cards": [
+    "4-03"
+   ],
+   "title": "Close-Up Shot of a Kitten",
+   "creator": "Swapnil Kulkarni",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/8860906/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "full-glass",
+   "cards": [
+    "4-05",
+    "6-05"
+   ],
+   "title": "Clear Drinking Glass With Clear Liquid",
+   "creator": "Engin Akyurt",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/10965842/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "pouring-water",
+   "cards": [
+    "6-05"
+   ],
+   "title": "Clear Glass Pitcher Pouring Water on Clear Drinking Glass",
+   "creator": "Wallace Chuck",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/3500006/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "sun",
+   "cards": [
+    "6-04"
+   ],
+   "title": "Sunlight and Clouds with Blue Sky",
+   "creator": "Engin Akyurt",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/7085605/",
+   "via": "Pexels"
+  },
+  {
+   "asset": "empty-glass",
+   "cards": [
+    "4-05",
+    "6-05"
+   ],
+   "title": "Clear Drinking Glass on Gray Surface",
+   "creator": "Mara Diezinger",
+   "source": "Pexels",
+   "license": "Pexels License",
+   "license_url": "https://www.pexels.com/license/",
+   "link": "https://www.pexels.com/photo/8960418/",
+   "via": "Pexels"
   }
  ],
  "illustrations": "Zouzou the camel, the child character, the feelings faces, the shapes and the silly scenes are original SVG drawings made for this app (2026). Font: Baloo Bhaijaan 2 (Ek Type, SIL Open Font License)."

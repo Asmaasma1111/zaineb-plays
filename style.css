@@ -196,9 +196,9 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .play { justify-content: flex-start; }
 .play .topbar { height: 96px; flex: none; }
 .play .card-area { flex: 1; min-height: 0; }
-.play .pic { width: min(360px, 46vh); height: min(360px, 46vh); }
-.play .pic.sm { width: min(280px, 38vh); height: min(280px, 38vh); }
-.play .grid4 .pic.sm { width: min(230px, 26vh); height: min(230px, 26vh); }
+.play .pic { width: min(400px, 50vh); height: min(400px, 50vh); }
+.play .pic.sm { width: min(310px, 42vh); height: min(310px, 42vh); }
+.play .grid4 .pic.sm { width: min(250px, 28vh); height: min(250px, 28vh); }
 .play .seq .pool .pic.sm, .play .seq .slot { width: min(190px, 24vh); height: min(190px, 24vh); }
 .play .count-row.n4 .pic.sm, .play .count-row.n5 .pic.sm { width: min(200px, 30vh); height: min(200px, 30vh); }
 .play .pic.big-hand { width: min(420px, 50vh); height: min(420px, 50vh); }

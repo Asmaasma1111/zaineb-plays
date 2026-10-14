@@ -109,7 +109,7 @@
     const wakingUp = wasAsleep && can.ok; wasAsleep = !can.ok;
     const cur = E.currentStage(P, DATA.cards, DATA.levels);
     const bubble = can.ok ? (P.sessionCount === 0 ? 'أهلاً زينب! نلعبو؟' : 'يا زينب! نلعبو مرة أخرى؟')
-                 : (can.reason === 'cap' ? DATA.feedback_lines.rest : 'نرتاحو شويا... ونعاودو من بعد!');
+                 : 'آني راقد زينب... مباعدة نلعبوا... زززز';
     const s = screen('home', `
       <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span></div>
         <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><img class="book-img" src="img/zouzou3d/sticker-book.webp" alt=""><span>${((P.stickers || {}).got || []).length}</span></button></div>
@@ -125,7 +125,7 @@
     if (!can.ok) slot.addEventListener('click', () => {
       if (slot.dataset.busy) return; slot.dataset.busy = '1';
       const bub = s.querySelector('.bubble'); const old = bub.textContent; Voice.unlock();
-      setMascot(slot, 'refuse'); bub.textContent = 'ششش... خمس دقايق أخرين... زززز'; Voice.play('ui:5', 'ششش... خمس دقايق أخرين');
+      setMascot(slot, 'refuse'); bub.textContent = 'آني راقد زينب... مباعدة نلعبوا... زززز'; Voice.play('ui:5', 'آني راقد زينب... مباعدة نلعبوا');
       setTimeout(() => { setMascot(slot, 'sleep'); bub.textContent = old; delete slot.dataset.busy; }, 3200);
     });
     s.querySelector('#start').addEventListener('click', () => { if (E.canStart(P, new Date()).ok) { Voice.unlock(); Sfx.get(); Sfx.snoreStop(); startSession(); } });
@@ -329,7 +329,10 @@
   /* ---------- END OF SESSION: star, mission, goodbye ---------- */
   async function endSession() {
     const played = S.cards.slice(); const today = S.today; const now = new Date();
+    const doneStages = () => DATA.levels.filter(l => { const st = E.stageStats(P, DATA.cards, l.stage); return E.isUnlocked(P, DATA.cards, l.stage) && st.known >= Math.ceil(st.total * (P.settings.unlockRatio || .8)); }).map(l => l.stage);
+    const doneBefore = doneStages();
     played.forEach(c => E.recordAnswer(P, c.id, S.results[c.id] || 'correct', today, P.sessionCount));
+    const stageJustDone = doneStages().some(st => !doneBefore.includes(st));   // she finished a whole stage this session
     const text = E.missionFor(played, rnd);
     const mc = played.find(c => c.mission === text); const di = E.DEFAULT_MISSIONS.indexOf(text);
     const mkey = mc ? `mission:${mc.id}` : `mission:default:${di}`;
@@ -343,7 +346,12 @@
     setMascot(m.querySelector('.mascot-slot'), 'wave');
     await Voice.play(mkey, text);
     await new Promise(res => { m.querySelector('#ok').onclick = res; });
-    await Voice.play('fb:session_end', DATA.feedback_lines.session_end);
+    if (stageJustDone) {                                                        // whole stage finished: Zouzou's big bravo, then off to the toys
+      const b = screen('end stage-done', `<div class="center"><div class="mascot-slot" data-size="240"></div><div class="bubble big">${DATA.feedback_lines.stage_done}</div><button class="btn-big green" id="ok">تم ✓</button></div>`);
+      setMascot(b.querySelector('.mascot-slot'), 'clap'); confetti(50); Sfx.fanfare();
+      await Voice.play('fb:stage_done', DATA.feedback_lines.stage_done);
+      await new Promise(res => { b.querySelector('#ok').onclick = res; setTimeout(res, 10000); });
+    } else await Voice.play('fb:session_end', DATA.feedback_lines.session_end);
     S = null; renderHome();
   }
 
