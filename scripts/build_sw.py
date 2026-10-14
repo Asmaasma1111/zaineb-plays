@@ -1,7 +1,7 @@
 """Write sw.js with a precache list of every file the app needs offline, and a fresh VERSION."""
 import os, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-files = ['./', 'index.html', 'style.css?v=19', 'mascot.js?v=19', 'engine.js?v=19', 'stickerbook.js?v=19', 'app.js?v=19', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
+files = ['./', 'index.html', 'style.css?v=20', 'mascot.js?v=20', 'engine.js?v=20', 'stickerbook.js?v=20', 'app.js?v=20', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
 for d in ('fonts', 'img', 'img/zouzou3d', 'icons', 'audio', 'stickers'):
     p = os.path.join(ROOT, d)
     if os.path.isdir(p): files += [f'{d}/{f}' for f in sorted(os.listdir(p)) if not f.startswith('.') and f != 'fonts.css']
@@ -19,6 +19,12 @@ self.addEventListener('activate', e => {{
 }});
 self.addEventListener('fetch', e => {{
   if (e.request.method !== 'GET' || !e.request.url.startsWith(self.location.origin)) return;
+  const url = new URL(e.request.url); const isPage = e.request.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('index.html');
+  if (isPage) {{   // the entry page: network first when online, so a new version is picked up on the next open; cache when offline
+    e.respondWith(fetch(e.request).then(res => {{ if (res.ok) {{ const copy = res.clone(); caches.open(VERSION).then(c => c.put('index.html', copy)); }} return res; }})
+      .catch(() => caches.match('index.html', {{ ignoreSearch: true }})));
+    return;
+  }}
   e.respondWith(caches.match(e.request, {{ ignoreSearch: false }}).then(r => r || caches.match(e.request, {{ ignoreSearch: true }})).then(r => r || fetch(e.request).then(res => {{
     if (res.ok) {{ const copy = res.clone(); caches.open(VERSION).then(c => c.put(e.request, copy)); }} return res;
   }}).catch(() => caches.match('index.html'))));
