@@ -24,13 +24,13 @@ test('isDue: box 1 is due next session, box 2+ by date', () => {
   assert.equal(E.isDue(p, '1-01', '2026-10-09', 5), false); assert.equal(E.isDue(p, '1-01', '2026-10-10', 5), true);
 });
 
-test('unlock rule: stage 2 opens at 80% of stage 1 known (13 of 16), stages open in order', () => {
+test('unlock rule: stage 2 opens at 60% of stage 1 known (10 of 16), stages open in order', () => {
   const p = E.emptyProgress();
   const s1 = E.stageCards(cards, 1); assert.equal(s1.length, 16);
   assert.ok(E.isUnlocked(p, cards, 1)); assert.ok(!E.isUnlocked(p, cards, 2));
   const know = (id) => { E.recordAnswer(p, id, 'correct', '2026-10-01', 0); };
-  s1.slice(0, 12).forEach(c => know(c.id)); assert.ok(!E.isUnlocked(p, cards, 2), '12/16 is not enough');
-  know(s1[12].id); assert.ok(E.isUnlocked(p, cards, 2), '13/16 opens stage 2');
+  s1.slice(0, 9).forEach(c => know(c.id)); assert.ok(!E.isUnlocked(p, cards, 2), '9/16 is not enough');
+  know(s1[9].id); assert.ok(E.isUnlocked(p, cards, 2), '10/16 opens stage 2');
   assert.ok(!E.isUnlocked(p, cards, 3));
   p.manualUnlocked.push(4); assert.ok(E.isUnlocked(p, cards, 4), 'manual unlock works'); assert.ok(!E.isUnlocked(p, cards, 5));
   assert.equal(E.highestUnlocked(p, cards, levels), 2, 'highest contiguous unlocked stage');
@@ -101,4 +101,22 @@ test('bigger sessions: 10 cards by default, about 40% review, rest new; 4-hour n
   const s1 = E.buildSession(p, cards, levels, t, seeded(12)); assert.equal(s1.length, 10);
   assert.equal(s1.filter(c => p.cards[c.id]).length, 4, 'four reviews'); assert.equal(s1.filter(c => !p.cards[c.id]).length, 6, 'six new');
   assert.ok(!E.canStart(p, new Date(2026, 9, 9, 13, 0)).ok, 'still napping 3 h later'); assert.ok(E.canStart(p, new Date(2026, 9, 9, 14, 30)).ok, 'afternoon session after 4 h');
+});
+
+test('streak counts distinct days, the current run and the best run', () => {
+  const p = E.emptyProgress();
+  ['2026-10-10', '2026-10-10', '2026-10-11', '2026-10-13', '2026-10-14', '2026-10-15'].forEach(d => p.sessions.push({ date: d, endedAt: 0, cards: [] }));
+  assert.deepEqual(E.streak(p, '2026-10-15'), { days: 5, current: 3, best: 3 });
+  assert.deepEqual(E.streak(p, '2026-10-16'), { days: 5, current: 3, best: 3 }, 'yesterday still counts');
+  assert.deepEqual(E.streak(p, '2026-10-18'), { days: 5, current: 0, best: 3 }, 'a missed day breaks the run');
+  assert.deepEqual(E.streak(E.emptyProgress(), '2026-10-18'), { days: 0, current: 0, best: 0 });
+});
+
+test('when the open stages have no new cards left, a session peeks at the next stage instead of repeating known cards', () => {
+  const p = E.emptyProgress(); const t = '2026-10-17';
+  E.stageCards(cards, 1).forEach(c => E.recordAnswer(p, c.id, 'correct', '2026-10-01', 0));     // whole stage 1 known and not due
+  p.settings.unlockRatio = 2;                                                                    // keep stage 2 locked for the test
+  const s = E.buildSession(p, cards, levels, t, seeded(3));
+  assert.ok(s.some(c => c.stage === 2), 'stage-2 cards appear although stage 2 is locked');
+  assert.ok(!s.some(c => c.stage === 1 && E.isKnown(p, c.id) && !E.isDue(p, c.id, t, p.sessionCount)), 'no known, not-due stage-1 card is repeated');
 });

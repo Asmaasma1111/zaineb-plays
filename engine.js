@@ -3,7 +3,7 @@
 (function (root) {
   const BOX_DAYS = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 };   // box -> days until due
   const KNOWN_BOX = 3;
-  const DEFAULT_SETTINGS = { v: 3, sessionsPerDay: 2, cardsPerSession: 10, breakMinutes: 240, hints: true, unlockRatio: 0.8, bigPickAfter: 5 };
+  const DEFAULT_SETTINGS = { v: 4, sessionsPerDay: 2, cardsPerSession: 10, breakMinutes: 240, hints: true, unlockRatio: 0.6, bigPickAfter: 5 };
   const DEFAULT_MISSIONS = ['جيبيلي حاجة صفراء!', 'جيبيلي حاجة حمراء!', 'وريني حاجة مدوّرة!', 'نقزي ثلاث مرات!', 'روحي اعطي حضن لماما!'];
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
@@ -59,6 +59,15 @@
     return h;
   }
 
+  /* ---------- Streak: distinct play days, current run (ending today or yesterday), best run ---------- */
+  function streak(p, today) {
+    const days = [...new Set((p.sessions || []).map(s => s.date))].sort(); if (!days.length) return { days: 0, current: 0, best: 0 };
+    let best = 1, run = 1;
+    for (let i = 1; i < days.length; i++) { run = addDays(days[i - 1], 1) === days[i] ? run + 1 : 1; best = Math.max(best, run); }
+    const last = days[days.length - 1]; const current = (last === today || addDays(last, 1) === today) ? run : 0;
+    return { days: days.length, current, best };
+  }
+
   /* ---------- Daily cap ---------- */
   function sessionsOn(p, today) { return p.sessions.filter(s => s.date === today).length; }
   function canStart(p, now) {
@@ -94,9 +103,12 @@
     const fresh = stageCards(cards, cur).filter(c => !cardState(p, c.id));
     for (const c of fresh) { if (chosen.length >= N) break; take(c); }
 
-    // 3. still short? more due cards, then new cards from any unlocked stage, then least-recently-seen known cards
-    for (const c of due) take(c);
+    // 3. still short? new cards from any unlocked stage, then a peek at the NEXT stage (new beats repetition),
+    //    then the remaining due cards, then least-recently-seen known cards
     for (const c of pool.filter(c => !cardState(p, c.id))) take(c);
+    const nextStage = highestUnlocked(p, cards, levels) + 1;
+    for (const c of stageCards(cards, nextStage).filter(c => !cardState(p, c.id))) take(c);
+    for (const c of due) take(c);
     const rest = pool.filter(c => cardState(p, c.id)).sort((a, b) => ((p.cards[a.id].lastSeen || '') < (p.cards[b.id].lastSeen || '') ? -1 : 1));
     for (const c of rest) take(c);
 
@@ -161,6 +173,6 @@
   }
 
   const Engine = { BOX_DAYS, KNOWN_BOX, DEFAULT_SETTINGS, DEFAULT_MISSIONS, dateKey, addDays, emptyProgress, cardState, isKnown, isDue, recordAnswer,
-    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, buildSession, buildPractice, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
+    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, streak, buildSession, buildPractice, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
   if (typeof module !== 'undefined' && module.exports) module.exports = Engine; else root.Engine = Engine;
 })(typeof window !== 'undefined' ? window : globalThis);

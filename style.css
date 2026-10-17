@@ -387,3 +387,5 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 @keyframes pbpop { 0% { transform: translate(-50%, -50%) scale(1.12); } 100% { transform: translate(-50%, -50%) scale(1); } }
 .popit #again { position: absolute; bottom: 18px; right: 50%; transform: translateX(50%); }
 .popit #again.hidden { display: none; }
+
+.stars-row .streak { margin-right: 14px; font-size: 26px; color: #c0392b; }

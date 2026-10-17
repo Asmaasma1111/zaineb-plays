@@ -6,7 +6,7 @@
   let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {}, POPIT = {};   // S = current session
 
   /* ---------- storage ---------- */
-  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } if (p.settings.v < 4) { if (p.settings.unlockRatio >= 0.8) p.settings.unlockRatio = 0.6; p.settings.v = 4; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } }
 
   /* ---------- audio: recorded clips through one unlocked <audio>; device voice only when a clip is missing ---------- */
@@ -116,7 +116,7 @@
     const bubble = can.ok ? (P.sessionCount === 0 ? 'أهلاً زينب! نلعبو؟' : 'يا زينب! نلعبو مرة أخرى؟')
                  : 'آني راقد زينب... مباعدة نلعبوا... زززز';
     const s = screen('home', `
-      <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span></div>
+      <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span>${(() => { const k = E.streak(P, E.dateKey()); return k.current ? `<span class="streak" title="أيام متتالية">🔥 ${k.current}</span>` : ''; })()}</div>
         <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><img class="book-img" src="img/zouzou3d/sticker-book.webp" alt=""><span>${((P.stickers || {}).got || []).length}</span></button></div>
       <div class="hero">
         <div class="mascot-wrap"><div class="bubble">${bubble}</div><div class="mascot-slot" data-size="260"></div></div>
@@ -387,6 +387,7 @@
       <div class="ptabs"><button data-t="prog" class="on">التقدم</button><button data-t="set">الإعدادات</button><button data-t="data">نسخة احتياطية</button><button data-t="cred">المصادر</button></div>
       <div class="ptab" data-t="prog">
         <table class="ptable">${stageRows}</table>
+        <p>${(() => { const k = E.streak(P, E.dateKey()); return `<b>أيام اللعب:</b> ${k.days} يوم · <b>متتالية الآن:</b> ${k.current} 🔥 · <b>أطول متتالية:</b> ${k.best}`; })()}</p>
         <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>المُلصقات:</b> ${((P.stickers || {}).got || []).length} / ${STICKERS.length} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
         <p><b>الكلمات المعروفة (${known.length}):</b> ${known.join('، ') || '—'}</p>
         <p><b>دفتر النجوم:</b> ${P.starBook.map(s => '★').join('') || '—'}</p>
