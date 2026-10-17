@@ -3,7 +3,7 @@
   const E = window.Engine, M = window.Mascot;
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
-  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {};   // S = current session
+  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {}, POPIT = {};   // S = current session
 
   /* ---------- storage ---------- */
   function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
@@ -459,12 +459,12 @@
 
   /* ---------- boot ---------- */
   async function boot() {
-    let stk; [DATA, MEDIA, stk, CLOUDS] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
+    let stk; [DATA, MEDIA, stk, CLOUDS, POPIT] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/popit/layout.json').then(r => r.json()).catch(() => ({})), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
     STICKERS = stk.stickers;
     P = load();
     await Voice.init();
     await maybeRestoreFromLink();
-    Toy = Popit.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti });
+    Toy = Popit.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, layout: POPIT, pick: () => P.sessionCount });
     Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
     Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();   // stickers earned before this version go straight into the book, no award flood
     renderHome();
