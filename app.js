@@ -6,7 +6,9 @@
   let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {}, POPIT = {};   // S = current session
 
   /* ---------- storage ---------- */
-  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } if (p.settings.v < 4) { if (p.settings.unlockRatio >= 0.8) p.settings.unlockRatio = 0.6; p.settings.v = 4; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } if (p.settings.v < 4) { if (p.settings.unlockRatio >= 0.8) p.settings.unlockRatio = 0.6; p.settings.v = 4; } ensureStart(p); return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  /* Zaineb's first day with the app was 9 Oct 2026; the iPad log was reset once, so the log alone would under-count */
+  function ensureStart(p) { if (!p.startDate) { const first = (p.sessions || []).map(s => s.date).sort()[0]; p.startDate = first && first < '2026-10-09' ? first : '2026-10-09'; } return p; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } }
 
   /* ---------- audio: recorded clips through one unlocked <audio>; device voice only when a clip is missing ---------- */
@@ -110,13 +112,14 @@
   /* ---------- HOME ---------- */
   let wasAsleep = false;
   function renderHome() {
+    ensureStart(P);
     const can = E.canStart(P, new Date());
     const wakingUp = wasAsleep && can.ok; wasAsleep = !can.ok;
     const cur = E.currentStage(P, DATA.cards, DATA.levels);
     const bubble = can.ok ? (P.sessionCount === 0 ? 'أهلاً زينب! نلعبو؟' : 'يا زينب! نلعبو مرة أخرى؟')
                  : 'آني راقد زينب... مباعدة نلعبوا... زززز';
     const s = screen('home', `
-      <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span>${(() => { const k = E.streak(P, E.dateKey()); return k.current ? `<span class="streak" title="أيام متتالية">🔥 ${k.current}</span>` : ''; })()}</div>
+      <div class="topbar"><div class="stars-row"><img class="star-img" src="img/zouzou3d/star.webp" alt=""><span>${P.stars}</span>${(() => { const n = E.daysSince(P.startDate, E.dateKey()); return n ? `<span class="streak" title="اليوم منذ البداية">🔥 يوم ${n}</span>` : ''; })()}</div>
         <h1 class="title">زينب تلعب وتتعلم</h1><button class="btn-book" id="book"><img class="book-img" src="img/zouzou3d/sticker-book.webp" alt=""><span>${((P.stickers || {}).got || []).length}</span></button></div>
       <div class="hero">
         <div class="mascot-wrap"><div class="bubble">${bubble}</div><div class="mascot-slot" data-size="260"></div></div>
@@ -387,7 +390,7 @@
       <div class="ptabs"><button data-t="prog" class="on">التقدم</button><button data-t="set">الإعدادات</button><button data-t="data">نسخة احتياطية</button><button data-t="cred">المصادر</button></div>
       <div class="ptab" data-t="prog">
         <table class="ptable">${stageRows}</table>
-        <p>${(() => { const k = E.streak(P, E.dateKey()); return `<b>أيام اللعب:</b> ${k.days} يوم · <b>متتالية الآن:</b> ${k.current} 🔥 · <b>أطول متتالية:</b> ${k.best}`; })()}</p>
+        <p>${(() => { const k = E.streak(P, E.dateKey()); const n = E.daysSince(P.startDate, E.dateKey()); return `<b>نستعمل التطبيق منذ</b> ${P.startDate || '—'} · <b>اليوم</b> ${n} 🔥 · <b>أيام لعب مسجلة:</b> ${k.days} · <b>متتالية الآن:</b> ${k.current} · <b>أطول متتالية:</b> ${k.best}`; })()}</p>
         <p><b>الحصص:</b> ${P.sessionCount} · <b>النجوم:</b> ${P.stars} · <b>المُلصقات:</b> ${((P.stickers || {}).got || []).length} / ${STICKERS.length} · <b>اليوم:</b> ${E.sessionsOn(P, E.dateKey())} / ${st.sessionsPerDay}</p>
         <p><b>الكلمات المعروفة (${known.length}):</b> ${known.join('، ') || '—'}</p>
         <p><b>دفتر النجوم:</b> ${P.starBook.map(s => '★').join('') || '—'}</p>
@@ -397,6 +400,7 @@
         <label>بطاقات في الحصة <input type="number" min="3" max="15" id="cps" value="${st.cardsPerSession}"></label>
         <label>نوم زوزو بين الحصتين (دقائق؛ 240 = حصة الصباح وحصة العشية) <input type="number" min="0" max="600" id="brk" value="${st.breakMinutes}"></label>
         <label>حصص لكل مُلصق (1 = مُلصق بعد كل حصة) <input type="number" min="1" max="5" id="stper" value="${st.stickerPer || 1}"></label>
+        <label>تاريخ بداية استعمال التطبيق <input type="date" id="startdate" value="${P.startDate || ''}"></label>
         <label><input type="checkbox" id="hints" ${st.hints ? 'checked' : ''}> إظهار تلميحات الكبار تحت البطاقة</label>
         <p><button class="btn-adult" id="unlock" ${next ? '' : 'disabled'}>فتح المرحلة ${next ? next.stage : ''} يدوياً</button></p>
         <p><select id="resetcard"><option value="">— إعادة بطاقة واحدة —</option>${DATA.cards.filter(c => P.cards[c.id]).map(c => `<option value="${c.id}">${c.id} ${c.word}</option>`).join('')}</select> <button class="btn-adult" id="resetone">إعادة</button></p>
@@ -418,6 +422,7 @@
     const setNum = (id, key, lo, hi) => o.querySelector(id).onchange = (e) => { const v = Math.max(lo, Math.min(hi, +e.target.value || lo)); P.settings[key] = v; e.target.value = v; save(); };
     setNum('#spd', 'sessionsPerDay', 1, 6); setNum('#stper', 'stickerPer', 1, 5); setNum('#cps', 'cardsPerSession', 3, 15); setNum('#brk', 'breakMinutes', 0, 600);
     o.querySelector('#hints').onchange = (e) => { P.settings.hints = e.target.checked; save(); };
+    o.querySelector('#startdate').onchange = (e) => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) { P.startDate = e.target.value; save(); } };
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
     o.querySelector('#resetall').onclick = () => { if (confirm('مسح كل تقدم زينب؟ لا يمكن التراجع.')) { P = E.emptyProgress(); save(); o.remove(); renderHome(); } };

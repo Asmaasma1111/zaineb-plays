@@ -120,3 +120,7 @@ test('when the open stages have no new cards left, a session peeks at the next s
   assert.ok(s.some(c => c.stage === 2), 'stage-2 cards appear although stage 2 is locked');
   assert.ok(!s.some(c => c.stage === 1 && E.isKnown(p, c.id) && !E.isDue(p, c.id, t, p.sessionCount)), 'no known, not-due stage-1 card is repeated');
 });
+
+test('day number since the start is inclusive', () => {
+  assert.equal(E.daysSince('2026-10-09', '2026-10-17'), 9); assert.equal(E.daysSince('2026-10-09', '2026-10-09'), 1); assert.equal(E.daysSince(null, '2026-10-17'), 0);
+});

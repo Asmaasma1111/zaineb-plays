@@ -68,6 +68,9 @@
     return { days: days.length, current, best };
   }
 
+  /* day number since the app's first day (inclusive): started 9 Oct, today 17 Oct -> day 9 */
+  function daysSince(startKey, today) { if (!startKey) return 0; const d = (k) => { const [y, m, dd] = k.split('-').map(Number); return Date.UTC(y, m - 1, dd); }; return Math.max(0, Math.round((d(today) - d(startKey)) / 86400000) + 1); }
+
   /* ---------- Daily cap ---------- */
   function sessionsOn(p, today) { return p.sessions.filter(s => s.date === today).length; }
   function canStart(p, now) {
@@ -173,6 +176,6 @@
   }
 
   const Engine = { BOX_DAYS, KNOWN_BOX, DEFAULT_SETTINGS, DEFAULT_MISSIONS, dateKey, addDays, emptyProgress, cardState, isKnown, isDue, recordAnswer,
-    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, streak, buildSession, buildPractice, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
+    stageCards, stageStats, isUnlocked, highestUnlocked, currentStage, sessionsOn, canStart, streak, daysSince, buildSession, buildPractice, pickDistractors, choicesFor, finishSession, missionFor, shuffle };
   if (typeof module !== 'undefined' && module.exports) module.exports = Engine; else root.Engine = Engine;
 })(typeof window !== 'undefined' ? window : globalThis);
