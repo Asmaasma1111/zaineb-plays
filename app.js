@@ -189,15 +189,15 @@
     const s = screen('play', `
       <div class="topbar"><div class="progress">${dots}</div><div></div><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button></div>
       <div class="card-area">${inner}${side ? `<div class="side">${side}</div>` : ''}</div>
-      <div class="zouzou top"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="130"></div></div>
+      <div class="zouzou top peek"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="210"></div></div>
       <div class="word hidden" id="word">${c.word}</div>
       <div class="hint ${P.settings.hints ? '' : 'off'}">${c.parent}</div>`);
-    setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle', 130);
+    setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle', 210);
     s.querySelector('#home').addEventListener('click', () => { Voice.stop(); Sfx.stopTune(); S = null; renderHome(); });
     return s;
   }
   function zouzou(state, text) {
-    const el = $app.querySelector('.zouzou .mascot-slot'); setMascot(el, state); if (state !== 'idle') setTimeout(() => setMascot(el, 'idle'), 2200);
+    const el = $app.querySelector('.zouzou .mascot-slot'); const sz = +(el && el.dataset.size) || undefined; setMascot(el, state, sz); if (state !== 'idle') setTimeout(() => setMascot(el, 'idle', sz), 2200);
     const b = $app.querySelector('.zbubble'); if (!b) return;
     if (text) { b.textContent = text; b.hidden = false; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); clearTimeout(b._t); b._t = setTimeout(() => { b.hidden = true; }, 4500); }
   }

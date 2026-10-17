@@ -371,7 +371,9 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .zouzou.top .zbubble { margin: 0 0 20px; max-width: 420px; }
 .zouzou.top .zbubble::after { bottom: auto; right: -11px; top: 50%; transform: translateY(-50%); border: 12px solid transparent; border-left-color: #fff; border-right: 0; }
 .play .topbar { height: 148px; align-items: flex-start; padding-top: 18px; }
-.play .zouzou.top .mascot-slot { height: 140px; }
+/* only Zouzou's face and hands peek over the cards: the top 66 % of the pose, fading out at the bottom */
+.zouzou.top.peek .mascot-slot { height: 138px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 80%, transparent); mask-image: linear-gradient(#000 80%, transparent); filter: none; }
+.zouzou.top.peek .zbubble { margin-bottom: 36px; }
 
 /* pop-it (her 3D boards + bubbles) */
 .popit .topbar { height: 150px; flex: none; align-items: flex-start; padding-top: 14px; }
