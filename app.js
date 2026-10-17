@@ -3,7 +3,7 @@
   const E = window.Engine, M = window.Mascot;
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
-  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book = null, CLOUDS = {};   // S = current session
+  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {};   // S = current session
 
   /* ---------- storage ---------- */
   function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
@@ -71,6 +71,11 @@
       else if (kind === 'food') { glide(900, 300, 0, .12, .3); this.tone(1200, t0 + .15, .15, .22); this.tone(1500, t0 + .3, .2, .2); }                                        // pop pop
       else { [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => this.tone(f, t0 + i * .08, .5, .2)); }                                                                          // twinkle up
     },
+    popit(i) { const c = this.get(); if (!c) return; const t0 = c.currentTime; const f = 380 + Math.random() * 520;
+      const o = c.createOscillator(), v = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f * 1.6, t0); o.frequency.exponentialRampToValueAtTime(f * .55, t0 + .11);
+      v.gain.setValueAtTime(.001, t0); v.gain.exponentialRampToValueAtTime(.4, t0 + .008); v.gain.exponentialRampToValueAtTime(.001, t0 + .16); o.connect(v).connect(c.destination); o.start(t0); o.stop(t0 + .17);
+      const len = Math.floor(c.sampleRate * .03); const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let k = 0; k < len; k++) d[k] = (Math.random() * 2 - 1) * (1 - k / len);
+      const src = c.createBufferSource(); src.buffer = buf; const g = c.createGain(); g.gain.value = .25; src.connect(g).connect(c.destination); src.start(t0); },
     pageTurn() { const c = this.get(); if (!c) return; const t0 = c.currentTime; const len = c.sampleRate * .5; const buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       const n = c.createBufferSource(); n.buffer = buf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(900, t0); f.frequency.exponentialRampToValueAtTime(2400, t0 + .3); f.Q.value = .8;
       const g = c.createGain(); g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.12, t0 + .08); g.gain.linearRampToValueAtTime(0, t0 + .4); n.connect(f).connect(g).connect(c.destination); n.start(t0); n.stop(t0 + .45); },
@@ -181,10 +186,10 @@
     const s = screen('play', `
       <div class="topbar"><div class="progress">${dots}</div><div></div><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button></div>
       <div class="card-area">${inner}${side ? `<div class="side">${side}</div>` : ''}</div>
-      <div class="zouzou"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="180"></div></div>
+      <div class="zouzou top"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="130"></div></div>
       <div class="word hidden" id="word">${c.word}</div>
       <div class="hint ${P.settings.hints ? '' : 'off'}">${c.parent}</div>`);
-    setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle');
+    setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle', 130);
     s.querySelector('#home').addEventListener('click', () => { Voice.stop(); Sfx.stopTune(); S = null; renderHome(); });
     return s;
   }
@@ -355,6 +360,7 @@
     await Voice.play('ui:4', 'خذيتي نجمة!'); await wait(1500);
     if (!$app.querySelector('.end')) return;
     await new Promise(res => Book.awardAll(res));
+    await new Promise(res => Toy.play(res));                                     // pop-it time!
     const m = screen('end mission', `<div class="center"><div class="mascot-slot" data-size="220"></div><div class="bubble big">${text}</div><button class="btn-big green" id="ok">تم ✓</button></div>`);
     setMascot(m.querySelector('.mascot-slot'), 'wave');
     await Voice.play(mkey, text);
@@ -458,6 +464,7 @@
     P = load();
     await Voice.init();
     await maybeRestoreFromLink();
+    Toy = Popit.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti });
     Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
     Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();   // stickers earned before this version go straight into the book, no award flood
     renderHome();

@@ -1,7 +1,7 @@
 """Write sw.js with a precache list of every file the app needs offline, and a fresh VERSION."""
 import os, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-files = ['./', 'index.html', 'style.css?v=25', 'mascot.js?v=25', 'engine.js?v=25', 'stickerbook.js?v=25', 'app.js?v=25', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
+files = ['./', 'index.html', 'style.css?v=26', 'mascot.js?v=26', 'engine.js?v=26', 'stickerbook.js?v=26', 'popit.js?v=26', 'app.js?v=26', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
 for d in ('fonts', 'img', 'img/zouzou3d', 'icons', 'audio', 'stickers'):
     p = os.path.join(ROOT, d)
     if os.path.isdir(p): files += [f'{d}/{f}' for f in sorted(os.listdir(p)) if not f.startswith('.') and f != 'fonts.css']
