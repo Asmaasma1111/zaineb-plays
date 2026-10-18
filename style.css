@@ -391,3 +391,5 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .popit #again.hidden { display: none; }
 
 .stars-row .streak { margin-right: 14px; font-size: 26px; color: #c0392b; }
+
+.panel .steps { font-size: 22px; line-height: 1.7; padding-right: 28px; } .panel .steps li { margin: 6px 0; }

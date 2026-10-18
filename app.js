@@ -408,6 +408,7 @@
       </div>
       <div class="ptab hidden" data-t="data">
         <p><b>كود التقدم</b> — انسخيه من الجهاز (أو من سفاري) الذي فيه التقدم الصحيح، والصقيه هنا في التطبيق الآخر. على الآيباد، التطبيق على الشاشة الرئيسية وسفاري لهما حفظ منفصل.</p>
+        <p><button class="btn-adult" id="tohome">📲 انقلي هذا التقدم إلى أيقونة الشاشة الرئيسية</button></p>
         <p><button class="btn-adult" id="copycode">نسخ كود التقدم (${P.stars} نجوم)</button></p>
         <textarea id="code" rows="3" readonly placeholder="الكود يظهر هنا بعد الضغط على الزر"></textarea>
         <p><textarea id="paste" rows="3" placeholder="الصقي كود التقدم هنا"></textarea> <button class="btn-adult" id="applycode">استرجاع من الكود</button></p>
@@ -426,6 +427,15 @@
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
     o.querySelector('#resetall').onclick = () => { if (confirm('مسح كل تقدم زينب؟ لا يمكن التراجع.')) { P = E.emptyProgress(); save(); o.remove(); renderHome(); } };
+    o.querySelector('#tohome').onclick = async () => {
+      const tok = await makeRestoreCode(); document.querySelectorAll('link[rel="manifest"]').forEach(l => l.remove());
+      history.replaceState(null, '', location.pathname + '?restore=' + tok + '&nomanifest=1');
+      o.innerHTML = `<div class="panel parent" dir="rtl"><h2>الآن، في سفاري:</h2><ol class="steps">
+        <li>اضغطي زر المشاركة <b>⬆️</b> في أسفل الشاشة.</li><li>اختاري <b>«إضافة إلى الشاشة الرئيسية»</b> ثم <b>«إضافة»</b>.</li>
+        <li>احذفي الأيقونة القديمة من الشاشة الرئيسية.</li><li>افتحي الأيقونة الجديدة: ${P.stars} نجوم و ${((P.stickers || {}).got || []).length} مُلصقات يجيو معها.</li></ol>
+        <p>من بعد، العبي دائماً من الأيقونة. (التقدم هنا في سفاري يبقى كما هو.)</p><p><button class="btn-adult" id="back">رجوع</button></p></div>`;
+      o.querySelector('#back').onclick = () => { o.remove(); renderHome(); };
+    };
     o.querySelector('#copycode').onclick = async () => { const tok = await makeRestoreCode(); const ta = o.querySelector('#code'); ta.value = tok; ta.select(); try { await navigator.clipboard.writeText(tok); o.querySelector('#copycode').textContent = 'تم النسخ ✓'; } catch (e) { o.querySelector('#copycode').textContent = 'حددي الكود وانسخيه'; } };
     o.querySelector('#applycode').onclick = async () => { const tok = o.querySelector('#paste').value; if (!tok.trim()) return; if (await applyRestoreCode(tok, false)) { o.remove(); renderHome(); } };
     o.querySelector('#export').onclick = () => { const txt = JSON.stringify(P); o.querySelector('#json').value = txt; const b = new Blob([txt], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `zaineb-progress-${E.dateKey()}.json`; a.click(); };
@@ -437,7 +447,7 @@
 
   /* ---------- restore progress from a link (#restore=...) made on another device ---------- */
   async function maybeRestoreFromLink() {
-    const m = location.hash.match(/#restore=([A-Za-z0-9_-]+)/); if (!m) return;
+    const m = location.hash.match(/#restore=([A-Za-z0-9_-]+)/) || location.search.match(/[?&]restore=([A-Za-z0-9_-]+)/); if (!m) return;
     history.replaceState(null, '', location.pathname);
     let used = ''; try { used = localStorage.getItem(KEY + ':restored') || ''; } catch (e) {}
     if (used === m[1].slice(-40)) return;                                       // this code was already applied here: ignore it
@@ -465,6 +475,7 @@
 
   /* ---------- boot ---------- */
   async function boot() {
+    if (/[?&]nomanifest=1/.test(location.search)) document.querySelectorAll('link[rel="manifest"]').forEach(l => l.remove());
     let stk; [DATA, MEDIA, stk, POPIT, CLOUDS] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/popit/layout.json').then(r => r.json()).catch(() => ({})), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
     STICKERS = stk.stickers;
     P = load();
