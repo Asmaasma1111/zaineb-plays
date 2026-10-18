@@ -239,7 +239,7 @@ def cmd_split(a):
         for l, (s, e, h) in zip(lines, spans):
             if s is None: print('  MISSING', l['key'], l['text']); clips[l['key']] = {'batch': b, 'missing': True}; continue
             y = x[int(s * 0.01 * SR):int(e * 0.01 * SR)]; write_wav(os.path.join(W, 'clips', slug(l['key']) + '.wav'), y)
-            clips[l['key']] = {'batch': b, 'start': round(s * 0.01, 2), 'end': round(e * 0.01, 2), 'heard': h, 'sim': round(sim(l.get('tts', l['text']), h), 2)}
+            clips[l['key']] = {'batch': b, 'start': round(s * 0.01, 2), 'end': round(e * 0.01, 2), 'heard': h, 'sim': round(sim(l.get('tts', l['text']), h), 2), 'text': l['text']}
         dump(os.path.join(W, 'clips.json'), clips); print(b, 'done; ear calls', ear.n)
 def slug(key): return re.sub(r'[^a-z0-9]+', '-', key.lower()).strip('-')
 
@@ -264,6 +264,7 @@ def cmd_build(a):
     for l in L.values():
         c = clips.get(l['key'])
         if not c or c.get('missing'): continue
+        if c.get('text') and norm(c['text']) != norm(l['text']): print('STALE CLIP (text changed, re-record):', l['key'], '|', c['text'], '->', l['text']); continue
         if not c.get('verified') and not (os.environ.get('PREVIEW') and c.get('sim', 0) >= 0.8): continue
         fn = slug(l['key']) + '.m4a'
         subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', os.path.join(W, 'clips', slug(l['key']) + '.wav'), '-c:a', 'aac', '-b:a', '64k', os.path.join(out, fn)], check=True)

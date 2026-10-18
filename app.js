@@ -465,7 +465,7 @@
 
   /* ---------- boot ---------- */
   async function boot() {
-    let stk; [DATA, MEDIA, stk, CLOUDS, POPIT] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/popit/layout.json').then(r => r.json()).catch(() => ({})), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
+    let stk; [DATA, MEDIA, stk, POPIT, CLOUDS] = await Promise.all([fetch('zaineb_cards.json').then(r => r.json()), fetch('media.json').then(r => r.json()), fetch('stickers/stickers.json').then(r => r.json()), fetch('img/popit/layout.json').then(r => r.json()).catch(() => ({})), fetch('img/zouzou3d/clouds.json').then(r => r.json()).catch(() => ({}))]);
     STICKERS = stk.stickers;
     P = load();
     await Voice.init();
