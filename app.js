@@ -203,13 +203,14 @@
   function frame(c, inner, side) {
     const dots = S.cards.map((x, i) => `<i class="${i < S.i ? 'on' : (i === S.i ? 'now' : '')}"></i>`).join('');
     const s = screen('play', `
-      <div class="topbar"><div class="progress">${dots}</div><div></div><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button></div>
+      <div class="topbar"><div class="progress">${dots}</div><div></div><div class="tb-btns"><button class="btn-home" id="home" aria-label="الرئيسية">⌂</button><button class="btn-home btn-repeat" id="repeat" aria-label="أعيدي السؤال">🔊</button></div></div>
       <div class="card-area">${inner}${side ? `<div class="side">${side}</div>` : ''}</div>
       <div class="zouzou top peek"><div class="zbubble" hidden></div><div class="mascot-slot" data-size="210"></div></div>
       <div class="word hidden" id="word">${c.word}</div>
       <div class="hint ${P.settings.hints ? '' : 'off'}">${c.parent}</div>`);
     setMascot(s.querySelector('.zouzou .mascot-slot'), 'idle', 210);
     s.querySelector('#home').addEventListener('click', () => { Voice.stop(); Sfx.stopTune(); S = null; renderHome(); });
+    s.querySelector('#repeat').addEventListener('click', () => { Voice.stop(); zouzou('tilt', c.ask); Voice.play(k(c, 'ask'), c.ask); });   // hear the question again
     return s;
   }
   function zouzou(state, text) {
