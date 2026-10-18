@@ -1,6 +1,8 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "zaineb", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8160", "--bind", "127.0.0.1"], "port": 8160 }
+    { "name": "zaineb", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8160", "--bind", "127.0.0.1"], "port": 8160 },
+    { "name": "zaineb-alt", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8162", "--bind", "127.0.0.1"], "port": 8162 },
+    { "name": "mock-cloud", "runtimeExecutable": "node", "runtimeArgs": ["scripts/mock_cloud.js", "8161", "test-secret"], "port": 8161 }
   ]
 }

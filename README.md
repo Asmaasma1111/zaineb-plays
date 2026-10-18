@@ -5,7 +5,7 @@ A small offline picture-card app for Zaineb (age 3), played together with an adu
 
 - Plain HTML/CSS/JS, no build step. Open `index.html` through any static server (GitHub Pages).
 - `zaineb_cards.json` holds every card text; `media.json` maps cards to pictures; `audio/voice.json` maps lines to clips.
-- Tests: `node --test tests/engine.test.js`
+- Tests: `node --test tests/engine.test.js tests/stickers.test.js tests/sync.test.js`
 - Pictures: CC0 / public-domain photos (credits in `credits.json` and in the parent area) plus original SVG drawings.
 - Voice: recorded once with Gemini TTS (voice Kore); nothing is generated live and no API key ships with the app.
 
@@ -16,6 +16,11 @@ A small offline picture-card app for Zaineb (age 3), played together with an adu
 
 ## Parent area
 Press and hold Zouzou on the home screen for 3 seconds.
+
+## Cloud sync (one progress for Safari, the home-screen icon and the laptop)
+`config.js` holds the family's Google Apps Script web app URL (`apiUrl`) and `secret`; with an empty `apiUrl` nothing is
+sent and the app works exactly as before. Set-up, the merge rule and a Google-free test server are in `apps-script/README.md`.
+Tests: `node --test tests/engine.test.js tests/stickers.test.js tests/sync.test.js`.
 
 ## Rebuilding after a change
 - Pictures: `python3 scripts/process_images.py`, `python3 scripts/draw_svgs.py`, `python3 scripts/build_media.py`

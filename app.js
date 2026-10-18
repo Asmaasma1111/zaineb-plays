@@ -4,12 +4,27 @@
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
   let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {}, POPIT = {};   // S = current session
+  /* cloud sync (sync.js + apps-script/Code.gs). Empty apiUrl in config.js = everything stays on the device, as before.
+     On localhost only, ?api=<url> points the app at scripts/mock_cloud.js for testing. */
+  const CONFIG = Object.assign({ apiUrl: '', family: 'zaineb', secret: '' }, window.ZP_CONFIG || {});
+  const isDev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  if (isDev) { const q = new URLSearchParams(location.search); if (q.get('api')) { CONFIG.apiUrl = q.get('api'); CONFIG.secret = q.get('secret') || CONFIG.secret; } }
+  let Cloud = null, pendingRemote = null;   // a cloud copy that arrived during a session waits for the home screen
 
   /* ---------- storage ---------- */
-  function load() { try { const s = localStorage.getItem(KEY); if (s) { const p = Object.assign(E.emptyProgress(), JSON.parse(s)); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } if (p.settings.v < 4) { if (p.settings.unlockRatio >= 0.8) p.settings.unlockRatio = 0.6; p.settings.v = 4; } ensureStart(p); return p; } } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
+  /* a progress object from anywhere (this device, a restore code, a file, the cloud) brought up to the current shape */
+  function normalize(raw) { const p = Object.assign(E.emptyProgress(), raw); p.settings = Object.assign({}, E.DEFAULT_SETTINGS, p.settings || {}); if ((p.settings.v || 1) < 2) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 8); p.settings.v = 2; } if (p.settings.v < 3) { p.settings.cardsPerSession = Math.max(p.settings.cardsPerSession, 10); if (p.settings.breakMinutes <= 20) p.settings.breakMinutes = 240; p.settings.v = 3; } if (p.settings.v < 4) { if (p.settings.unlockRatio >= 0.8) p.settings.unlockRatio = 0.6; p.settings.v = 4; } ensureStart(p); return p; }
+  function load() { try { const s = localStorage.getItem(KEY); if (s) return normalize(JSON.parse(s)); } catch (e) { console.warn('storage read failed', e); } return E.emptyProgress(); }
   /* Zaineb's first day with the app was 9 Oct 2026; the iPad log was reset once, so the log alone would under-count */
   function ensureStart(p) { if (!p.startDate) { const first = (p.sessions || []).map(s => s.date).sort()[0]; p.startDate = first && first < '2026-10-09' ? first : '2026-10-09'; } return p; }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } }
+  /* save(): a change made here -> stamp it and send it to the cloud soon. save(false): a copy adopted from the cloud, kept as is. */
+  function save(stamp) { if (stamp !== false) P.updatedAt = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { console.warn('storage write failed', e); } if (stamp !== false && Cloud) Cloud.schedule(); }
+  /* the cloud copy wins: take it over quietly (stickers it earned go straight into the book), after the session if one is running */
+  function adoptRemote(remote) {
+    if (S) { pendingRemote = remote; return; }
+    P = normalize(remote); if (STICKERS) Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save(false);
+    if ($app.querySelector('.home') && !$app.querySelector('.overlay')) renderHome();
+  }
 
   /* ---------- audio: recorded clips through one unlocked <audio>; device voice only when a clip is missing ---------- */
   const Voice = {
@@ -113,6 +128,7 @@
   let wasAsleep = false;
   function renderHome() {
     ensureStart(P);
+    if (pendingRemote) { const r = pendingRemote; pendingRemote = null; if (window.Sync && Sync.core.pickWinner(P, r) === 'remote') return adoptRemote(r); }
     const can = E.canStart(P, new Date());
     const wakingUp = wasAsleep && can.ok; wasAsleep = !can.ok;
     const cur = E.currentStage(P, DATA.cards, DATA.levels);
@@ -408,6 +424,7 @@
       </div>
       <div class="ptab hidden" data-t="data">
         <p><b>كود التقدم</b> — انسخيه من الجهاز (أو من سفاري) الذي فيه التقدم الصحيح، والصقيه هنا في التطبيق الآخر. على الآيباد، التطبيق على الشاشة الرئيسية وسفاري لهما حفظ منفصل.</p>
+        <p class="cloudline"><b>☁️ المزامنة السحابية:</b> <span id="cloudtxt">…</span> <button class="btn-adult" id="syncnow" ${Cloud && Cloud.status().enabled ? '' : 'hidden'}>مزامنة الآن</button></p>
         <p><button class="btn-adult" id="tohome">📲 انقلي هذا التقدم إلى أيقونة الشاشة الرئيسية</button></p>
         <p><button class="btn-adult" id="copycode">نسخ كود التقدم (${P.stars} نجوم)</button></p>
         <textarea id="code" rows="3" readonly placeholder="الكود يظهر هنا بعد الضغط على الزر"></textarea>
@@ -426,7 +443,16 @@
     o.querySelector('#startdate').onchange = (e) => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) { P.startDate = e.target.value; save(); } };
     if (next) o.querySelector('#unlock').onclick = () => { P.manualUnlocked.push(next.stage); save(); o.remove(); openParent(); };
     o.querySelector('#resetone').onclick = () => { const id = o.querySelector('#resetcard').value; if (id) { delete P.cards[id]; save(); o.remove(); openParent(); } };
-    o.querySelector('#resetall').onclick = () => { if (confirm('مسح كل تقدم زينب؟ لا يمكن التراجع.')) { P = E.emptyProgress(); save(); o.remove(); renderHome(); } };
+    o.querySelector('#resetall').onclick = () => { if (confirm('مسح كل تقدم زينب؟ لا يمكن التراجع.')) { P = E.emptyProgress(); save(); if (Cloud) Cloud.schedule({ force: true, delay: 0 }); o.remove(); renderHome(); } };
+    const cloudText = (st) => { if (!st.enabled) return 'غير مفعّلة (apiUrl فارغ في config.js)';
+      const when = st.lastSyncAt ? new Date(st.lastSyncAt).toLocaleString('ar-DZ', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+      if (st.busy) return 'جارٍ المزامنة…'; if (st.last === 'ok' && !st.pending) return `آخر مزامنة: ${when} ✓`;
+      if (st.last === 'offline' || (st.pending && st.last === 'never')) return `في الانتظار (بدون إنترنت) · آخر مزامنة: ${when}`;
+      if (st.last === 'error') return `تعذّر الاتصال (${st.error || '?'}) · آخر مزامنة: ${when}`; return `آخر مزامنة: ${when}`; };
+    const cloudEl = o.querySelector('#cloudtxt'); cloudEl.textContent = cloudText(Cloud ? Cloud.status() : { enabled: false });
+    if (Cloud) { Cloud.onChange(st => { if ($app.contains(cloudEl)) cloudEl.textContent = cloudText(st); });
+      o.querySelector('#syncnow').onclick = async () => { const b = o.querySelector('#syncnow'); b.disabled = true; cloudEl.textContent = 'جارٍ المزامنة…'; const r = await Cloud.now(); b.disabled = false;
+        if (r && r.adopted) { o.remove(); openParent(); alert(`رجع التقدم من السحابة: ${P.stars} نجوم و ${P.sessionCount} حصص.`); } }; }
     o.querySelector('#tohome').onclick = async () => {
       const tok = await makeRestoreCode(); document.querySelectorAll('link[rel="manifest"]').forEach(l => l.remove());
       history.replaceState(null, '', location.pathname + '?restore=' + tok + '&nomanifest=1');
@@ -439,7 +465,7 @@
     o.querySelector('#copycode').onclick = async () => { const tok = await makeRestoreCode(); const ta = o.querySelector('#code'); ta.value = tok; ta.select(); try { await navigator.clipboard.writeText(tok); o.querySelector('#copycode').textContent = 'تم النسخ ✓'; } catch (e) { o.querySelector('#copycode').textContent = 'حددي الكود وانسخيه'; } };
     o.querySelector('#applycode').onclick = async () => { const tok = o.querySelector('#paste').value; if (!tok.trim()) return; if (await applyRestoreCode(tok, false)) { o.remove(); renderHome(); } };
     o.querySelector('#export').onclick = () => { const txt = JSON.stringify(P); o.querySelector('#json').value = txt; const b = new Blob([txt], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `zaineb-progress-${E.dateKey()}.json`; a.click(); };
-    o.querySelector('#import').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { const p = JSON.parse(await f.text()); if (!p.cards) throw 0; if (confirm('استبدال التقدم الحالي بالملف؟')) { P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); save(); o.remove(); renderHome(); } } catch (err) { alert('ملف غير صالح'); } };
+    o.querySelector('#import').onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { const p = JSON.parse(await f.text()); if (!p.cards) throw 0; if (confirm('استبدال التقدم الحالي بالملف؟')) { P = normalize(p); save(); if (Cloud) Cloud.schedule({ force: true, delay: 0 }); o.remove(); renderHome(); } } catch (err) { alert('ملف غير صالح'); } };
     fetch('credits.json').then(r => r.json()).then(cr => {
       o.querySelector('#credits').innerHTML = `<p>${cr.illustrations}</p><p>الملصقات: Microsoft Fluent Emoji 3D (MIT) مع إطار وأوجه مضافة، والجيلي اللامع مرسوم خصيصاً للتطبيق. الأصوات مصنوعة داخل التطبيق.</p><table class="ptable" dir="ltr">${cr.photos.map(p => `<tr><td><img src="img/${p.asset}.webp" width="40"></td><td>${p.title || p.asset}</td><td>${p.creator || ''}</td><td><a href="${p.license_url}" target="_blank">${p.license}</a></td><td>${p.link ? `<a href="${p.link}" target="_blank">${p.source}</a>` : p.source} · ${p.via}</td></tr>`).join('')}</table>`;
     }).catch(() => {});
@@ -467,7 +493,7 @@
     try {
       const p = await decodeRestoreCode(tok); const mine = P.sessionCount || 0;
       if (mine > 0 && !confirm(`استرجاع التقدم من الجهاز الآخر (${p.stars} نجوم، ${p.sessionCount} حصص)؟ سيستبدل التقدم الموجود هنا (${P.stars} نجوم).`)) return false;
-      P = Object.assign(E.emptyProgress(), p); P.settings = Object.assign({}, E.DEFAULT_SETTINGS, P.settings || {}); if (STICKERS) Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();
+      P = normalize(p); if (STICKERS) Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save(); if (Cloud) Cloud.schedule({ force: true, delay: 0 });
       try { localStorage.setItem(KEY + ':restored', tok.trim().replace(/^.*#restore=/, '').slice(-40)); } catch (e) {}
       alert(`تم! ${P.stars} نجوم و ${P.sessionCount} حصص رجعت لزينب.`); return true;
     } catch (e) { alert(fromLink ? 'الرابط ما خدمش. جربي مرة أخرى.' : 'الكود ما خدمش. تأكدي أنك لصقتي الكود كامل.'); return false; }
@@ -483,7 +509,11 @@
     await maybeRestoreFromLink();
     Toy = Popit.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, layout: POPIT, pick: () => P.sessionCount });
     Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
-    Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1).forEach(e => { e.seen = true; }); save();   // stickers earned before this version go straight into the book, no award flood
+    { const fresh = Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); if (fresh.length) { fresh.forEach(e => { e.seen = true; }); save(); } }   // stickers earned before this version go straight into the book, no award flood
+    if (window.Sync && CONFIG.apiUrl) {
+      Cloud = Sync.mount({ config: CONFIG, getP: () => P, adopt: adoptRemote, busy: () => !!S });
+      await Promise.race([Cloud.boot(), wait(3000)]);                            // usually the cloud answers first; if not, home shows and the copy is adopted on arrival
+    }
     renderHome();
     const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
     if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) {
@@ -491,7 +521,7 @@
       navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !window.__reloaded) { window.__reloaded = true; if (S) window.__pendingReload = true; else location.reload(); } had = true; });   // a new version took over: load it
       navigator.serviceWorker.register('sw.js').then(reg => { reg.update().catch(() => {}); }).catch(() => {});
     }
-    window.ZP = { get Book() { return Book; }, get stickers() { return STICKERS; }, openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
+    window.ZP = { get Book() { return Book; }, get stickers() { return STICKERS; }, get cloud() { return Cloud; }, openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
   }
   boot();
 })();
