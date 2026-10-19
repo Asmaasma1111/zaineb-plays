@@ -397,3 +397,25 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .tb-btns { display: flex; gap: 12px; align-items: center; }
 .btn-repeat { font-size: 30px; }
 .btn-repeat:active { transform: scale(.92); }
+
+/* memory match */
+.memory .topbar, .balloons .topbar { height: 150px; flex: none; align-items: flex-start; padding-top: 14px; }
+.memory .btitle, .balloons .btitle { font-size: 40px; font-weight: 800; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.15); position: relative; z-index: 1; flex: none; white-space: nowrap; }
+.mem-wrap { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; min-height: 0; }
+.mem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.mem { width: min(230px, 26vh); height: min(230px, 26vh); border: 0; background: none; padding: 0; perspective: 900px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.mem-in { position: relative; width: 100%; height: 100%; transition: transform .45s; transform-style: preserve-3d; }
+.mem.up .mem-in, .mem.done .mem-in { transform: rotateY(180deg); }
+.mem-back, .mem-front { position: absolute; inset: 0; border-radius: var(--radius); border: 8px solid #fff; box-shadow: var(--shadow); backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.mem-back { background: linear-gradient(135deg, #FFD95A, #FF8A71); } .mem-back img { width: 55%; }
+.mem-front { transform: rotateY(180deg); background: #fff; } .mem-front img { width: 100%; height: 100%; object-fit: cover; }
+.mem.done { animation: pop .5s ease; } .mem.done .mem-front { outline: 8px solid var(--leaf); }
+/* balloons */
+.sky-area { flex: 1; width: 100%; position: relative; overflow: hidden; z-index: 1; }
+.balloon { position: absolute; bottom: -220px; width: var(--sz); height: calc(var(--sz) * 1.2); border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; background: none;
+  animation: rise var(--d) linear forwards; }
+.balloon::before { content: ''; position: absolute; inset: 0 0 18% 0; border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%; background: radial-gradient(circle at 35% 30%, #fff8 0, #fff0 30%), var(--c); box-shadow: inset -10px -14px 22px rgba(0,0,0,.15), 0 10px 18px rgba(0,0,0,.15); }
+.balloon .knot { position: absolute; left: 50%; bottom: 14%; width: 14px; height: 14px; background: var(--c); transform: translateX(-50%) rotate(45deg); }
+.balloon .string { position: absolute; left: 50%; bottom: -40px; width: 2px; height: 56px; background: rgba(0,0,0,.25); transform: translateX(-50%); }
+.balloon.popped { animation: none; transform: scale(1.4); opacity: 0; transition: transform .15s, opacity .2s; }
+@keyframes rise { from { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-55vh) rotate(3deg); } to { transform: translateY(-120vh) rotate(-3deg); } }

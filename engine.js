@@ -98,7 +98,7 @@
 
     // 1. review cards due today (lowest box first, then oldest), up to 3
     const due = pool.filter(c => isDue(p, c.id, today, sIdx)).sort((a, b) => (p.cards[a.id].box - p.cards[b.id].box) || ((p.cards[a.id].lastSeen || '') < (p.cards[b.id].lastSeen || '') ? -1 : 1));
-    const maxReview = Math.min(Math.max(3, Math.round(N * 0.4)), N - 2);   // about 40 % review, the rest new
+    const maxReview = Math.min(Math.max(2, Math.round(N * 0.2)), N - 2);   // about 20 % review (2 of 10), the rest new
     for (const c of shuffle(due, rnd)) { if (chosen.length >= maxReview) break; take(c); }
 
     // 2. new cards from the current stage, in JSON order (the deck is sequenced on purpose)

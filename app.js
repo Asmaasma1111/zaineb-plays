@@ -3,7 +3,7 @@
   const E = window.Engine, M = window.Mascot;
   const $app = document.getElementById('app');
   const KEY = 'zp:progress:v1';
-  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, CLOUDS = {}, POPIT = {};   // S = current session
+  let DATA = null, MEDIA = null, P = null, S = null, STICKERS = null, Book, Toy = null, Play = null, CLOUDS = {}, POPIT = {};   // S = current session
   /* cloud sync (sync.js + apps-script/Code.gs). Empty apiUrl in config.js = everything stays on the device, as before.
      On localhost only, ?api=<url> points the app at scripts/mock_cloud.js for testing. */
   const CONFIG = Object.assign({ apiUrl: '', family: 'zaineb', secret: '' }, window.ZP_CONFIG || {});
@@ -239,7 +239,7 @@
     const w = $app.querySelector('#word'); if (w) { w.classList.add('pop'); }
     $app.querySelectorAll('.pic').forEach(p => { p.onclick = () => Voice.play(k(c, 'word'), c.word); });
     const next = h('<button class="btn-next" id="next">➜</button>'); $app.firstElementChild.appendChild(next);
-    const go = () => { if (S && S.cards[S.i] === c) { S.i++; S.i < S.cards.length ? showCard() : endSession(); } };
+    const go = () => { if (S && S.cards[S.i] === c) { S.i++; if (S.i === 5 && !S.memoryDone && S.i < S.cards.length) { S.memoryDone = true; const known = DATA.cards.filter(x => E.isKnown(P, x.id) && MEDIA.cards[x.id] && MEDIA.cards[x.id].pics && MEDIA.cards[x.id].pics.length && /\.(webp|jpg|png)$/.test(MEDIA.files[MEDIA.cards[x.id].pics[0]] || '')); return Play.memory(known, () => { if (S) showCard(); }); } S.i < S.cards.length ? showCard() : endSession(); } };
     next.addEventListener('click', go); setTimeout(go, 9000);
   }
 
@@ -380,7 +380,7 @@
     await Voice.play('ui:4', 'خذيتي نجمة!'); await wait(1500);
     if (!$app.querySelector('.end')) return;
     await new Promise(res => Book.awardAll(res));
-    await new Promise(res => Toy.play(res));                                     // pop-it time!
+    await new Promise(res => (P.sessionCount % 2 ? Toy.play(res) : Play.balloons(res)));   // pop-it and balloons take turns
     const m = screen('end mission', `<div class="center"><div class="mascot-slot" data-size="220"></div><div class="bubble big">${text}</div><button class="btn-big green" id="ok">تم ✓</button></div>`);
     setMascot(m.querySelector('.mascot-slot'), 'wave');
     await Voice.play(mkey, text);
@@ -509,6 +509,7 @@
     await Voice.init();
     await maybeRestoreFromLink();
     Toy = Popit.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, layout: POPIT, pick: () => P.sessionCount });
+    Play = Games.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, media: (c) => { const m = MEDIA.cards[c.id]; const f = m && m.pics && m.pics[0] && MEDIA.files[m.pics[0]]; return f && /\.(webp|jpg|png)$/.test(f) ? f : null; } });
     Book = Stickers.mount({ $app, h, screen, Mascot: M, Voice, Sfx, confetti, getP: () => P, save, settings: () => P.settings, catalog: STICKERS, goHome: renderHome });
     { const fresh = Stickers.core.sync(P, STICKERS, P.settings.stickerPer || 1); if (fresh.length) { fresh.forEach(e => { e.seen = true; }); save(); } }   // stickers earned before this version go straight into the book, no award flood
     if (window.Sync && CONFIG.apiUrl) {

@@ -93,13 +93,13 @@ test('practice: N cards from one open stage, due and weakest first, nothing from
   const s4 = E.buildPractice(p, cards, levels, 4, t, seeded(8)); assert.equal(s4[s4.length - 1].type, 'do', 'movement card last in stage 4');
 });
 
-test('bigger sessions: 10 cards by default, about 40% review, rest new; 4-hour nap between sessions', () => {
+test('bigger sessions: 10 cards by default, about 20% review, rest new; 4-hour nap between sessions', () => {
   const p = E.emptyProgress(); const t = '2026-10-09';
   assert.equal(p.settings.cardsPerSession, 10); assert.equal(p.settings.breakMinutes, 240);
   const s0 = E.buildSession(p, cards, levels, t, seeded(11)); assert.equal(s0.length, 10);
   s0.forEach(c => E.recordAnswer(p, c.id, 'wrong', t, 0)); E.finishSession(p, s0, t, new Date(2026, 9, 9, 10), 'm');
   const s1 = E.buildSession(p, cards, levels, t, seeded(12)); assert.equal(s1.length, 10);
-  assert.equal(s1.filter(c => p.cards[c.id]).length, 4, 'four reviews'); assert.equal(s1.filter(c => !p.cards[c.id]).length, 6, 'six new');
+  assert.equal(s1.filter(c => p.cards[c.id]).length, 2, 'two reviews'); assert.equal(s1.filter(c => !p.cards[c.id]).length, 8, 'eight new');
   assert.ok(!E.canStart(p, new Date(2026, 9, 9, 13, 0)).ok, 'still napping 3 h later'); assert.ok(E.canStart(p, new Date(2026, 9, 9, 14, 30)).ok, 'afternoon session after 4 h');
 });
 
