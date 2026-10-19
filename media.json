@@ -51,6 +51,57 @@
 "curious-cat": "curious-cat.webp",
 "cloud": "cloud.webp",
 "spoon": "spoon.webp",
+"chair": "chair.webp",
+"table": "table.webp",
+"bed-room": "bed-room.webp",
+"window": "window.webp",
+"pot": "pot.webp",
+"plate": "plate.webp",
+"shirt": "shirt.webp",
+"trousers": "trousers.webp",
+"hat": "hat.webp",
+"shoe-big": "shoe-big.webp",
+"shoe-small": "shoe-small.webp",
+"soap": "soap.webp",
+"towel": "towel.webp",
+"car-red": "car-red.webp",
+"truck": "truck.webp",
+"bicycle": "bicycle.webp",
+"airplane": "airplane.webp",
+"tree": "tree.webp",
+"butterfly": "butterfly.webp",
+"tomato": "tomato.webp",
+"carrot": "carrot.webp",
+"grapes": "grapes.webp",
+"caterpillar": "caterpillar.webp",
+"cocoon": "cocoon.webp",
+"rain": "rain.webp",
+"horse": "horse.webp",
+"duck-pond": "duck-pond.webp",
+"black-cat": "black-cat.webp",
+"apples-many": "apples-many.webp",
+"feather": "feather.webp",
+"cat-in-box": "cat-in-box.webp",
+"spinning-top": "spinning-top.webp",
+"banana-peeled": "banana-peeled.webp",
+"eating-banana": "eating-banana.webp",
+"sunset": "sunset.webp",
+"frying-egg": "frying-egg.webp",
+"fried-egg": "fried-egg.webp",
+"face-mouth": "face-mouth.webp",
+"face-ear": "face-ear.webp",
+"heart": "heart.webp",
+"sick": "sick.webp",
+"hungry": "hungry.webp",
+"thirsty": "thirsty.webp",
+"loud-noise": "loud-noise.webp",
+"friends": "friends.webp",
+"toy-taken": "toy-taken.webp",
+"hen-chick": "hen-chick.webp",
+"star-photo": "star-photo.webp",
+"angry-photo": "angry-photo.webp",
+"tired-photo": "tired-photo.webp",
+"toothbrush-photo": "toothbrush-photo.webp",
 "blue-ball": "blue-ball.webp",
 "circle": "circle.svg",
 "square": "square.svg",
@@ -58,8 +109,8 @@
 "door-open": "door-open.svg",
 "door-closed": "door-closed.svg",
 "melted-ice-cream": "melted-ice-cream.svg",
-"face-eye": "face-eye.webp",
-"face-nose": "face-nose.webp",
+"face-eye": "face-eye.svg",
+"face-nose": "face-nose.svg",
 "happy": "happy.svg",
 "sad": "sad.svg",
 "angry": "angry.svg",
@@ -84,9 +135,11 @@
 "kitten-story": "kitten-story.svg",
 "funny-faces": "funny-faces.svg",
 "star-big-blue": "star-big-blue.svg",
+"zouzou3d": "zouzou3d",
 "star-small-yellow": "star-small-yellow.svg",
 "star-big-yellow": "star-big-yellow.svg",
-"star-small-blue": "star-small-blue.svg"
+"star-small-blue": "star-small-blue.svg",
+"popit": "popit"
 },
 "cards": {
 "1-01": {
@@ -169,6 +222,46 @@
 "feet"
 ]
 },
+"1-17": {
+"pics": [
+"horse"
+]
+},
+"1-18": {
+"pics": [
+"rabbit"
+]
+},
+"1-19": {
+"pics": [
+"elephant"
+]
+},
+"1-20": {
+"pics": [
+"duck-pond"
+]
+},
+"1-21": {
+"pics": [
+"face-mouth"
+]
+},
+"1-22": {
+"pics": [
+"face-ear"
+]
+},
+"1-23": {
+"pics": [
+"egg"
+]
+},
+"1-24": {
+"pics": [
+"full-glass"
+]
+},
 "2-01": {
 "pics": [
 "red-ball"
@@ -249,6 +342,48 @@
 "blue-ball"
 ]
 },
+"2-16": {
+"pics": [
+"white-cat"
+]
+},
+"2-17": {
+"pics": [
+"black-cat"
+]
+},
+"2-18": {
+"pics": [
+"carrot"
+]
+},
+"2-19": {
+"pics": [
+"star-photo"
+]
+},
+"2-20": {
+"pics": [
+"heart"
+]
+},
+"2-21": {
+"pics": [
+"shoe"
+],
+"count": 2
+},
+"2-22": {
+"pics": [
+"sparrow"
+],
+"count": 4
+},
+"2-23": {
+"pics": [
+"banana"
+]
+},
 "3-01": {
 "pics": [
 "happy"
@@ -307,6 +442,46 @@
 "3-12": {
 "pics": [
 "sleeping"
+]
+},
+"3-13": {
+"pics": [
+"sick"
+]
+},
+"3-14": {
+"pics": [
+"hungry"
+]
+},
+"3-15": {
+"pics": [
+"thirsty"
+]
+},
+"3-16": {
+"pics": [
+"angry-photo"
+]
+},
+"3-17": {
+"pics": [
+"tired-photo"
+]
+},
+"3-18": {
+"pics": [
+"loud-noise"
+]
+},
+"3-19": {
+"pics": [
+"friends"
+]
+},
+"3-20": {
+"pics": [
+"toy-taken"
 ]
 },
 "4-01": {
@@ -394,6 +569,54 @@
 "dirty-hands"
 ],
 "answer": "clean-hands"
+},
+"4-15": {
+"pics": [
+"apples-many",
+"apple"
+],
+"answer": "apples-many"
+},
+"4-16": {
+"pics": [
+"elephant",
+"feather"
+],
+"answer": "elephant"
+},
+"4-17": {
+"pics": [
+"moon",
+"sun"
+],
+"answer": "moon"
+},
+"4-18": {
+"pics": [
+"cat-in-box"
+],
+"adult": true
+},
+"4-19": {
+"pics": [
+"spinning-top"
+]
+},
+"4-20": {
+"pics": [
+"horse"
+]
+},
+"4-21": {
+"pics": [
+"giraffe",
+"mouse"
+]
+},
+"4-22": {
+"pics": [
+"hand"
+]
 },
 "5-01": {
 "pics": [
@@ -496,6 +719,55 @@
 "moon"
 ]
 },
+"5-15": {
+"pics": [
+"sheep"
+]
+},
+"5-16": {
+"pics": [
+"apple"
+]
+},
+"5-17": {
+"pics": [
+"elephant"
+]
+},
+"5-18": {
+"pics": [
+"sun"
+]
+},
+"5-19": {
+"pics": [
+"shoe"
+]
+},
+"5-20": {
+"pics": [
+"red-ball",
+"circle",
+"square"
+],
+"answer": "square"
+},
+"5-21": {
+"pics": [
+"sheep",
+"cow",
+"fish"
+],
+"answer": "fish"
+},
+"5-22": {
+"pics": [
+"puppy",
+"kitten",
+"ball"
+],
+"answer": "ball"
+},
 "6-01": {
 "steps": [
 "seed",
@@ -596,6 +868,235 @@
 "6-12": {
 "pics": [
 "kitten-story"
+]
+},
+"6-13": {
+"steps": [
+"banana",
+"banana-peeled",
+"eating-banana"
+],
+"pics": [
+"banana",
+"banana-peeled",
+"eating-banana"
+]
+},
+"6-14": {
+"steps": [
+"sunset",
+"moon",
+"sleeping"
+],
+"pics": [
+"sunset",
+"moon",
+"sleeping"
+]
+},
+"6-15": {
+"steps": [
+"egg",
+"frying-egg",
+"fried-egg"
+],
+"pics": [
+"egg",
+"frying-egg",
+"fried-egg"
+]
+},
+"6-16": {
+"pics": [
+"bird-flying"
+]
+},
+"6-17": {
+"pics": [
+"chair"
+]
+},
+"6-18": {
+"pics": [
+"camel"
+]
+},
+"6-19": {
+"pics": [
+"hen-chick"
+]
+},
+"6-20": {
+"pics": [
+"puppy"
+]
+},
+"7-01": {
+"pics": [
+"chair"
+]
+},
+"7-02": {
+"pics": [
+"table"
+]
+},
+"7-03": {
+"pics": [
+"bed-room"
+]
+},
+"7-04": {
+"pics": [
+"window"
+]
+},
+"7-05": {
+"pics": [
+"pot"
+]
+},
+"7-06": {
+"pics": [
+"plate"
+]
+},
+"7-07": {
+"pics": [
+"full-glass"
+],
+"count": 2
+},
+"7-08": {
+"pics": [
+"shirt"
+]
+},
+"7-09": {
+"pics": [
+"trousers"
+]
+},
+"7-10": {
+"pics": [
+"hat"
+]
+},
+"7-11": {
+"pics": [
+"shoe-big",
+"shoe-small"
+],
+"answer": "shoe-small"
+},
+"7-12": {
+"pics": [
+"soap"
+]
+},
+"7-13": {
+"pics": [
+"towel"
+]
+},
+"7-14": {
+"pics": [
+"toothbrush-photo"
+]
+},
+"7-15": {
+"pics": [
+"plate"
+],
+"count": 3
+},
+"8-01": {
+"pics": [
+"car-red"
+]
+},
+"8-02": {
+"pics": [
+"truck"
+]
+},
+"8-03": {
+"pics": [
+"bicycle"
+]
+},
+"8-04": {
+"pics": [
+"airplane"
+]
+},
+"8-05": {
+"pics": [
+"tree"
+]
+},
+"8-06": {
+"pics": [
+"flower"
+]
+},
+"8-07": {
+"pics": [
+"butterfly"
+]
+},
+"8-08": {
+"pics": [
+"car-red"
+]
+},
+"8-09": {
+"pics": [
+"tomato"
+]
+},
+"8-10": {
+"pics": [
+"carrot"
+]
+},
+"8-11": {
+"pics": [
+"grapes"
+]
+},
+"8-12": {
+"steps": [
+"caterpillar",
+"cocoon",
+"butterfly"
+],
+"pics": [
+"caterpillar",
+"cocoon",
+"butterfly"
+]
+},
+"8-13": {
+"pics": [
+"sun"
+]
+},
+"8-14": {
+"pics": [
+"rain"
+]
+},
+"8-15": {
+"steps": [
+"cloud",
+"rain",
+"sun"
+],
+"pics": [
+"cloud",
+"rain",
+"sun"
 ]
 }
 }

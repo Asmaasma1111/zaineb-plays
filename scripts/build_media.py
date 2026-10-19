@@ -35,6 +35,7 @@ O['5-11'] = {'pics': ['star-big-yellow', 'star-small-blue', 'star-big-blue', 'st
 O['5-12'] = {'pics': ['kitten', 'bread', 'puppy', 'apple'], 'rule1': ['kitten', 'puppy'], 'rule2': ['bread', 'apple']}
 O['6-01'] = {'steps': ['seed', 'sprout', 'flower']}; O['6-02'] = {'steps': ['egg', 'chick', 'hen']}; O['6-03'] = {'steps': ['dirty-hands', 'washing-hands', 'clean-hands']}
 O['6-04'] = {'steps': ['ice-cream', 'sun', 'melted-ice-cream']}; O['6-05'] = {'steps': ['empty-glass', 'pouring-water', 'full-glass']}; O['6-06'] = {'steps': ['pyjamas', 'toothbrush', 'bed']}
+for k, v in json.load(open(os.path.join(ROOT, 'work/new-cards/media_overrides.json'))).items(): O[k] = v   # stages 7-8 + extra cards (19 Oct 2026)
 for k, v in M.items():
     v['pics'] = v.get('pics') or v.get('steps')
     for a in (v.get('pics') or []) + (v.get('steps') or []):

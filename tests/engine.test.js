@@ -24,16 +24,21 @@ test('isDue: box 1 is due next session, box 2+ by date', () => {
   assert.equal(E.isDue(p, '1-01', '2026-10-09', 5), false); assert.equal(E.isDue(p, '1-01', '2026-10-10', 5), true);
 });
 
-test('unlock rule: stage 2 opens at 60% of stage 1 known (10 of 16), stages open in order', () => {
+test('unlock rule: stage 2 opens at 60% of stage 1 known (15 of 24), stages open in order', () => {
   const p = E.emptyProgress();
-  const s1 = E.stageCards(cards, 1); assert.equal(s1.length, 16);
-  assert.ok(E.isUnlocked(p, cards, 1)); assert.ok(!E.isUnlocked(p, cards, 2));
+  const s1 = E.stageCards(cards, 1); assert.equal(s1.length, 24);
+  assert.ok(E.isUnlocked(p, cards, 1, levels)); assert.ok(!E.isUnlocked(p, cards, 2, levels));
   const know = (id) => { E.recordAnswer(p, id, 'correct', '2026-10-01', 0); };
-  s1.slice(0, 9).forEach(c => know(c.id)); assert.ok(!E.isUnlocked(p, cards, 2), '9/16 is not enough');
-  know(s1[9].id); assert.ok(E.isUnlocked(p, cards, 2), '10/16 opens stage 2');
-  assert.ok(!E.isUnlocked(p, cards, 3));
-  p.manualUnlocked.push(4); assert.ok(E.isUnlocked(p, cards, 4), 'manual unlock works'); assert.ok(!E.isUnlocked(p, cards, 5));
-  assert.equal(E.highestUnlocked(p, cards, levels), 2, 'highest contiguous unlocked stage');
+  s1.slice(0, 14).forEach(c => know(c.id)); assert.ok(!E.isUnlocked(p, cards, 2, levels), '14/24 is not enough');
+  assert.ok(!E.isUnlocked(p, cards, 7, levels), 'stage 7 follows stage 1 and needs the same 60%');
+  know(s1[14].id); assert.ok(E.isUnlocked(p, cards, 2, levels), '15/24 opens stage 2');
+  assert.ok(!E.isUnlocked(p, cards, 3, levels));
+  assert.ok(E.isUnlocked(p, cards, 7, levels), 'stage 7 opens off stage 1, not stage 6');
+  assert.ok(!E.isUnlocked(p, cards, 8, levels), 'stage 8 waits for stage 7');
+  const s7 = E.stageCards(cards, 7); assert.equal(s7.length, 15); s7.slice(0, 9).forEach(c => know(c.id)); assert.ok(E.isUnlocked(p, cards, 8, levels), '9/15 of stage 7 opens stage 8');
+  p.manualUnlocked.push(4); assert.ok(E.isUnlocked(p, cards, 4, levels), 'manual unlock works'); assert.ok(!E.isUnlocked(p, cards, 5, levels));
+  assert.equal(E.highestUnlocked(p, cards, levels), 8, 'highest unlocked stage');
+  assert.equal(E.currentStage(p, cards, levels), 8, 'new cards come from the highest open stage that still has unseen cards');
 });
 
 test('session: 5 cards, no duplicates, new cards come from the current stage, up to 3 reviews', () => {

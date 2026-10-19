@@ -31,6 +31,18 @@
       "stage": 6,
       "name": "واش يصير من بعد؟",
       "skill": "Imagine and tell: sequences and pretend"
+    },
+    {
+      "stage": 7,
+      "name": "بيتنا وحوايجي",
+      "skill": "Find and say: things at home, clothes, kitchen, bathroom",
+      "after": 1
+    },
+    {
+      "stage": 8,
+      "name": "برّا: الحديقة والسوق والسيارات",
+      "skill": "Outside: vehicles, garden, market, weather (find, say, describe, put in order)",
+      "after": 7
     }
   ],
   "feedback_lines": {
@@ -257,6 +269,110 @@
       }
     },
     {
+      "id": "1-17",
+      "stage": 1,
+      "type": "find",
+      "word": "حِصَان",
+      "ask": "وين الحصان؟",
+      "reveal": "هذا حصان! يجري بالزربة: تك تك تك!",
+      "parent": "اجريو في بلاصتكم كيما الحصان.",
+      "image": {
+        "kind": "photo",
+        "query": "brown horse in field"
+      }
+    },
+    {
+      "id": "1-18",
+      "stage": 1,
+      "type": "find",
+      "word": "أَرْنَب",
+      "ask": "وين الأرنب؟",
+      "reveal": "هذا أرنب! عندو وذنين طوال ويحب الجزر.",
+      "parent": "ديرو وذنين طوال بيديكم.",
+      "image": {
+        "kind": "photo",
+        "query": "existing rabbit photo (4-06)"
+      }
+    },
+    {
+      "id": "1-19",
+      "stage": 1,
+      "type": "find",
+      "word": "فِيل",
+      "ask": "وين الفيل؟",
+      "reveal": "هذا فيل! كبير بزاف وعندو خرطوم طويل.",
+      "parent": "ديرو خرطوم بذراعكم.",
+      "image": {
+        "kind": "photo",
+        "query": "existing elephant photo (4-01)"
+      }
+    },
+    {
+      "id": "1-20",
+      "stage": 1,
+      "type": "find",
+      "word": "بَطَّة",
+      "ask": "وين البطة؟",
+      "reveal": "هذي بطة! تعوم في الماء وتقول: كواك كواك!",
+      "parent": "قولي معاها: كواك كواك!",
+      "image": {
+        "kind": "photo",
+        "query": "duck swimming on pond"
+      }
+    },
+    {
+      "id": "1-21",
+      "stage": 1,
+      "type": "find",
+      "word": "فَم",
+      "ask": "وين الفم؟ وريني فمك!",
+      "reveal": "هذا الفم! ناكلو بيه ونهدرو بيه.",
+      "parent": "حلي فمك كبير: آآآ!",
+      "image": {
+        "kind": "photo",
+        "query": "child smiling mouth closeup"
+      }
+    },
+    {
+      "id": "1-22",
+      "stage": 1,
+      "type": "find",
+      "word": "أُذُن",
+      "ask": "وين الأذن؟ وريني وذنك!",
+      "reveal": "هذي الأذن! نسمعو بيها.",
+      "parent": "قولي في وذنها كلمة بالشوية بالشوية.",
+      "image": {
+        "kind": "photo",
+        "query": "child ear closeup"
+      }
+    },
+    {
+      "id": "1-23",
+      "stage": 1,
+      "type": "find",
+      "word": "بَيْضَة",
+      "ask": "وين البيضة؟",
+      "reveal": "هذي بيضة! الدجاجة تعطيها لنا.",
+      "parent": "سقسيها: شكون يعطينا البيضة؟",
+      "image": {
+        "kind": "photo",
+        "query": "existing egg photo (6-02)"
+      }
+    },
+    {
+      "id": "1-24",
+      "stage": 1,
+      "type": "find",
+      "word": "مَاء",
+      "ask": "وين الماء؟",
+      "reveal": "هذا ماء! نشربوه كي نعطشو.",
+      "parent": "اشربو كاس ماء مع بعض: بسم الله.",
+      "image": {
+        "kind": "photo",
+        "query": "existing glass of water (4-05)"
+      }
+    },
+    {
       "id": "2-01",
       "stage": 2,
       "type": "say",
@@ -462,6 +578,114 @@
       }
     },
     {
+      "id": "2-16",
+      "stage": 2,
+      "type": "say",
+      "word": "أَبْيَض",
+      "ask": "واش هذا اللون؟",
+      "reveal": "أبيض! كيما الحليب والقطة البيضاء.",
+      "parent": "قلبو على حاجة بيضاء في الدار.",
+      "mission": "جيبيلي حاجة بيضاء!",
+      "image": {
+        "kind": "photo",
+        "query": "existing white cat (2-14)"
+      }
+    },
+    {
+      "id": "2-17",
+      "stage": 2,
+      "type": "say",
+      "word": "أَسْوَد",
+      "ask": "واش هذا اللون؟",
+      "reveal": "أسود! كحل كيما الليل.",
+      "parent": "في دارجتنا نقولو كحل؛ خليها تسمع الكلمتين.",
+      "mission": "وريني حاجة كحلة!",
+      "image": {
+        "kind": "photo",
+        "query": "black cat sitting"
+      }
+    },
+    {
+      "id": "2-18",
+      "stage": 2,
+      "type": "say",
+      "word": "بُرْتُقَالِي",
+      "ask": "واش هذا اللون؟",
+      "reveal": "برتقالي! كيما الجزر.",
+      "parent": "سقسيها: واش كاين برتقالي في الكوزينة؟",
+      "image": {
+        "kind": "photo",
+        "query": "fresh carrots bunch (shared with 8-10)"
+      }
+    },
+    {
+      "id": "2-19",
+      "stage": 2,
+      "type": "say",
+      "word": "نَجْمَة",
+      "ask": "واش هذا الشكل؟",
+      "reveal": "نجمة! تضوي في السماء في الليل.",
+      "parent": "رسمو نجمة بصبعكم في الهواء.",
+      "image": {
+        "kind": "photo",
+        "query": "gold star decoration"
+      }
+    },
+    {
+      "id": "2-20",
+      "stage": 2,
+      "type": "say",
+      "word": "قَلْب",
+      "ask": "واش هذا الشكل؟",
+      "reveal": "قلب! نحبك بزاف يا زينب.",
+      "parent": "ديرو قلب بيديكم مع بعض.",
+      "image": {
+        "kind": "photo",
+        "query": "red heart shape"
+      }
+    },
+    {
+      "id": "2-21",
+      "stage": 2,
+      "type": "count",
+      "word": "اِثْنَان",
+      "ask": "قداش من حذاء؟",
+      "reveal": "اثنان! حذاءان.",
+      "parent": "عدو حذاءها: واحد، اثنان.",
+      "count": 2,
+      "image": {
+        "kind": "photo",
+        "query": "existing child shoe photo (5-10), shown twice"
+      }
+    },
+    {
+      "id": "2-22",
+      "stage": 2,
+      "type": "count",
+      "word": "أَرْبَعَة",
+      "ask": "قداش من عصفور؟",
+      "reveal": "أربعة! واحد، اثنان، ثلاثة، أربعة.",
+      "parent": "عدّي بصبعها على كل عصفور.",
+      "count": 4,
+      "image": {
+        "kind": "photo",
+        "query": "existing sparrow photo (1-08), four times"
+      }
+    },
+    {
+      "id": "2-23",
+      "stage": 2,
+      "type": "describe",
+      "word": "مَوْزَة صَفْرَاء",
+      "ask": "واش هذي؟ وكيفاش لونها؟",
+      "reveal": "موزة... صفراء! موزة صفراء.",
+      "parent": "سقسيها: واش حاجة أخرى صفراء؟",
+      "image": {
+        "kind": "photo",
+        "query": "existing banana photo (1-10)"
+      }
+    },
+    {
       "id": "3-01",
       "stage": 3,
       "type": "say",
@@ -616,6 +840,110 @@
       "image": {
         "kind": "illustration",
         "query": "boy sleeping in bed cartoon"
+      }
+    },
+    {
+      "id": "3-13",
+      "stage": 3,
+      "type": "say",
+      "word": "مَرِيض",
+      "ask": "كيفاش راهو هذا الولد؟",
+      "reveal": "مريض. راهو سخون وراقد. يحتاج يرتاح.",
+      "parent": "سقسيها: كي تمرضي، شكون يداويك؟",
+      "image": {
+        "kind": "photo",
+        "query": "sick child in bed thermometer"
+      }
+    },
+    {
+      "id": "3-14",
+      "stage": 3,
+      "type": "say",
+      "word": "جَوْعَان",
+      "ask": "كيفاش راهي هذي البنت؟",
+      "reveal": "جوعانة! كرشها تقول: قرقر!",
+      "parent": "سقسيها: واش تحبي تاكلي كي تجوعي؟",
+      "image": {
+        "kind": "photo",
+        "query": "hungry child looking at food"
+      }
+    },
+    {
+      "id": "3-15",
+      "stage": 3,
+      "type": "say",
+      "word": "عَطْشَان",
+      "ask": "كيفاش راهو هذا الولد؟",
+      "reveal": "عطشان. يحب يشرب الماء.",
+      "parent": "اعطيها كاس ماء وقولي: كي نعطشو نشربو.",
+      "image": {
+        "kind": "photo",
+        "query": "child drinking glass of water"
+      }
+    },
+    {
+      "id": "3-16",
+      "stage": 3,
+      "type": "find",
+      "word": "غَضْبَان",
+      "ask": "وين الوجه الغضبان؟",
+      "reveal": "هذا هو! غضبان ووجهو أحمر.",
+      "parent": "تنفسو مع بعض بالشوية: شهيق... زفير.",
+      "image": {
+        "kind": "photo",
+        "query": "angry child face"
+      }
+    },
+    {
+      "id": "3-17",
+      "stage": 3,
+      "type": "find",
+      "word": "تَعْبَان",
+      "ask": "وين الوجه التعبان؟",
+      "reveal": "هذا هو! تعبان ويتثاوب.",
+      "parent": "تثاوبو مع بعض: آآآه!",
+      "image": {
+        "kind": "photo",
+        "query": "tired child yawning"
+      }
+    },
+    {
+      "id": "3-18",
+      "stage": 3,
+      "type": "why",
+      "word": "خَائِف",
+      "ask": "الولد سمع صوت كبير: بووم! كيفاش راهو؟",
+      "reveal": "خايف! الصوت الكبير يخوف. حضن ويروح الخوف.",
+      "parent": "قوليلها: كي تسمعي صوت كبير، تجي لماما.",
+      "image": {
+        "kind": "photo",
+        "query": "child covering ears hands"
+      }
+    },
+    {
+      "id": "3-19",
+      "stage": 3,
+      "type": "why",
+      "word": "فَرْحَان",
+      "ask": "البنت لعبت مع صاحبتها. كيفاش راهي؟",
+      "reveal": "فرحانة! اللعب مع الصحاب يفرّح.",
+      "parent": "سقسيها: شكون صاحبتك؟",
+      "image": {
+        "kind": "photo",
+        "query": "two children playing together"
+      }
+    },
+    {
+      "id": "3-20",
+      "stage": 3,
+      "type": "why",
+      "word": "غَضْبَان",
+      "ask": "خوها خذالو اللعبة. كيفاش راهو؟",
+      "reveal": "غضبان. يحب لعبتو. نقولو: من فضلك، عطيني!",
+      "parent": "علميها: كي نغضبو، نهدرو، ما نضربوش.",
+      "image": {
+        "kind": "photo",
+        "query": "children fighting over toy"
       }
     },
     {
@@ -799,6 +1127,110 @@
       "image": {
         "kind": "photo",
         "query": "child washing hands soap"
+      }
+    },
+    {
+      "id": "4-15",
+      "stage": 4,
+      "type": "compare",
+      "word": "كَثِير / قَلِيل",
+      "ask": "وين التفاح الكثير؟",
+      "reveal": "هذا بزاف! تفاح كثير. وهذي تفاحة وحدة، قليل.",
+      "parent": "حطي شوية حبات وحبة وحدة، وسقسيها: وين بزاف؟",
+      "image": {
+        "kind": "photo",
+        "query": "basket full of red apples + existing single apple"
+      }
+    },
+    {
+      "id": "4-16",
+      "stage": 4,
+      "type": "compare",
+      "word": "ثَقِيل / خَفِيف",
+      "ask": "واش هو الثقيل؟ الفيل ولا الريشة؟",
+      "reveal": "الفيل ثقيل بزاف! والريشة خفيفة، تطير.",
+      "parent": "هزي كتاب وريشة ورقة وقارنو.",
+      "image": {
+        "kind": "photo",
+        "query": "existing elephant + white feather"
+      }
+    },
+    {
+      "id": "4-17",
+      "stage": 4,
+      "type": "compare",
+      "word": "نَهَار / لَيْل",
+      "ask": "وين الليل؟",
+      "reveal": "هذا الليل! كحل وفيه القمر. والنهار فيه الشمس.",
+      "parent": "شوفو من التاقة: ضرك نهار ولا ليل؟",
+      "image": {
+        "kind": "photo",
+        "query": "existing moon (5-14) + existing sun (6-04)"
+      }
+    },
+    {
+      "id": "4-18",
+      "stage": 4,
+      "type": "compare",
+      "word": "دَاخِل / خَارِج",
+      "ask": "القطة داخل العلبة ولا خارج العلبة؟",
+      "reveal": "داخل! القطة داخل العلبة.",
+      "parent": "حطي لعبة داخل علبة ومن بعد خارجها.",
+      "image": {
+        "kind": "photo",
+        "query": "cat sitting inside cardboard box"
+      }
+    },
+    {
+      "id": "4-19",
+      "stage": 4,
+      "type": "do",
+      "word": "دُورِي",
+      "ask": "دوري دوري كيما الطاحونة... وحبسي!",
+      "reveal": "ههه! راسك يدور؟",
+      "parent": "دورو بالشوية باش ما تطيحش.",
+      "image": {
+        "kind": "photo",
+        "query": "spinning top toy"
+      }
+    },
+    {
+      "id": "4-20",
+      "stage": 4,
+      "type": "do",
+      "word": "اِجْرِي",
+      "ask": "اجري في بلاصتك كيما الحصان! تك تك تك!",
+      "reveal": "برافو! حصان سريع!",
+      "parent": "اجريو مع بعض ومن بعد حبسو.",
+      "image": {
+        "kind": "photo",
+        "query": "horse photo from 1-17"
+      }
+    },
+    {
+      "id": "4-21",
+      "stage": 4,
+      "type": "do",
+      "word": "تَمَدَّدِي",
+      "ask": "تمدي لفوق كيما الزرافة... ودرك انزلي لتحت كيما الفار!",
+      "reveal": "هايلة! طويلة... وصغيرة!",
+      "parent": "عاودوها ثلاث مرات بالشوية.",
+      "image": {
+        "kind": "photo",
+        "query": "existing giraffe + mouse photos"
+      }
+    },
+    {
+      "id": "4-22",
+      "stage": 4,
+      "type": "do",
+      "word": "لَمْسِي",
+      "ask": "لمسي راسك! لمسي كرشك! لمسي رجليك!",
+      "reveal": "شاطرة! تعرفي جسمك كامل.",
+      "parent": "زيدي: لمسي وذنك، لمسي أنفك.",
+      "image": {
+        "kind": "photo",
+        "query": "toddler girl touching her head"
       }
     },
     {
@@ -1011,6 +1443,133 @@
       }
     },
     {
+      "id": "5-15",
+      "stage": 5,
+      "type": "silly",
+      "word": "خَرُوف",
+      "ask": "الخروف يقول هاو هاو؟",
+      "reveal": "لا! الخروف يقول باااع! الكلب هو اللي يقول هاو هاو.",
+      "parent": "سقسيها: شكون يقول هاو هاو؟",
+      "answer": "no",
+      "image": {
+        "kind": "photo",
+        "query": "existing sheep photo (1-04)"
+      }
+    },
+    {
+      "id": "5-16",
+      "stage": 5,
+      "type": "silly",
+      "word": "تُفَّاحَة",
+      "ask": "التفاحة حمراء؟",
+      "reveal": "واه! صحيح! التفاحة حمراء وبنينة.",
+      "parent": "مدحيها لأنها جاوبت واه.",
+      "answer": "yes",
+      "image": {
+        "kind": "photo",
+        "query": "existing apple photo"
+      }
+    },
+    {
+      "id": "5-17",
+      "stage": 5,
+      "type": "silly",
+      "word": "فِيل",
+      "ask": "الفيل صغير كيما الفار؟",
+      "reveal": "لا لا! الفيل كبير بزاف! الفار هو الصغير.",
+      "parent": "سقسيها: شكون الصغير؟",
+      "answer": "no",
+      "image": {
+        "kind": "photo",
+        "query": "existing elephant photo"
+      }
+    },
+    {
+      "id": "5-18",
+      "stage": 5,
+      "type": "silly",
+      "word": "شَمْس",
+      "ask": "الشمس تسخن؟",
+      "reveal": "واه! صحيح! الشمس تسخن وتضوي.",
+      "parent": "سقسيها: والقمر؟ يسخن؟",
+      "answer": "yes",
+      "image": {
+        "kind": "photo",
+        "query": "existing sun photo"
+      }
+    },
+    {
+      "id": "5-19",
+      "stage": 5,
+      "type": "silly",
+      "word": "حِذَاء",
+      "ask": "نلبسو الحذاء في يدينا؟",
+      "reveal": "لا! الحذاء في الرجلين! هههه.",
+      "parent": "جربي تحطي حذاء على يدك وخليها تضحك.",
+      "answer": "no",
+      "image": {
+        "kind": "photo",
+        "query": "child shoe sneaker"
+      }
+    },
+    {
+      "id": "5-20",
+      "stage": 5,
+      "type": "odd",
+      "word": "مُرَبَّع",
+      "ask": "كورة، دائرة، مربع... واش هو اللي ماشي مدوّر؟",
+      "reveal": "المربع! عندو أربع جيهات، ماشي مدوّر.",
+      "parent": "سقسيها: علاش؟",
+      "options": [
+        "كورة",
+        "دائرة",
+        "مربع"
+      ],
+      "answer": "مربع",
+      "image": {
+        "kind": "photo",
+        "query": "existing red ball + circle SVG + square SVG"
+      }
+    },
+    {
+      "id": "5-21",
+      "stage": 5,
+      "type": "odd",
+      "word": "سَمَكَة",
+      "ask": "خروف، بقرة، سمكة... واش هو اللي يعوم في الماء؟",
+      "reveal": "السمكة! الخروف والبقرة يمشيو في الأرض.",
+      "parent": "سقسيها: وين تسكن السمكة؟",
+      "options": [
+        "خروف",
+        "بقرة",
+        "سمكة"
+      ],
+      "answer": "سمكة",
+      "image": {
+        "kind": "photo",
+        "query": "existing sheep, cow, fish photos"
+      }
+    },
+    {
+      "id": "5-22",
+      "stage": 5,
+      "type": "odd",
+      "word": "كُرَة",
+      "ask": "كلب، قطة، كورة... واش هو اللي ماشي حيوان؟",
+      "reveal": "الكورة! هي لعبة، ماشي حيوان.",
+      "parent": "سقسيها: الكورة تاكل؟ هههه.",
+      "options": [
+        "كلب",
+        "قطة",
+        "كورة"
+      ],
+      "answer": "كورة",
+      "image": {
+        "kind": "photo",
+        "query": "existing puppy, kitten, ball photos"
+      }
+    },
+    {
       "id": "6-01",
       "stage": 6,
       "type": "sequence",
@@ -1194,6 +1753,533 @@
       "image": {
         "kind": "generated",
         "query": "cute cartoon kitten in a storybook scene"
+      }
+    },
+    {
+      "id": "6-13",
+      "stage": 6,
+      "type": "sequence",
+      "word": "مَوْزَة",
+      "ask": "موزة... واش نديرو قبل ما ناكلوها؟",
+      "reveal": "نقشروها، ومن بعد ناكلوها: نيام نيام!",
+      "parent": "خليها تقشر موزة وحدها.",
+      "steps": [
+        "موزة",
+        "نقشروها",
+        "ناكلوها"
+      ],
+      "image": {
+        "kind": "photo",
+        "query": "existing banana + peeled banana + child eating banana"
+      }
+    },
+    {
+      "id": "6-14",
+      "stage": 6,
+      "type": "sequence",
+      "word": "غُرُوب",
+      "ask": "الشمس راحت ترقد... واش يجي من بعد؟",
+      "reveal": "يطلع القمر، ومن بعد نرقدو احنا تاني!",
+      "parent": "استعمليها قبل النوم: الشمس رقدت، ونتي تاني.",
+      "steps": [
+        "الشمس تغيب",
+        "القمر",
+        "نرقدو"
+      ],
+      "image": {
+        "kind": "photo",
+        "query": "sunset orange sky + existing moon + existing sleeping SVG"
+      }
+    },
+    {
+      "id": "6-15",
+      "stage": 6,
+      "type": "sequence",
+      "word": "بَيْضَة",
+      "ask": "بيضة... نطيبوها... واش تولي؟",
+      "reveal": "تولي بيضة مقلية! ناكلوها بالخبز.",
+      "parent": "طيبو بيضة مع بعض وهي تشوف.",
+      "steps": [
+        "بيضة",
+        "نطيبوها",
+        "بيضة مقلية"
+      ],
+      "image": {
+        "kind": "photo",
+        "query": "existing egg + egg frying in pan + fried egg on plate"
+      }
+    },
+    {
+      "id": "6-16",
+      "stage": 6,
+      "type": "imagine",
+      "word": "جَنَاحَان",
+      "ask": "لو كان عندك جناحين، وين تطيري؟",
+      "reveal": "للسماء؟ لعند جدة؟ يا سلام! نتي عصفورة!",
+      "parent": "خليها تحكي وين تطير، وطيرو في الدار.",
+      "image": {
+        "kind": "photo",
+        "query": "existing bird flying photo (4-10)"
+      }
+    },
+    {
+      "id": "6-17",
+      "stage": 6,
+      "type": "imagine",
+      "word": "كُرْسِي",
+      "ask": "هذا كرسي. واش يقدر يولي؟ سيارة؟ قطار؟",
+      "reveal": "توت توت! الكرسي ولا قطار! هههه.",
+      "parent": "صفو الكراسي وديرو قطار.",
+      "image": {
+        "kind": "photo",
+        "query": "chair photo (shared with 7-01)"
+      }
+    },
+    {
+      "id": "6-18",
+      "stage": 6,
+      "type": "imagine",
+      "word": "جَمَل",
+      "ask": "لو كان الجمل يهدر، واش يقول؟",
+      "reveal": "بلاك يقول: نحب نشرب الماء بزاف! ولا: اركبي فوق ظهري!",
+      "parent": "تقمصي صوت زوزو وردي عليها.",
+      "image": {
+        "kind": "photo",
+        "query": "existing camel photo (1-05)"
+      }
+    },
+    {
+      "id": "6-19",
+      "stage": 6,
+      "type": "story",
+      "word": "دَجَاجَة",
+      "ask": "الدجاجة ضيعت الفلوس الصغير... واش دارت؟",
+      "reveal": "قلبت عليه في كل بلاصة... ولقاتو تحت الشجرة! وعطاتو حضن.",
+      "parent": "خليها تكمل: وين كان الفلوس؟",
+      "image": {
+        "kind": "photo",
+        "query": "hen with chicks"
+      }
+    },
+    {
+      "id": "6-20",
+      "stage": 6,
+      "type": "story",
+      "word": "حِكَايَتِي",
+      "ask": "درك نتي تحكي! كان يا مكان... كلب صغير...",
+      "reveal": "يا سلام على الحكاية! حكواتية شاطرة!",
+      "parent": "سجلي صوتها وهي تحكي.",
+      "image": {
+        "kind": "photo",
+        "query": "puppy dog"
+      }
+    },
+    {
+      "id": "7-01",
+      "stage": 7,
+      "type": "find",
+      "word": "كُرْسِي",
+      "ask": "وين الكرسي؟",
+      "reveal": "هذا كرسي! نقعدو فوقو.",
+      "parent": "سقسيها: وين الكرسي تاعك في الدار؟",
+      "mission": "روحي اقعدي فوق الكرسي!",
+      "image": {
+        "kind": "photo",
+        "query": "wooden chair white background"
+      }
+    },
+    {
+      "id": "7-02",
+      "stage": 7,
+      "type": "find",
+      "word": "طَاوِلَة",
+      "ask": "وين الطاولة؟",
+      "reveal": "هذي طاولة! ناكلو فوقها.",
+      "parent": "دقّي على الطاولة مع بعض: طق طق!",
+      "image": {
+        "kind": "photo",
+        "query": "small wooden table white background"
+      }
+    },
+    {
+      "id": "7-03",
+      "stage": 7,
+      "type": "find",
+      "word": "سَرِير",
+      "ask": "وين السرير؟",
+      "reveal": "هذا سرير! نرقدو فيه في الليل.",
+      "parent": "سقسيها: شكون يرقد في السرير؟ زينب ولا القطة؟",
+      "image": {
+        "kind": "photo",
+        "query": "child bed cozy bedroom"
+      }
+    },
+    {
+      "id": "7-04",
+      "stage": 7,
+      "type": "find",
+      "word": "تَاقَة",
+      "ask": "وين التاقة؟",
+      "reveal": "هذي تاقة! نشوفو منها السماء.",
+      "parent": "روحو للتاقة وشوفو واش كاين برّا.",
+      "mission": "روحي شوفي من التاقة!",
+      "image": {
+        "kind": "photo",
+        "query": "window with curtains daylight"
+      }
+    },
+    {
+      "id": "7-05",
+      "stage": 7,
+      "type": "find",
+      "word": "قِدْر",
+      "ask": "وين القدر؟",
+      "reveal": "هذا قدر! ماما تطيب فيه الماكلة.",
+      "parent": "وريها القدر في الكوزينة وهي باردة.",
+      "image": {
+        "kind": "photo",
+        "query": "cooking pot on stove"
+      }
+    },
+    {
+      "id": "7-06",
+      "stage": 7,
+      "type": "say",
+      "word": "طَبَق",
+      "ask": "واش هذا؟",
+      "reveal": "طبق! نحطو فيه الماكلة.",
+      "parent": "خليها تجيب طبق صغير للطاولة.",
+      "image": {
+        "kind": "photo",
+        "query": "empty white plate top view"
+      }
+    },
+    {
+      "id": "7-07",
+      "stage": 7,
+      "type": "count",
+      "word": "اِثْنَان",
+      "ask": "قداش من كاس؟",
+      "reveal": "اثنان! كأسان.",
+      "parent": "عدو مع بعض: واحد، اثنان.",
+      "count": 2,
+      "image": {
+        "kind": "photo",
+        "query": "glass of water (existing full-glass photo, shown twice)"
+      }
+    },
+    {
+      "id": "7-08",
+      "stage": 7,
+      "type": "say",
+      "word": "قَمِيص",
+      "ask": "واش هذا؟",
+      "reveal": "قميص! نلبسوه فوق.",
+      "parent": "سقسيها: واش لون قميصك اليوم؟",
+      "image": {
+        "kind": "photo",
+        "query": "child t-shirt flat lay white background"
+      }
+    },
+    {
+      "id": "7-09",
+      "stage": 7,
+      "type": "say",
+      "word": "سِرْوَال",
+      "ask": "واش هذا؟",
+      "reveal": "سروال! نلبسوه في رجلينا.",
+      "parent": "عدو مع بعض: رجل... ورجلان!",
+      "image": {
+        "kind": "photo",
+        "query": "children jeans trousers folded"
+      }
+    },
+    {
+      "id": "7-10",
+      "stage": 7,
+      "type": "say",
+      "word": "قُبَّعَة",
+      "ask": "واش هذي؟",
+      "reveal": "قبعة! نحطوها فوق الراس كي يكون البرد.",
+      "parent": "حطي قبعة على راسك ومن بعد على راسها.",
+      "mission": "جيبيلي القبعة تاعك!",
+      "image": {
+        "kind": "photo",
+        "query": "knitted beanie hat child"
+      }
+    },
+    {
+      "id": "7-11",
+      "stage": 7,
+      "type": "compare",
+      "word": "كَبِير / صَغِير",
+      "ask": "وين الحذاء الصغير؟",
+      "reveal": "هذا هو! حذاء زينب صغير، وحذاء بابا كبير بزاف.",
+      "parent": "قارنو حذاءك وحذاءها قدام الباب.",
+      "image": {
+        "kind": "photo",
+        "query": "two photos: men's leather shoes + baby shoes"
+      }
+    },
+    {
+      "id": "7-12",
+      "stage": 7,
+      "type": "find",
+      "word": "صَابُون",
+      "ask": "وين الصابون؟",
+      "reveal": "هذا صابون! يدير رغوة ويخلي يدينا نظاف.",
+      "parent": "ديرو رغوة بالصابون مع بعض.",
+      "mission": "روحي اغسلي يديك بالصابون!",
+      "image": {
+        "kind": "photo",
+        "query": "bar of soap with foam"
+      }
+    },
+    {
+      "id": "7-13",
+      "stage": 7,
+      "type": "find",
+      "word": "مِنْشَفَة",
+      "ask": "وين المنشفة؟",
+      "reveal": "هذي منشفة! نمسحو بيها يدينا ووجهنا.",
+      "parent": "بعد ما تغسل يديها، قوليلها: جيبي المنشفة.",
+      "mission": "جيبيلي المنشفة!",
+      "image": {
+        "kind": "photo",
+        "query": "folded bath towel"
+      }
+    },
+    {
+      "id": "7-14",
+      "stage": 7,
+      "type": "say",
+      "word": "فُرْشَاة",
+      "ask": "واش هذي؟",
+      "reveal": "فرشاة! نغسلو بيها السنان. شي شي شي!",
+      "parent": "ديرو حركة غسيل السنان مع بعض.",
+      "image": {
+        "kind": "photo",
+        "query": "toothbrush"
+      }
+    },
+    {
+      "id": "7-15",
+      "stage": 7,
+      "type": "count",
+      "word": "ثَلَاثَة",
+      "ask": "قداش من طبق؟",
+      "reveal": "ثلاثة! واحد، اثنان، ثلاثة.",
+      "parent": "حطو ثلاثة أطباق على الطاولة وعدوهم.",
+      "count": 3,
+      "image": {
+        "kind": "photo",
+        "query": "plate photo from 7-06, shown three times"
+      }
+    },
+    {
+      "id": "8-01",
+      "stage": 8,
+      "type": "find",
+      "word": "سَيَّارَة",
+      "ask": "وين السيارة؟",
+      "reveal": "هذي سيارة! تمشي في الطريق: بروم بروم!",
+      "parent": "سقسيها: واش لون سيارة بابا؟",
+      "image": {
+        "kind": "photo",
+        "query": "red car side view"
+      }
+    },
+    {
+      "id": "8-02",
+      "stage": 8,
+      "type": "find",
+      "word": "شَاحِنَة",
+      "ask": "وين الشاحنة؟",
+      "reveal": "هذي شاحنة! كبيرة وتهز حوايج بزاف.",
+      "parent": "سقسيها: الشاحنة كبيرة ولا صغيرة؟",
+      "image": {
+        "kind": "photo",
+        "query": "big truck lorry on road"
+      }
+    },
+    {
+      "id": "8-03",
+      "stage": 8,
+      "type": "find",
+      "word": "دَرَّاجَة",
+      "ask": "وين الدراجة؟",
+      "reveal": "هذي دراجة! عندها عجلتان، ونبدلو بيها.",
+      "parent": "وريها العجلات وعدوهم: واحد، اثنان.",
+      "image": {
+        "kind": "photo",
+        "query": "child bicycle"
+      }
+    },
+    {
+      "id": "8-04",
+      "stage": 8,
+      "type": "say",
+      "word": "طَائِرَة",
+      "ask": "واش هذي؟",
+      "reveal": "طائرة! تطير في السماء لفوق لفوق.",
+      "parent": "طيرو بيديكم كيما الطائرة.",
+      "mission": "طيري كيما الطائرة في الدار!",
+      "image": {
+        "kind": "photo",
+        "query": "airplane flying blue sky"
+      }
+    },
+    {
+      "id": "8-05",
+      "stage": 8,
+      "type": "find",
+      "word": "شَجَرَة",
+      "ask": "وين الشجرة؟",
+      "reveal": "هذي شجرة! كبيرة وخضراء، وفيها ورق بزاف.",
+      "parent": "كي تخرجو، لمسو شجرة حقيقية.",
+      "image": {
+        "kind": "photo",
+        "query": "big green tree in field"
+      }
+    },
+    {
+      "id": "8-06",
+      "stage": 8,
+      "type": "say",
+      "word": "وَرْدَة",
+      "ask": "واش هذي؟",
+      "reveal": "وردة! زينة وريحتها بنينة.",
+      "parent": "شمو وردة مع بعض: هممم!",
+      "image": {
+        "kind": "photo",
+        "query": "existing flower photo (6-01)"
+      }
+    },
+    {
+      "id": "8-07",
+      "stage": 8,
+      "type": "find",
+      "word": "فَرَاشَة",
+      "ask": "وين الفراشة؟",
+      "reveal": "هذي فراشة! تطير من وردة لوردة.",
+      "parent": "طيرو بيديكم بالشوية كيما الفراشة.",
+      "image": {
+        "kind": "photo",
+        "query": "butterfly on flower"
+      }
+    },
+    {
+      "id": "8-08",
+      "stage": 8,
+      "type": "describe",
+      "word": "سَيَّارَة حَمْرَاء",
+      "ask": "واش هذي؟ وكيفاش لونها؟",
+      "reveal": "سيارة... حمراء! سيارة حمراء.",
+      "parent": "كي تخرجو، قلبو على سيارة حمراء.",
+      "image": {
+        "kind": "photo",
+        "query": "red car photo from 8-01"
+      }
+    },
+    {
+      "id": "8-09",
+      "stage": 8,
+      "type": "find",
+      "word": "طَمَاطِم",
+      "ask": "وين الطماطم؟",
+      "reveal": "هذي طماطم! حمراء ونشريوها من السوق.",
+      "parent": "في السوق، خليها تختار الطماطم.",
+      "image": {
+        "kind": "photo",
+        "query": "red ripe tomatoes"
+      }
+    },
+    {
+      "id": "8-10",
+      "stage": 8,
+      "type": "say",
+      "word": "جَزَر",
+      "ask": "واش هذا؟",
+      "reveal": "جزر! برتقالي، والأرنب يحبو بزاف.",
+      "parent": "سقسيها: شكون يحب الجزر؟",
+      "image": {
+        "kind": "photo",
+        "query": "fresh carrots bunch"
+      }
+    },
+    {
+      "id": "8-11",
+      "stage": 8,
+      "type": "say",
+      "word": "عِنَب",
+      "ask": "واش هذا؟",
+      "reveal": "عنب! حبات صغار وحلوين.",
+      "parent": "عدو حبات العنب مع بعض.",
+      "image": {
+        "kind": "photo",
+        "query": "bunch of grapes"
+      }
+    },
+    {
+      "id": "8-12",
+      "stage": 8,
+      "type": "sequence",
+      "word": "دُودَة",
+      "ask": "واش يجي من بعد؟ دودة صغيرة... ومن بعد؟",
+      "reveal": "دودة، ومن بعد تتغطى في بيتها، ومن بعد تخرج فراشة!",
+      "parent": "سقسيها: الفراشة كانت واش قبل؟",
+      "steps": [
+        "دودة صغيرة",
+        "تتغطى في بيتها",
+        "فراشة"
+      ],
+      "image": {
+        "kind": "photo",
+        "query": "three photos: caterpillar on leaf, cocoon/chrysalis, butterfly (8-07)"
+      }
+    },
+    {
+      "id": "8-13",
+      "stage": 8,
+      "type": "say",
+      "word": "شَمْس",
+      "ask": "واش هذي؟",
+      "reveal": "شمس! تسخن وتضوي النهار.",
+      "parent": "شوفو الشمس من التاقة، بلا ما تطلو فيها بزاف.",
+      "image": {
+        "kind": "photo",
+        "query": "existing sun photo (6-04)"
+      }
+    },
+    {
+      "id": "8-14",
+      "stage": 8,
+      "type": "say",
+      "word": "مَطَر",
+      "ask": "واش هذا؟",
+      "reveal": "مطر! يطيح من السحاب: طش طش طش!",
+      "parent": "ديرو صوت المطر بصوابعكم على الطاولة.",
+      "image": {
+        "kind": "photo",
+        "query": "rain drops on window"
+      }
+    },
+    {
+      "id": "8-15",
+      "stage": 8,
+      "type": "sequence",
+      "word": "سَحَابَة",
+      "ask": "شوفي السحابة... واش يصير من بعد؟",
+      "reveal": "يطيح المطر! ومن بعد تطلع الشمس.",
+      "parent": "كي يطيح المطر، شوفو من التاقة وعاودو الحكاية.",
+      "steps": [
+        "سحابة",
+        "مطر",
+        "شمس"
+      ],
+      "image": {
+        "kind": "photo",
+        "query": "existing cloud (6-09) + rain (8-14) + sun (6-04)"
       }
     }
   ]

@@ -20,7 +20,8 @@ STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking s
          "pronounce ج as the French j; ضُرك = ḍork; نتي = nti; كيما = kīma; واش = wāsh; ما عندهاش = ma ʿandhāsh. Short vowels are "
          "reduced like in Algerian speech. Laugh gently where the text says هههه. Each paragraph is a separate line: pause about two seconds between paragraphs.")
 STYLE = os.environ.get('STYLE', STYLE)
-KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة', 'ملصق', 'الملصق', 'ملصقات', 'الملصقات', 'ملصقين'}      # Standard-Arabic labels and loans that keep q in Sétif
+KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة', 'ملصق', 'الملصق', 'ملصقات', 'الملصقات', 'ملصقين',
+          'قميص', 'القميص', 'قميصك', 'قدر', 'القدر', 'قبعة', 'القبعة', 'طبق', 'أطباق', 'قطار', 'كأسان', 'قليل', 'اثنان', 'اِثْنَان', 'برتقالي'}   # فصحى nouns/numbers (Asma, 19 Oct 2026): spoken with q      # Standard-Arabic labels and loans that keep q in Sétif
 def tts_form(text):
     """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
     out = []
@@ -31,7 +32,6 @@ def tts_form(text):
     t = re.sub(r'(?<![\u0621-\u064A])(ال)?م[ُ]?ل[ْ]?ص[َ]?ق(ات|ين)?(?![\u0621-\u064A])', lambda m: (m.group(1) or '') + 'مُلْصَق' + (m.group(2) or ''), t)   # مُلْصَق: damma, no shadda
     t = re.sub(r'(?<![\u0621-\u064A])([وف]?)درك(?![\u0621-\u064A])', r'\1ضُرك', t)
     t = re.sub(r'(?<![\u0621-\u064A])اثنين(?![\u0621-\u064A])', 'زوج', t)
-    t = re.sub(r'(?<![\u0621-\u064A])اِثْنَان(?![\u0621-\u064A])', 'زوج', t)
     return t
 CHECK_MODELS = [m for m in os.environ.get('CHECK_MODELS', 'gemini-3-flash-preview,gemini-3.5-transcribe,gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest,gemini-3.5-flash').split(',') if m]
 STRICT = ('Transcribe this short Arabic clip verbatim in Arabic script, exactly as spoken, dialect words as pronounced. Do not correct, '

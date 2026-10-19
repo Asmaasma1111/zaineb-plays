@@ -78,5 +78,101 @@
  "dirty-hands": {
   "i": 0,
   "dir": "mud-hands"
+ },
+ "chair": 2,
+ "table": 1,
+ "bed-room": 0,
+ "pot": 2,
+ "plate": {
+  "i": 2,
+  "dir": "plate-c"
+ },
+ "hat": 1,
+ "shoe-small": {
+  "i": 0,
+  "dir": "shoe-small-c"
+ },
+ "soap": 1,
+ "towel": 3,
+ "car-red": 3,
+ "airplane": 0,
+ "tree": 3,
+ "butterfly": 3,
+ "tomato": 0,
+ "carrot": 4,
+ "rain": 0,
+ "duck-pond": 0,
+ "feather": 2,
+ "spinning-top": 0,
+ "banana-peeled": 0,
+ "sunset": 2,
+ "fried-egg": 5,
+ "window": {
+  "i": 5,
+  "dir": "window-c"
+ },
+ "shirt": {
+  "i": 3,
+  "dir": "shirt-c"
+ },
+ "trousers": 3,
+ "shoe-big": 2,
+ "truck": {
+  "i": 1,
+  "dir": "truck-c"
+ },
+ "bicycle": {
+  "i": 5,
+  "dir": "bicycle-c"
+ },
+ "grapes": {
+  "i": 0,
+  "dir": "grapes-c"
+ },
+ "caterpillar": 0,
+ "cocoon": 2,
+ "apples-many": {
+  "i": 2,
+  "dir": "apples-many-c"
+ },
+ "cat-in-box": {
+  "i": 0,
+  "dir": "cat-in-box-c"
+ },
+ "frying-egg": {
+  "i": 0,
+  "dir": "frying-egg-c"
+ },
+ "heart": 1,
+ "loud-noise": {
+  "i": 1,
+  "dir": "loud-noise-c"
+ },
+ "hen-chick": {
+  "i": 0,
+  "dir": "hen-chick-c"
+ },
+ "angry-photo": {
+  "i": 2,
+  "dir": "angry-photo-c"
+ },
+ "toothbrush-photo": {
+  "i": 1,
+  "dir": "toothbrush-photo-c"
+ },
+ "horse": 1,
+ "black-cat": 3,
+ "thirsty": 4,
+ "hungry": 3,
+ "eating-banana": 2,
+ "face-mouth": 0,
+ "face-ear": 2,
+ "sick": 0,
+ "friends": 0,
+ "toy-taken": 0,
+ "star-photo": 1,
+ "tired-photo": {
+  "i": 0,
+  "dir": "tired-photo-c"
  }
 }

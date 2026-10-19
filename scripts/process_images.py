@@ -7,9 +7,12 @@ plan = json.load(open(os.path.join(ROOT, 'scripts/image_plan.json')))
 picks = json.load(open(os.path.join(ROOT, 'scripts/picks.json')))
 credits = {'photos': [], 'illustrations': 'Zouzou the camel, the child character, the feelings faces, the shapes and the silly scenes are original SVG drawings made for this app (2026). Font: Baloo Bhaijaan 2 (Ek Type, SIL Open Font License).'}
 LIC = {'cc0': ('CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'), 'pdm': ('Public Domain Mark', 'https://creativecommons.org/publicdomain/mark/1.0/')}
+old_rows = {r['asset']: r for r in json.load(open(os.path.join(ROOT, 'credits.json'))).get('photos', [])} if os.path.exists(os.path.join(ROOT, 'credits.json')) else {}
 for ph in plan['photos']:
     a = ph['asset']; pk = picks.get(a)
     if pk is None: print('NO PICK', a); continue
+    if a in old_rows and os.path.exists(os.path.join(IMG, a + '.webp')) and not os.environ.get('REDO'):   # already processed earlier: keep its credit row, refresh the card list
+        row = dict(old_rows[a]); row['cards'] = ph['cards']; credits['photos'].append(row); continue
     i, fx, fy, zoom, d = (pk, .5, .5, 1, a) if isinstance(pk, int) else (pk['i'], pk.get('fx', .5), pk.get('fy', .5), pk.get('zoom', 1), pk.get('dir', a))
     meta = {m['i']: m for m in json.load(open(os.path.join(C, d, 'meta.json')))}[i]
     im = ImageOps.exif_transpose(Image.open(os.path.join(C, d, f'{i}.jpg')).convert('RGB'))

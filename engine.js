@@ -42,15 +42,18 @@
     const seen = list.filter(c => !!cardState(p, c.id)).length;
     return { total: list.length, known, seen };
   }
-  function isUnlocked(p, cards, stage) {
+  /* a level may name the stage it follows ("after": 1 for stage 7, 7 for stage 8); default = the previous number */
+  function prevStageOf(stage, levels) { const l = (levels || []).find(x => x.stage === stage); return l && l.after ? l.after : stage - 1; }
+  function isUnlocked(p, cards, stage, levels) {
     if (stage === 1) return true;
     if ((p.manualUnlocked || []).includes(stage)) return true;
-    const prev = stageStats(p, cards, stage - 1);
+    const before = prevStageOf(stage, levels);
+    const prev = stageStats(p, cards, before);
     const ratio = (p.settings && p.settings.unlockRatio) || DEFAULT_SETTINGS.unlockRatio;
-    return prev.total > 0 && prev.known >= Math.ceil(prev.total * ratio) && isUnlocked(p, cards, stage - 1);
+    return prev.total > 0 && prev.known >= Math.ceil(prev.total * ratio) && isUnlocked(p, cards, before, levels);
   }
   function highestUnlocked(p, cards, levels) {
-    let h = 1; for (const l of levels) { if (isUnlocked(p, cards, l.stage)) h = l.stage; else break; } return h;
+    let h = 1; for (const l of levels) if (isUnlocked(p, cards, l.stage, levels)) h = Math.max(h, l.stage); return h;
   }
   /* the stage new cards are drawn from: the highest unlocked stage that still has unseen cards, else the lowest with unseen cards */
   function currentStage(p, cards, levels) {
@@ -91,7 +94,7 @@
   function buildSession(p, cards, levels, today, rnd) {
     rnd = rnd || Math.random;
     const st = p.settings || DEFAULT_SETTINGS; const N = st.cardsPerSession; const sIdx = p.sessionCount;
-    const unlocked = new Set(levels.filter(l => isUnlocked(p, cards, l.stage)).map(l => l.stage));
+    const unlocked = new Set(levels.filter(l => isUnlocked(p, cards, l.stage, levels)).map(l => l.stage));
     const pool = cards.filter(c => unlocked.has(c.stage));
     const chosen = []; const used = new Set();
     const take = (c) => { if (c && !used.has(c.id) && chosen.length < N) { chosen.push(c); used.add(c.id); return true; } return false; };
@@ -138,7 +141,7 @@
   /* practice session: N cards from one open stage — due first, then the least-known, then the rest shuffled */
   function buildPractice(p, cards, levels, stage, today, rnd) {
     rnd = rnd || Math.random; const st = p.settings || DEFAULT_SETTINGS; const N = st.cardsPerSession; const sIdx = p.sessionCount;
-    if (!isUnlocked(p, cards, stage)) return [];
+    if (!isUnlocked(p, cards, stage, levels)) return [];
     const pool = shuffle(stageCards(cards, stage), rnd);
     const box = (c) => (cardState(p, c.id) ? cardState(p, c.id).box : 1.5);   // struggling cards first, then unseen, then known
     const due = pool.filter(c => isDue(p, c.id, today, sIdx));

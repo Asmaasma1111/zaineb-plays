@@ -177,7 +177,7 @@
     const pts = [[7, 30], [24, 62], [42, 30], [60, 62], [78, 30], [94, 62]];
     const path = pts.map((p, i) => (i ? 'L' : 'M') + (100 - p[0]) + ' ' + p[1]).join(' ');
     const stops = DATA.levels.map((l, i) => {
-      const un = E.isUnlocked(P, DATA.cards, l.stage); const st = E.stageStats(P, DATA.cards, l.stage);
+      const un = E.isUnlocked(P, DATA.cards, l.stage, DATA.levels); const st = E.stageStats(P, DATA.cards, l.stage);
       const done = un && st.known >= Math.ceil(st.total * (P.settings.unlockRatio || .8));
       const cls = !un ? 'locked' : (done ? 'done' : (l.stage === cur ? 'current' : ''));
       return `<div class="stop ${cls}" data-stage="${l.stage}" style="right:${pts[i][0]}%;top:${pts[i][1]}%">
@@ -367,7 +367,7 @@
   /* ---------- END OF SESSION: star, mission, goodbye ---------- */
   async function endSession() {
     const played = S.cards.slice(); const today = S.today; const now = new Date();
-    const doneStages = () => DATA.levels.filter(l => { const st = E.stageStats(P, DATA.cards, l.stage); return E.isUnlocked(P, DATA.cards, l.stage) && st.known >= Math.ceil(st.total * (P.settings.unlockRatio || .8)); }).map(l => l.stage);
+    const doneStages = () => DATA.levels.filter(l => { const st = E.stageStats(P, DATA.cards, l.stage); return E.isUnlocked(P, DATA.cards, l.stage, DATA.levels) && st.known >= Math.ceil(st.total * (P.settings.unlockRatio || .8)); }).map(l => l.stage);
     const doneBefore = doneStages();
     played.forEach(c => E.recordAnswer(P, c.id, S.results[c.id] || 'correct', today, P.sessionCount));
     const stageJustDone = doneStages().some(st => !doneBefore.includes(st));   // she finished a whole stage this session
@@ -398,10 +398,10 @@
   function openParent() {
     Voice.stop();
     const st = P.settings;
-    const stageRows = DATA.levels.map(l => { const s = E.stageStats(P, DATA.cards, l.stage); const un = E.isUnlocked(P, DATA.cards, l.stage);
+    const stageRows = DATA.levels.map(l => { const s = E.stageStats(P, DATA.cards, l.stage); const un = E.isUnlocked(P, DATA.cards, l.stage, DATA.levels);
       return `<tr><td>${l.stage}. ${l.name}</td><td>${un ? '' : '🔒 '}${s.known} / ${s.total}</td><td>${s.seen} شوفت</td></tr>`; }).join('');
     const known = DATA.cards.filter(c => E.isKnown(P, c.id)).map(c => c.word);
-    const next = DATA.levels.find(l => !E.isUnlocked(P, DATA.cards, l.stage));
+    const next = DATA.levels.find(l => !E.isUnlocked(P, DATA.cards, l.stage, DATA.levels));
     const o = h(`<div class="overlay"><div class="panel parent" dir="rtl">
       <div class="prow"><h2>منطقة الوالدين</h2><button class="btn-adult" id="close">رجوع ✕</button></div>
       <div class="ptabs"><button data-t="prog" class="on">التقدم</button><button data-t="set">الإعدادات</button><button data-t="data">نسخة احتياطية</button><button data-t="cred">المصادر</button></div>
