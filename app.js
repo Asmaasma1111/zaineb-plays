@@ -31,15 +31,16 @@
     index: {}, el: null, unlocked: false, token: 0,
     async init() { try { this.index = await (await fetch('audio/voice.json', { cache: 'no-cache' })).json(); } catch (e) { this.index = {}; } this.el = new Audio(); this.el.preload = 'auto'; },
     unlock() { if (this.unlocked) return; this.unlocked = true; try { this.el.src = 'audio/_unlock.m4a'; this.el.play().catch(() => {}); } catch (e) {} },
-    stop() { this.token++; try { this.el.pause(); } catch (e) {} try { speechSynthesis.cancel(); } catch (e) {} },
+    stop() { this.token++; try { this.el.pause(); } catch (e) {} try { speechSynthesis.cancel(); } catch (e) {} if (this._res) { const r = this._res; this._res = null; r(false); } },   // whoever was waiting for the old line moves on now, not 15 s later
     play(key, text) {
       this.stop(); const my = this.token;
-      return new Promise(res => {
+      return new Promise(res0 => {
+        const res = (ok = true) => { if (this._res === res) this._res = null; res0(ok); }; this._res = res;
         if (location.search.includes('mute')) return setTimeout(res, 300);     // dev: silent, fast
         const f = this.index[key];
         if (f) {
           const a = this.el; a.onended = a.onerror = () => { if (my === this.token) res(); }; a.src = 'audio/' + f;
-          a.play().catch(() => res()); setTimeout(() => res(), 15000); return;
+          a.play().catch(() => { if (my === this.token) res(); }); setTimeout(() => { if (my === this.token) res(); }, 15000); return;
         }
         if (!text || key.startsWith('st:') || !('speechSynthesis' in window) || !speechSynthesis.getVoices().some(v => v.lang.startsWith('ar'))) return setTimeout(res, 600);   // sticker lines: Zouzou's clip or silence, never the device voice
         const u = new SpeechSynthesisUtterance(text.replace(/[ً-ْ]/g, '')); u.lang = 'ar'; u.rate = .85; u.onend = u.onerror = () => res(); speechSynthesis.speak(u);
@@ -220,6 +221,7 @@
   }
   function showWord(c) { const w = $app.querySelector('#word'); if (w) w.classList.remove('hidden'); }
 
+  const live = (c) => !!(S && S.cards[S.i] === c);                                   // is this card still the one on screen?
   async function correct(c, el) {
     if (el) el.classList.add('correct');
     const fb = DATA.feedback_lines.correct; const i = Math.floor(rnd() * fb.length);
@@ -233,9 +235,11 @@
     if (target) { target.classList.remove('wiggle'); void target.offsetWidth; target.classList.add('wiggle'); }
   }
   async function reveal(c, result) {
+    if (!live(c) || S.revealed === c) return; S.revealed = c;                        // once per card, and only while it is on screen
     S.results[c.id] = S.results[c.id] || result;
     showWord(c); zouzou('happy', c.reveal);
     await Voice.play(k(c, 'reveal'), c.reveal);
+    if (!live(c)) return;
     const w = $app.querySelector('#word'); if (w) { w.classList.add('pop'); }
     $app.querySelectorAll('.pic').forEach(p => { p.onclick = () => Voice.play(k(c, 'word'), c.word); });
     const next = h('<button class="btn-next" id="next">➜</button>'); $app.firstElementChild.appendChild(next);
@@ -263,22 +267,24 @@
     const ds = E.pickDistractors(P, DATA.cards, c, S.choices - 1, rnd, assetOf).map(assetOf);
     const all = E.shuffle([target, ...ds], rnd);
     const s = frame(c, all.map(a => pic(a, 'tap ' + (all.length > 2 ? 'sm' : ''))).join(''));
-    let wrong = false, done = false;
+    let wrong = false, done = false, busy = false;
     s.querySelectorAll('.pic').forEach(p => p.addEventListener('click', async () => {
-      if (done) return;
-      if (p.dataset.asset === target) { done = true; await correct(c, p); reveal(c, wrong ? 'wrong' : 'correct'); }
+      if (done || busy) return; busy = true;
+      if (p.dataset.asset === target) { done = true; await correct(c, p); if (live(c)) reveal(c, wrong ? 'wrong' : 'correct'); }
       else { wrong = true; await tryAgain(c, s.querySelector(`.pic[data-asset="${target}"]`)); }
+      busy = false;
     }));
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playChoice(c, m, pics, answers, kind) {
     const all = kind === 'odd' ? E.shuffle(pics, rnd) : pics;
     const s = frame(c, all.map(a => pic(a, 'tap ' + (all.length > 2 ? 'sm' : ''))).join(''));
-    let wrong = false, done = false;
+    let wrong = false, done = false, busy = false;
     s.querySelectorAll('.pic').forEach(p => p.addEventListener('click', async () => {
-      if (done) return;
-      if (answers.includes(p.dataset.asset)) { done = true; await correct(c, p); reveal(c, wrong ? 'wrong' : 'correct'); }
+      if (done || busy) return; busy = true;
+      if (answers.includes(p.dataset.asset)) { done = true; await correct(c, p); if (live(c)) reveal(c, wrong ? 'wrong' : 'correct'); }
       else { wrong = true; await tryAgain(c, s.querySelector(`.pic[data-asset="${answers[0]}"]`)); }
+      busy = false;
     }));
     Voice.play(k(c, 'ask'), c.ask);
   }
@@ -290,7 +296,7 @@
       if (busy) return; busy = true;
       const ok = (phase === 1 ? m.rule1 : m.rule2).includes(p.dataset.asset);
       if (ok && phase === 1) { p.classList.add('correct'); zouzou('happy', 'بدلنا اللعبة!'); Sfx.pop(); await Voice.play('ui:3', 'بدلنا اللعبة!'); phase = 2; s.querySelectorAll('.pic').forEach(x => x.classList.remove('correct')); }
-      else if (ok) { await correct(c, p); busy = true; return reveal(c, wrong ? 'wrong' : 'correct'); }
+      else if (ok) { await correct(c, p); busy = true; if (live(c)) reveal(c, wrong ? 'wrong' : 'correct'); return; }
       else { wrong = true; await tryAgain(c, null); }
       busy = false;
     }));
@@ -298,13 +304,15 @@
   }
   function playAdult(c, m) {
     const s = frame(c, pic(m.pics[0] || assetOf(c), ''), `<div class="adult-btns"><button class="btn-adult ok" id="said">قالتها ✓</button><button class="btn-adult help" id="help">نعاونها</button></div>`);
-    s.querySelector('#said').onclick = async () => { await correct(c, s.querySelector('.pic')); reveal(c, 'correct'); };
-    s.querySelector('#help').onclick = async () => { zouzou('happy', 'نعاونوها مع بعض!'); reveal(c, 'help'); };
+    let done = false;
+    s.querySelector('#said').onclick = async () => { if (done) return; done = true; await correct(c, s.querySelector('.pic')); if (live(c)) reveal(c, 'correct'); };
+    s.querySelector('#help').onclick = async () => { if (done) return; done = true; zouzou('happy', 'نعاونوها مع بعض!'); reveal(c, 'help'); };
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playOpen(c, m, label) {
     const s = frame(c, pic(m.pics[0] || assetOf(c), ''), `<button class="btn-adult ok big" id="done">${label}</button>`);
-    s.querySelector('#done').onclick = async () => { zouzou('clap', 'يا سلام!'); confetti(); Sfx.sparkle(); reveal(c, 'correct'); };
+    let done = false;
+    s.querySelector('#done').onclick = async () => { if (done) return; done = true; zouzou('clap', 'يا سلام!'); confetti(); Sfx.sparkle(); reveal(c, 'correct'); };
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playCount(c, m) {
@@ -319,20 +327,20 @@
       const i = +p.dataset.n; if (i !== next) return;
       p.classList.add('lit'); Sfx.pop(); next++;
       await Voice.play(`count:${i}`, ['واحد', 'اثنين', 'ثلاثة', 'أربعة', 'خمسة'][i - 1]);
-      if (i === n) { await correct(c, null); reveal(c, 'correct'); }
+      if (i === n && live(c)) { await correct(c, null); if (live(c)) reveal(c, 'correct'); }
     }));
     Voice.play(k(c, 'ask'), c.ask);
   }
   function playSequence(c, m) {
     const order = m.steps; const shuffled = E.shuffle(order, rnd);
     const s = frame(c, `<div class="seq"><div class="slots">${[1, 2, 3].map(i => `<div class="slot" data-i="${i}"><span>${i}</span></div>`).join('')}</div><div class="pool">${shuffled.map(a => pic(a, 'tap sm')).join('')}</div></div>`);
-    let next = 0, wrong = false;
+    let next = 0, wrong = false, busy = false;
     s.querySelectorAll('.pool .pic').forEach(p => p.addEventListener('click', async () => {
-      if (p.classList.contains('placed')) return;
+      if (p.classList.contains('placed') || busy) return;
       if (p.dataset.asset === order[next]) {
         p.classList.add('placed'); Sfx.pop(); const slot = s.querySelector(`.slot[data-i="${next + 1}"]`); slot.innerHTML = ''; slot.appendChild(p.cloneNode(true)); p.style.visibility = 'hidden'; next++;
-        if (next === 3) { await correct(c, null); reveal(c, wrong ? 'wrong' : 'correct'); }
-      } else { wrong = true; await tryAgain(c, s.querySelector(`.pool .pic[data-asset="${order[next]}"]`)); }
+        if (next === 3) { busy = true; await correct(c, null); if (live(c)) reveal(c, wrong ? 'wrong' : 'correct'); }
+      } else { wrong = true; busy = true; await tryAgain(c, s.querySelector(`.pool .pic[data-asset="${order[next]}"]`)); busy = false; }
     }));
     Voice.play(k(c, 'ask'), c.ask);
   }
@@ -354,11 +362,11 @@
   }
   function playSilly(c, m) {
     const s = frame(c, pic(m.pics[0] || assetOf(c), ''), `<div class="yesno"><button class="btn-round yes" data-a="yes"><span class="face">😊</span>واه</button><button class="btn-round no" data-a="no"><span class="face">🙃</span>لا</button></div>`);
-    let wrong = false, done = false;
+    let wrong = false, done = false, busy = false;
     s.querySelectorAll('.btn-round').forEach(b => b.addEventListener('click', async () => {
-      if (done) return;
-      if (b.dataset.a === c.answer) { done = true; await correct(c, s.querySelector('.pic')); reveal(c, wrong ? 'wrong' : 'correct'); }
-      else if (!wrong) { wrong = true; await tryAgain(c, null); }
+      if (done || busy) return; busy = true;
+      if (b.dataset.a === c.answer) { done = true; await correct(c, s.querySelector('.pic')); if (live(c)) reveal(c, wrong ? 'wrong' : 'correct'); }
+      else if (!wrong) { wrong = true; await tryAgain(c, null); busy = false; }
       else { done = true; reveal(c, 'wrong'); }
     }));
     Voice.play(k(c, 'ask'), c.ask);
