@@ -225,8 +225,8 @@
       "reveal": "هذي العين! نشوفو بيها.",
       "parent": "غمضي عينيك وحليهم مع بعض.",
       "image": {
-        "kind": "illustration",
-        "query": "friendly cartoon child face pointing to eye"
+        "kind": "photo",
+        "query": "human eye closeup"
       }
     },
     {
@@ -238,8 +238,8 @@
       "reveal": "هذا الأنف! نشمو بيه. شمي... ممم!",
       "parent": "شمو وردة ولا فاكية مع بعض.",
       "image": {
-        "kind": "illustration",
-        "query": "friendly cartoon child face nose"
+        "kind": "photo",
+        "query": "baby smiling"
       }
     },
     {
@@ -437,8 +437,8 @@
       "reveal": "دائرة! مدوّرة كيما الكورة.",
       "parent": "رسمو دائرة في الهواء بصبعكم.",
       "image": {
-        "kind": "illustration",
-        "query": "simple circle shape bright"
+        "kind": "photo",
+        "query": "round wall clock"
       }
     },
     {
@@ -450,8 +450,8 @@
       "reveal": "مربع! عندو أربع جيهات.",
       "parent": "قلبو على مربع: طاقة، كتاب، علبة.",
       "image": {
-        "kind": "illustration",
-        "query": "simple square shape bright"
+        "kind": "photo",
+        "query": "square tile"
       }
     },
     {
@@ -695,8 +695,8 @@
       "parent": "سقسيها: واش يفرحك نتي؟",
       "mission": "وريني وجه فرحان!",
       "image": {
-        "kind": "illustration",
-        "query": "happy child cartoon face soft style"
+        "kind": "photo",
+        "query": "laughing child"
       }
     },
     {
@@ -708,8 +708,8 @@
       "reveal": "حزينة. راهي تبكي شويا.",
       "parent": "سقسيها: كي تحزني، واش يفرحك؟ حضن من ماما؟",
       "image": {
-        "kind": "illustration",
-        "query": "sad little girl cartoon gentle"
+        "kind": "photo",
+        "query": "baby crying"
       }
     },
     {
@@ -721,8 +721,8 @@
       "reveal": "غضبان! وجهو أحمر.",
       "parent": "علميها: كي نغضبو، نتنفسو بالشوية: شهيق... زفير.",
       "image": {
-        "kind": "illustration",
-        "query": "angry boy cartoon gentle"
+        "kind": "photo",
+        "query": "angry child face"
       }
     },
     {
@@ -734,8 +734,8 @@
       "reveal": "خايفة. تحتاج حضن.",
       "parent": "قوليلها: كي تخافي، تجي عند ماما.",
       "image": {
-        "kind": "illustration",
-        "query": "scared little girl cartoon gentle not scary"
+        "kind": "photo",
+        "query": "child covering ears hands"
       }
     },
     {
@@ -747,8 +747,8 @@
       "reveal": "تعبان. يحب يرقد. آآآه!",
       "parent": "تثاوبو مع بعض.",
       "image": {
-        "kind": "illustration",
-        "query": "tired yawning boy cartoon"
+        "kind": "photo",
+        "query": "yawning toddler"
       }
     },
     {
@@ -760,8 +760,8 @@
       "reveal": "متفاجئة! فمها مفتوح: أووه!",
       "parent": "ديرو وجه متفاجئ مع بعض.",
       "image": {
-        "kind": "illustration",
-        "query": "surprised girl cartoon open mouth"
+        "kind": "photo",
+        "query": "baby smiling"
       }
     },
     {
@@ -773,8 +773,8 @@
       "reveal": "هذا هو! فرحان ويضحك.",
       "parent": "قلدو الوجه مع بعض.",
       "image": {
-        "kind": "illustration",
-        "query": "set of cartoon emotion faces"
+        "kind": "photo",
+        "query": "laughing child"
       }
     },
     {
@@ -786,8 +786,8 @@
       "reveal": "هذا هو! حزين شويا.",
       "parent": "سقسيها: علاش راهو حزين؟",
       "image": {
-        "kind": "illustration",
-        "query": "set of cartoon emotion faces"
+        "kind": "photo",
+        "query": "baby crying"
       }
     },
     {
@@ -799,8 +799,8 @@
       "reveal": "فرحانة! الهدية تفرّح.",
       "parent": "سقسيها: واش هي الهدية اللي تحبيها؟",
       "image": {
-        "kind": "illustration",
-        "query": "girl receiving gift happy cartoon"
+        "kind": "photo",
+        "query": "teddy bear toy"
       }
     },
     {
@@ -812,8 +812,8 @@
       "reveal": "حزين. ضاعتلو الكورة.",
       "parent": "سقسيها: كيفاش نعاونوه؟",
       "image": {
-        "kind": "illustration",
-        "query": "boy sad ball fell in pool cartoon"
+        "kind": "photo",
+        "query": "ball floating swimming pool"
       }
     },
     {
@@ -825,8 +825,8 @@
       "reveal": "هايلة! نتي ممثلة!",
       "parent": "صوريها ووريلها الصور من بعد.",
       "image": {
-        "kind": "illustration",
-        "query": "child making funny faces cartoon"
+        "kind": "photo",
+        "query": "tongue out child"
       }
     },
     {
@@ -838,8 +838,8 @@
       "reveal": "يحتاج يرقد! تعبان.",
       "parent": "اربطيها بروتينها: نتي تاني تتعبي وترقدي.",
       "image": {
-        "kind": "illustration",
-        "query": "boy sleeping in bed cartoon"
+        "kind": "photo",
+        "query": "baby sleeping"
       }
     },
     {
@@ -1059,8 +1059,8 @@
       "reveal": "برافو! حبستي كيما التمثال!",
       "parent": "شغلي موسيقى صغيرة وحبسيها فجأة، وعاودو.",
       "image": {
-        "kind": "illustration",
-        "query": "child freeze dance cartoon"
+        "kind": "photo",
+        "query": "toddler dancing"
       }
     },
     {
@@ -1098,8 +1098,8 @@
       "reveal": "برافو! ودرك صفقي مرتين بالشوية.",
       "parent": "بدلي العدد كل مرة.",
       "image": {
-        "kind": "illustration",
-        "query": "child clapping hands cartoon"
+        "kind": "photo",
+        "query": "clapping hands"
       }
     },
     {
@@ -1243,8 +1243,8 @@
       "parent": "سقسيها: شكون يلبس الصباط؟",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon fish wearing red shoes, soft cute style, plain background"
+        "kind": "photo",
+        "query": "goldfish"
       }
     },
     {
@@ -1257,8 +1257,8 @@
       "parent": "خليها تصحح الصوت وحدها.",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon cow with speech bubble, cute, plain background"
+        "kind": "photo",
+        "query": "dairy cow"
       }
     },
     {
@@ -1271,8 +1271,8 @@
       "parent": "حطي حاجة على راسك ودعيها تضحك.",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon child wearing a banana as a hat, funny, cute"
+        "kind": "photo",
+        "query": "ripe banana fruit"
       }
     },
     {
@@ -1285,8 +1285,8 @@
       "parent": "سقسيها: شكون يطير؟",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon puppy with tiny wings flying, funny, cute"
+        "kind": "photo",
+        "query": "puppy dog"
       }
     },
     {
@@ -1313,8 +1313,8 @@
       "parent": "وريها الكاس والفرشيطة الحقيقيين.",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon fork in a glass of milk, funny, cute"
+        "kind": "photo",
+        "query": "glass of milk white background"
       }
     },
     {
@@ -1397,8 +1397,8 @@
       "reveal": "شاطرة! بدلتي القاعدة كيما الكبار.",
       "parent": "هذي لعبة تبديل القاعدة. عاونيها في البداية.",
       "image": {
-        "kind": "illustration",
-        "query": "big yellow star small blue star big blue star small yellow star"
+        "kind": "photo",
+        "query": "ball-big-yellow"
       }
     },
     {
@@ -1424,8 +1424,8 @@
       "parent": "سقسيها: وين تسكن السمكة؟",
       "answer": "no",
       "image": {
-        "kind": "generated",
-        "query": "cartoon camel swimming in the sea with goggles, funny, cute"
+        "kind": "photo",
+        "query": "camel"
       }
     },
     {
@@ -1673,8 +1673,8 @@
         "نرقدو"
       ],
       "image": {
-        "kind": "illustration",
-        "query": "child bedtime routine cartoon pyjamas toothbrush bed"
+        "kind": "photo",
+        "query": "child t-shirt"
       }
     },
     {
@@ -1738,8 +1738,8 @@
       "reveal": "مشى يقلب على جزرة! لقاها؟ واه! وكلاها: كرش كرش!",
       "parent": "خليها تكمل الحكاية بكلامها، وكتبيها من بعد.",
       "image": {
-        "kind": "generated",
-        "query": "cute cartoon rabbit looking for a carrot, storybook style"
+        "kind": "photo",
+        "query": "rabbit eating"
       }
     },
     {
@@ -1751,8 +1751,8 @@
       "reveal": "يا سلام على الحكاية! نتي حكواتية!",
       "parent": "سجلي صوتها وهي تحكي، ووريه لبابا.",
       "image": {
-        "kind": "generated",
-        "query": "cute cartoon kitten in a storybook scene"
+        "kind": "photo",
+        "query": "cute kitten"
       }
     },
     {

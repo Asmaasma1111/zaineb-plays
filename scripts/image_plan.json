@@ -8,7 +8,8 @@
     "1-01",
     "5-08",
     "5-12",
-    "5-22"
+    "5-22",
+    "6-12"
    ]
   },
   {
@@ -18,7 +19,8 @@
     "1-02",
     "5-08",
     "5-22",
-    "6-20"
+    "6-20",
+    "5-04"
    ]
   },
   {
@@ -26,7 +28,8 @@
    "query": "dairy cow",
    "cards": [
     "1-03",
-    "5-21"
+    "5-21",
+    "5-02"
    ]
   },
   {
@@ -43,7 +46,8 @@
    "query": "camel",
    "cards": [
     "1-05",
-    "6-18"
+    "6-18",
+    "5-13"
    ]
   },
   {
@@ -59,7 +63,8 @@
    "query": "goldfish",
    "cards": [
     "1-07",
-    "5-21"
+    "5-21",
+    "5-01"
    ]
   },
   {
@@ -92,14 +97,16 @@
     "2-09",
     "5-10",
     "2-23",
-    "6-13"
+    "6-13",
+    "5-03"
    ]
   },
   {
    "asset": "milk",
    "query": "glass of milk white background",
    "cards": [
-    "1-11"
+    "1-11",
+    "5-06"
    ]
   },
   {
@@ -376,11 +383,11 @@
    "asset": "sun",
    "query": "sun in the sky",
    "cards": [
-    "6-04",
     "8-13",
     "8-15",
     "4-17",
-    "5-18"
+    "5-18",
+    "6-04"
    ]
   },
   {
@@ -438,7 +445,8 @@
    "asset": "bed-room",
    "query": "child bed bedroom",
    "cards": [
-    "7-03"
+    "7-03",
+    "6-06"
    ]
   },
   {
@@ -467,7 +475,8 @@
    "asset": "shirt",
    "query": "child t-shirt",
    "cards": [
-    "7-08"
+    "7-08",
+    "6-06"
    ]
   },
   {
@@ -689,7 +698,9 @@
    "asset": "face-mouth",
    "query": "baby smiling",
    "cards": [
-    "1-21"
+    "1-21",
+    "1-14",
+    "3-06"
    ]
   },
   {
@@ -731,7 +742,8 @@
    "asset": "loud-noise",
    "query": "child covering ears hands",
    "cards": [
-    "3-18"
+    "3-18",
+    "3-04"
    ]
   },
   {
@@ -745,7 +757,8 @@
    "asset": "toy-taken",
    "query": "teddy bear toy",
    "cards": [
-    "3-20"
+    "3-20",
+    "3-09"
    ]
   },
   {
@@ -766,7 +779,8 @@
    "asset": "angry-photo",
    "query": "angry child face",
    "cards": [
-    "3-16"
+    "3-16",
+    "3-03"
    ]
   },
   {
@@ -780,237 +794,123 @@
    "asset": "toothbrush-photo",
    "query": "toothbrush",
    "cards": [
-    "7-14"
+    "7-14",
+    "6-06"
    ]
-  }
- ],
- "svg": [
+  },
   {
-   "asset": "circle",
+   "asset": "happy-photo",
+   "query": "laughing child",
+   "cards": [
+    "3-01",
+    "3-07"
+   ]
+  },
+  {
+   "asset": "sad-photo",
+   "query": "baby crying",
+   "cards": [
+    "3-02",
+    "3-08"
+   ]
+  },
+  {
+   "asset": "tired-child",
+   "query": "yawning toddler",
+   "cards": [
+    "3-05"
+   ]
+  },
+  {
+   "asset": "funny-face-photo",
+   "query": "tongue out child",
+   "cards": [
+    "3-11"
+   ]
+  },
+  {
+   "asset": "ball-pool-photo",
+   "query": "ball floating swimming pool",
+   "cards": [
+    "3-10"
+   ]
+  },
+  {
+   "asset": "sleeping-photo",
+   "query": "baby sleeping",
+   "cards": [
+    "3-12",
+    "6-14"
+   ]
+  },
+  {
+   "asset": "face-eye-photo",
+   "query": "human eye closeup",
+   "cards": [
+    "1-13"
+   ]
+  },
+  {
+   "asset": "circle-photo",
+   "query": "round wall clock",
    "cards": [
     "2-05",
     "5-20"
    ]
   },
   {
-   "asset": "square",
+   "asset": "square-photo",
+   "query": "square tile",
    "cards": [
     "2-06",
     "5-20"
    ]
   },
   {
-   "asset": "stars",
-   "cards": [
-    "5-11"
-   ],
-   "note": "four stars: big yellow, small blue, big blue, small yellow"
-  },
-  {
-   "asset": "door-open",
-   "cards": [
-    "4-04"
-   ],
-   "note": "open door (no CC0 photo of an open door found)"
-  },
-  {
-   "asset": "door-closed",
+   "asset": "door-open-photo",
+   "query": "open door light",
    "cards": [
     "4-04"
    ]
   },
   {
-   "asset": "melted-ice-cream",
+   "asset": "door-closed-photo",
+   "query": "closed door",
+   "cards": [
+    "4-04"
+   ]
+  },
+  {
+   "asset": "melted-photo",
+   "query": "ice cream melting cone",
    "cards": [
     "6-04"
-   ],
-   "note": "drawn: no CC0 photo of a dripping cone found"
-  }
- ],
- "generated": [
-  {
-   "asset": "face-eye",
-   "cards": [
-    "1-13"
-   ],
-   "prompt": "friendly cartoon toddler girl face, pointing to her eye, soft rounded style"
+   ]
   },
   {
-   "asset": "face-nose",
-   "cards": [
-    "1-14"
-   ],
-   "prompt": "friendly cartoon toddler girl face, touching her nose, soft rounded style"
-  },
-  {
-   "asset": "happy",
-   "cards": [
-    "3-01",
-    "3-07",
-    "3-08",
-    "3-11"
-   ],
-   "prompt": "happy laughing cartoon child face"
-  },
-  {
-   "asset": "sad",
-   "cards": [
-    "3-02",
-    "3-07",
-    "3-08"
-   ],
-   "prompt": "gently sad cartoon girl face with one small tear"
-  },
-  {
-   "asset": "angry",
-   "cards": [
-    "3-03",
-    "3-07",
-    "3-08"
-   ],
-   "prompt": "mildly cross cartoon boy face with pink cheeks, not scary"
-  },
-  {
-   "asset": "scared",
-   "cards": [
-    "3-04",
-    "3-07",
-    "3-08"
-   ],
-   "prompt": "a little worried cartoon girl hugging a teddy, gentle, not scary"
-  },
-  {
-   "asset": "tired",
-   "cards": [
-    "3-05",
-    "3-07",
-    "3-08"
-   ],
-   "prompt": "tired yawning cartoon boy face"
-  },
-  {
-   "asset": "surprised",
-   "cards": [
-    "3-06",
-    "3-07",
-    "3-08"
-   ],
-   "prompt": "surprised cartoon girl face, round open mouth, wide eyes"
-  },
-  {
-   "asset": "gift",
-   "cards": [
-    "3-09"
-   ],
-   "prompt": "cartoon girl receiving a wrapped gift, delighted"
-  },
-  {
-   "asset": "ball-pool",
-   "cards": [
-    "3-10"
-   ],
-   "prompt": "cartoon boy sad, his ball fell into a small pool"
-  },
-  {
-   "asset": "sleeping",
-   "cards": [
-    "3-12",
-    "6-14"
-   ],
-   "prompt": "cartoon boy asleep in bed with a teddy"
-  },
-  {
-   "asset": "freeze",
+   "asset": "dancing-photo",
+   "query": "toddler dancing",
    "cards": [
     "4-09"
-   ],
-   "prompt": "cartoon child frozen mid-dance like a statue, music notes"
+   ]
   },
   {
-   "asset": "clapping",
+   "asset": "clapping-photo",
+   "query": "clapping hands",
    "cards": [
     "4-12"
-   ],
-   "prompt": "cartoon child clapping hands happily"
+   ]
   },
   {
-   "asset": "pyjamas",
-   "cards": [
-    "6-06"
-   ],
-   "prompt": "folded pyjamas, cartoon"
-  },
-  {
-   "asset": "toothbrush",
-   "cards": [
-    "6-06"
-   ],
-   "prompt": "toothbrush with toothpaste, cartoon"
-  },
-  {
-   "asset": "bed",
-   "cards": [
-    "6-06"
-   ],
-   "prompt": "cosy child bed with pillow and moon lamp, cartoon"
-  },
-  {
-   "asset": "fish-shoes",
-   "cards": [
-    "5-01"
-   ],
-   "prompt": "cartoon fish wearing red shoes"
-  },
-  {
-   "asset": "cow-meow",
-   "cards": [
-    "5-02"
-   ],
-   "prompt": "cartoon cow with a speech bubble containing a tiny cat face"
-  },
-  {
-   "asset": "banana-hat",
-   "cards": [
-    "5-03"
-   ],
-   "prompt": "cartoon child wearing a banana as a hat"
-  },
-  {
-   "asset": "flying-puppy",
-   "cards": [
-    "5-04"
-   ],
-   "prompt": "cartoon puppy with tiny wings flying"
-  },
-  {
-   "asset": "fork-milk",
-   "cards": [
-    "5-06"
-   ],
-   "prompt": "cartoon fork standing in a glass of milk"
-  },
-  {
-   "asset": "camel-sea",
-   "cards": [
-    "5-13"
-   ],
-   "prompt": "cartoon camel swimming in the sea with goggles"
-  },
-  {
-   "asset": "rabbit-carrot",
+   "asset": "rabbit-carrot-photo",
+   "query": "rabbit eating",
    "cards": [
     "6-11"
-   ],
-   "prompt": "cute cartoon rabbit looking for a carrot, storybook"
-  },
-  {
-   "asset": "kitten-story",
-   "cards": [
-    "6-12"
-   ],
-   "prompt": "cute cartoon kitten in a storybook scene"
+   ]
   }
  ],
+ "svg": [],
+ "generated": [],
  "derived": [
   {
    "asset": "blue-ball",
@@ -1020,6 +920,38 @@
     "5-09"
    ],
    "note": "hue-shifted copy of the CC0 red ball photo"
+  },
+  {
+   "asset": "ball-big-yellow",
+   "from": "red-ball",
+   "cards": [
+    "5-11"
+   ],
+   "note": "hue-shifted / scaled copy of the CC0 red ball photo (scripts/derive_balls.py)"
+  },
+  {
+   "asset": "ball-small-yellow",
+   "from": "red-ball",
+   "cards": [
+    "5-11"
+   ],
+   "note": "hue-shifted / scaled copy of the CC0 red ball photo (scripts/derive_balls.py)"
+  },
+  {
+   "asset": "ball-big-blue",
+   "from": "red-ball",
+   "cards": [
+    "5-11"
+   ],
+   "note": "hue-shifted / scaled copy of the CC0 red ball photo (scripts/derive_balls.py)"
+  },
+  {
+   "asset": "ball-small-blue",
+   "from": "red-ball",
+   "cards": [
+    "5-11"
+   ],
+   "note": "hue-shifted / scaled copy of the CC0 red ball photo (scripts/derive_balls.py)"
   }
  ]
 }

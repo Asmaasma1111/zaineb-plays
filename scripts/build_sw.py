@@ -1,7 +1,7 @@
 """Write sw.js with a precache list of every file the app needs offline, and a fresh VERSION."""
 import os, time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-files = ['./', 'index.html', 'style.css?v=38', 'config.js?v=38', 'mascot.js?v=38', 'engine.js?v=38', 'stickerbook.js?v=38', 'popit.js?v=38', 'games.js?v=38', 'sync.js?v=38', 'app.js?v=38', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
+files = ['./', 'index.html', 'style.css?v=39', 'config.js?v=39', 'mascot.js?v=39', 'engine.js?v=39', 'stickerbook.js?v=39', 'popit.js?v=39', 'games.js?v=39', 'sync.js?v=39', 'app.js?v=39', 'zaineb_cards.json', 'media.json', 'credits.json', 'stickers/stickers.json', 'manifest.webmanifest', 'fonts/fonts.css']
 for d in ('fonts', 'img', 'img/zouzou3d', 'img/popit', 'icons', 'audio', 'stickers'):
     p = os.path.join(ROOT, d)
     if os.path.isdir(p): files += [f'{d}/{f}' for f in sorted(os.listdir(p)) if not f.startswith('.') and f != 'fonts.css']

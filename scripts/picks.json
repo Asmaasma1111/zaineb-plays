@@ -174,5 +174,50 @@
  "tired-photo": {
   "i": 0,
   "dir": "tired-photo-c"
+ },
+ "happy-photo": {
+  "i": 0,
+  "dir": "happy-photo-c"
+ },
+ "ball-pool-photo": {
+  "i": 0,
+  "dir": "ball-pool-photo-c"
+ },
+ "sleeping-photo": {
+  "i": 1,
+  "dir": "sleeping-photo-c"
+ },
+ "circle-photo": 0,
+ "square-photo": {
+  "i": 5,
+  "dir": "square-photo-c"
+ },
+ "door-closed-photo": 0,
+ "sad-photo": {
+  "i": 1,
+  "dir": "sad-photo-c"
+ },
+ "face-eye-photo": 0,
+ "melted-photo": {
+  "i": 0,
+  "dir": "melted-photo-c"
+ },
+ "dancing-photo": {
+  "i": 5,
+  "dir": "dancing-photo-c"
+ },
+ "clapping-photo": 1,
+ "rabbit-carrot-photo": {
+  "i": 0,
+  "dir": "rabbit-carrot-photo-c"
+ },
+ "funny-face-photo": 4,
+ "door-open-photo": {
+  "i": 1,
+  "dir": "door-open-photo-c"
+ },
+ "tired-child": {
+  "i": 2,
+  "dir": "sleeping-photo-c"
  }
 }

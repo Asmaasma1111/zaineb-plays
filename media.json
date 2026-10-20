@@ -102,44 +102,62 @@
 "angry-photo": "angry-photo.webp",
 "tired-photo": "tired-photo.webp",
 "toothbrush-photo": "toothbrush-photo.webp",
+"happy-photo": "happy-photo.webp",
+"sad-photo": "sad-photo.webp",
+"tired-child": "tired-child.webp",
+"funny-face-photo": "funny-face-photo.webp",
+"ball-pool-photo": "ball-pool-photo.webp",
+"sleeping-photo": "sleeping-photo.webp",
+"face-eye-photo": "face-eye-photo.webp",
+"circle-photo": "circle-photo.webp",
+"square-photo": "square-photo.webp",
+"door-open-photo": "door-open-photo.webp",
+"door-closed-photo": "door-closed-photo.webp",
+"melted-photo": "melted-photo.webp",
+"dancing-photo": "dancing-photo.webp",
+"clapping-photo": "clapping-photo.webp",
+"rabbit-carrot-photo": "rabbit-carrot-photo.webp",
 "blue-ball": "blue-ball.webp",
-"circle": "circle.svg",
-"square": "square.svg",
-"stars": "stars.svg",
-"door-open": "door-open.svg",
-"door-closed": "door-closed.svg",
-"melted-ice-cream": "melted-ice-cream.svg",
-"face-eye": "face-eye.svg",
-"face-nose": "face-nose.svg",
-"happy": "happy.svg",
-"sad": "sad.svg",
-"angry": "angry.svg",
-"scared": "scared.svg",
-"tired": "tired.svg",
-"surprised": "surprised.svg",
-"gift": "gift.svg",
-"ball-pool": "ball-pool.svg",
-"sleeping": "sleeping.svg",
-"freeze": "freeze.svg",
-"clapping": "clapping.svg",
-"pyjamas": "pyjamas.svg",
-"toothbrush": "toothbrush.svg",
+"ball-big-yellow": "ball-big-yellow.webp",
+"ball-small-yellow": "ball-small-yellow.webp",
+"ball-big-blue": "ball-big-blue.webp",
+"ball-small-blue": "ball-small-blue.webp",
 "bed": "bed.svg",
-"fish-shoes": "fish-shoes.svg",
-"cow-meow": "cow-meow.svg",
-"banana-hat": "banana-hat.svg",
-"flying-puppy": "flying-puppy.svg",
-"fork-milk": "fork-milk.svg",
-"camel-sea": "camel-sea.svg",
-"rabbit-carrot": "rabbit-carrot.svg",
-"kitten-story": "kitten-story.svg",
+"scared": "scared.svg",
 "funny-faces": "funny-faces.svg",
+"circle": "circle.svg",
+"cow-meow": "cow-meow.svg",
+"door-closed": "door-closed.svg",
+"face-eye": "face-eye.webp",
+"toothbrush": "toothbrush.svg",
+"face-nose": "face-nose.svg",
+"freeze": "freeze.svg",
+"rabbit-carrot": "rabbit-carrot.svg",
+"camel-sea": "camel-sea.svg",
+"surprised": "surprised.svg",
+"melted-ice-cream": "melted-ice-cream.svg",
+"sad": "sad.svg",
+"door-open": "door-open.svg",
 "star-big-blue": "star-big-blue.svg",
 "zouzou3d": "zouzou3d",
 "star-small-yellow": "star-small-yellow.svg",
+"happy": "happy.svg",
+"fork-milk": "fork-milk.svg",
+"sleeping": "sleeping.svg",
+"square": "square.svg",
+"ball-pool": "ball-pool.svg",
 "star-big-yellow": "star-big-yellow.svg",
+"clapping": "clapping.svg",
+"fish-shoes": "fish-shoes.svg",
+"kitten-story": "kitten-story.svg",
 "star-small-blue": "star-small-blue.svg",
-"popit": "popit"
+"tired": "tired.svg",
+"flying-puppy": "flying-puppy.svg",
+"gift": "gift.svg",
+"popit": "popit",
+"banana-hat": "banana-hat.svg",
+"angry": "angry.svg",
+"pyjamas": "pyjamas.svg"
 },
 "cards": {
 "1-01": {
@@ -204,12 +222,12 @@
 },
 "1-13": {
 "pics": [
-"face-eye"
+"face-eye-photo"
 ]
 },
 "1-14": {
 "pics": [
-"face-nose"
+"face-mouth"
 ]
 },
 "1-15": {
@@ -284,12 +302,12 @@
 },
 "2-05": {
 "pics": [
-"circle"
+"circle-photo"
 ]
 },
 "2-06": {
 "pics": [
-"square"
+"square-photo"
 ]
 },
 "2-07": {
@@ -386,62 +404,62 @@
 },
 "3-01": {
 "pics": [
-"happy"
+"happy-photo"
 ]
 },
 "3-02": {
 "pics": [
-"sad"
+"sad-photo"
 ]
 },
 "3-03": {
 "pics": [
-"angry"
+"angry-photo"
 ]
 },
 "3-04": {
 "pics": [
-"scared"
+"loud-noise"
 ]
 },
 "3-05": {
 "pics": [
-"tired"
+"tired-child"
 ]
 },
 "3-06": {
 "pics": [
-"surprised"
+"face-mouth"
 ]
 },
 "3-07": {
 "pics": [
-"happy"
+"happy-photo"
 ]
 },
 "3-08": {
 "pics": [
-"sad"
+"sad-photo"
 ]
 },
 "3-09": {
 "pics": [
-"gift"
+"toy-taken"
 ]
 },
 "3-10": {
 "pics": [
-"ball-pool"
+"ball-pool-photo"
 ]
 },
 "3-11": {
 "pics": [
-"funny-faces"
+"funny-face-photo"
 ]
 },
 "3-12": {
 "pics": [
-"sleeping"
+"sleeping-photo"
 ]
 },
 "3-13": {
@@ -506,10 +524,10 @@
 },
 "4-04": {
 "pics": [
-"door-open",
-"door-closed"
+"door-open-photo",
+"door-closed-photo"
 ],
-"answer": "door-open"
+"answer": "door-open-photo"
 },
 "4-05": {
 "pics": [
@@ -539,7 +557,7 @@
 },
 "4-09": {
 "pics": [
-"freeze"
+"dancing-photo"
 ]
 },
 "4-10": {
@@ -554,7 +572,7 @@
 },
 "4-12": {
 "pics": [
-"clapping"
+"clapping-photo"
 ]
 },
 "4-13": {
@@ -620,22 +638,22 @@
 },
 "5-01": {
 "pics": [
-"fish-shoes"
+"fish"
 ]
 },
 "5-02": {
 "pics": [
-"cow-meow"
+"cow"
 ]
 },
 "5-03": {
 "pics": [
-"banana-hat"
+"banana"
 ]
 },
 "5-04": {
 "pics": [
-"flying-puppy"
+"puppy"
 ]
 },
 "5-05": {
@@ -645,7 +663,7 @@
 },
 "5-06": {
 "pics": [
-"fork-milk"
+"milk"
 ]
 },
 "5-07": {
@@ -679,18 +697,18 @@
 },
 "5-11": {
 "pics": [
-"star-big-yellow",
-"star-small-blue",
-"star-big-blue",
-"star-small-yellow"
+"ball-big-yellow",
+"ball-small-blue",
+"ball-big-blue",
+"ball-small-yellow"
 ],
 "rule1": [
-"star-big-yellow",
-"star-small-yellow"
+"ball-big-yellow",
+"ball-small-yellow"
 ],
 "rule2": [
-"star-small-blue",
-"star-small-yellow"
+"ball-small-blue",
+"ball-small-yellow"
 ]
 },
 "5-12": {
@@ -711,7 +729,7 @@
 },
 "5-13": {
 "pics": [
-"camel-sea"
+"camel"
 ]
 },
 "5-14": {
@@ -747,10 +765,10 @@
 "5-20": {
 "pics": [
 "red-ball",
-"circle",
-"square"
+"circle-photo",
+"square-photo"
 ],
-"answer": "square"
+"answer": "square-photo"
 },
 "5-21": {
 "pics": [
@@ -808,12 +826,12 @@
 "steps": [
 "ice-cream",
 "sun",
-"melted-ice-cream"
+"melted-photo"
 ],
 "pics": [
 "ice-cream",
 "sun",
-"melted-ice-cream"
+"melted-photo"
 ]
 },
 "6-05": {
@@ -830,14 +848,14 @@
 },
 "6-06": {
 "steps": [
-"pyjamas",
-"toothbrush",
-"bed"
+"shirt",
+"toothbrush-photo",
+"bed-room"
 ],
 "pics": [
-"pyjamas",
-"toothbrush",
-"bed"
+"shirt",
+"toothbrush-photo",
+"bed-room"
 ]
 },
 "6-07": {
@@ -862,12 +880,12 @@
 },
 "6-11": {
 "pics": [
-"rabbit-carrot"
+"rabbit-carrot-photo"
 ]
 },
 "6-12": {
 "pics": [
-"kitten-story"
+"kitten"
 ]
 },
 "6-13": {
@@ -886,12 +904,12 @@
 "steps": [
 "sunset",
 "moon",
-"sleeping"
+"sleeping-photo"
 ],
 "pics": [
 "sunset",
 "moon",
-"sleeping"
+"sleeping-photo"
 ]
 },
 "6-15": {

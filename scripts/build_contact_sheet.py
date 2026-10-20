@@ -6,10 +6,9 @@ by_card = {}
 for kind in ('photos', 'svg', 'generated', 'derived'):
     for a in plan[kind]:
         for c in a['cards']: by_card.setdefault(c, []).append((a['asset'], 'webp' if kind in ('photos', 'derived') else 'svg'))
-# special multi-picture assets
-by_card['5-11'] = [(s, 'svg') for s in ('star-big-yellow', 'star-small-blue', 'star-big-blue', 'star-small-yellow')]
-by_card['3-11'] = [('funny-faces', 'svg')]
-by_card['3-07'] = [('happy', 'svg')]; by_card['3-08'] = [('sad', 'svg')]
+# the truth is media.json (what the app shows)
+M = json.load(open(os.path.join(ROOT, 'media.json')))
+by_card = {cid: [(a, M['files'][a].rsplit('.', 1)[1]) for a in v['pics']] for cid, v in M['cards'].items()}
 rows = []
 for lv in d['levels']:
     rows.append(f'<h2>المرحلة {lv["stage"]}: {lv["name"]}</h2><div class="grid">')
