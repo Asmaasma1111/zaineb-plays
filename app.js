@@ -525,13 +525,29 @@
       await Promise.race([Cloud.boot(), wait(3000)]);                            // usually the cloud answers first; if not, home shows and the copy is adopted on arrival
     }
     renderHome();
-    const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
-    if ('serviceWorker' in navigator && location.protocol !== 'file:' && !dev) {
-      let had = !!navigator.serviceWorker.controller;
-      navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !window.__reloaded) { window.__reloaded = true; if (S) window.__pendingReload = true; else location.reload(); } had = true; });   // a new version took over: load it
-      navigator.serviceWorker.register('sw.js').then(reg => { reg.update().catch(() => {}); }).catch(() => {});
-    }
     window.ZP = { get Book() { return Book; }, get stickers() { return STICKERS; }, get cloud() { return Cloud; }, openParent, playCard(id) { const c = DATA.cards.find(x => x.id === id); S = { cards: [c], i: 0, results: {}, today: E.dateKey(), choices: 3 }; showCard(); }, data: DATA, media: MEDIA, get p() { return P; }, set p(v) { P = v; save(); }, save, Engine: E, renderHome, Voice, startSession, get session() { return S; } };
   }
-  boot();
+  /* the offline cache is registered FIRST and independently of boot: a crash in the app must never block the next update */
+  function registerSW() {
+    const dev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !location.search.includes('sw=1');
+    if (!('serviceWorker' in navigator) || location.protocol === 'file:' || dev) return;
+    let had = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !window.__reloaded) { window.__reloaded = true; if (S) window.__pendingReload = true; else location.reload(); } had = true; });   // a new version took over: load it
+    navigator.serviceWorker.register('sw.js').then(reg => { reg.update().catch(() => {}); }).catch(() => {});
+  }
+  /* if boot fails (for example a half-updated cache), heal once: drop the cache and the worker, reload; the second time show a button */
+  async function healAndReload(err) {
+    console.error('boot failed', err);
+    let healed = false; try { healed = sessionStorage.getItem('zp:healed') === '1'; } catch (e) {}
+    if (!healed) {
+      try { sessionStorage.setItem('zp:healed', '1'); } catch (e) {}
+      try { const regs = await navigator.serviceWorker.getRegistrations(); await Promise.all(regs.map(r => r.unregister())); } catch (e) {}
+      try { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } catch (e) {}
+      return location.reload();
+    }
+    $app.innerHTML = `<section class="screen"><div class="center" style="gap:18px"><h2 class="h">آسفين... صار مشكل صغير</h2><p style="font-size:22px;direction:ltr">${String(err && err.message || err).slice(0, 200)}</p><button class="btn-big green" id="retry">إعادة المحاولة ↻</button></div></section>`;
+    $app.querySelector('#retry').onclick = () => { try { sessionStorage.removeItem('zp:healed'); } catch (e) {} location.reload(); };
+  }
+  registerSW();
+  boot().then(() => { try { sessionStorage.removeItem('zp:healed'); } catch (e) {} }).catch(healAndReload);
 })();

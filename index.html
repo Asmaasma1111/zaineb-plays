@@ -15,17 +15,33 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="style.css?v=40">
+<link rel="stylesheet" href="style.css?v=41">
 </head>
 <body>
 <div id="app" class="app"></div>
-<script src="config.js?v=40"></script>
-<script src="mascot.js?v=40"></script>
-<script src="engine.js?v=40"></script>
-<script src="stickerbook.js?v=40"></script>
-<script src="popit.js?v=40"></script>
-<script src="games.js?v=40"></script>
-<script src="sync.js?v=40"></script>
-<script src="app.js?v=40"></script>
+<script>
+/* works even if the app scripts are broken: ?reset=1 wipes the offline cache + worker and reloads; any early error shows a retry button */
+(function () {
+  if (/[?&]reset=1/.test(location.search)) {
+    var done = function () { location.replace(location.pathname); };
+    Promise.all([
+      ('serviceWorker' in navigator) ? navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); }) : null,
+      ('caches' in window) ? caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }) : null
+    ]).then(done, done);
+  }
+  window.addEventListener('error', function (e) {
+    var app = document.getElementById('app'); if (!app || app.children.length) return;
+    app.innerHTML = '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:sans-serif"><div style="font-size:30px;font-weight:700">آسفين... صار مشكل صغير</div><button onclick="location.href=location.pathname+\'?reset=1\'" style="font-size:26px;padding:14px 32px;border-radius:999px;border:0;background:#5FAE52;color:#fff">إصلاح وإعادة التحميل ↻</button></div>';
+  });
+})();
+</script>
+<script src="config.js?v=41"></script>
+<script src="mascot.js?v=41"></script>
+<script src="engine.js?v=41"></script>
+<script src="stickerbook.js?v=41"></script>
+<script src="popit.js?v=41"></script>
+<script src="games.js?v=41"></script>
+<script src="sync.js?v=41"></script>
+<script src="app.js?v=41"></script>
 </body>
 </html>
