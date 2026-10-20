@@ -22,6 +22,7 @@ STYLE = ("A warm, cheerful young mother from Sétif in eastern Algeria talking s
 STYLE = os.environ.get('STYLE', STYLE)
 KEEP_Q = {'قدم', 'القدم', 'قفي', 'قفز', 'مغلق', 'المغلق', 'البطريق', 'بطريق', 'دقايق', 'دقيقة', 'ملصق', 'الملصق', 'ملصقات', 'الملصقات', 'ملصقين',
           'قميص', 'القميص', 'قميصك', 'قدر', 'القدر', 'قبعة', 'القبعة', 'طبق', 'أطباق', 'قطار', 'كأسان', 'قليل', 'اثنان', 'اِثْنَان', 'برتقالي'}   # فصحى nouns/numbers (Asma, 19 Oct 2026): spoken with q      # Standard-Arabic labels and loans that keep q in Sétif
+TTS_WORD = {'فُرْشَاة': 'فُرْشَاه'}      # the isolated word is otherwise read as the French 'fourchette' (20 Oct 2026)
 def tts_form(text):
     """What the voice is given: her text respelled the Sétif way. Displayed text is never changed."""
     out = []
@@ -29,6 +30,7 @@ def tts_form(text):
         base = TASHKEEL.sub('', re.sub(r'[^\u0621-\u064A\u064B-\u0652\u0670]', '', tok))
         out.append(tok if base in KEEP_Q else tok.replace('ق', 'ڨ'))
     t = ' '.join(out).replace(' / ', '... ')      # slashed labels: a pause, not a slash the voice may skip
+    for a, b in TTS_WORD.items(): t = re.sub(r'(?<![\u0621-\u064A])' + a + r'(?![\u0621-\u064A])', b, t)
     t = re.sub(r'(?<![\u0621-\u064A])(ال)?م[ُ]?ل[ْ]?ص[َ]?ق(ات|ين)?(?![\u0621-\u064A])', lambda m: (m.group(1) or '') + 'مُلْصَق' + (m.group(2) or ''), t)   # مُلْصَق: damma, no shadda
     t = re.sub(r'(?<![\u0621-\u064A])([وف]?)درك(?![\u0621-\u064A])', r'\1ضُرك', t)
     t = re.sub(r'(?<![\u0621-\u064A])اثنين(?![\u0621-\u064A])', 'زوج', t)
