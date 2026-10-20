@@ -174,7 +174,7 @@
     if (window.__pendingReload) location.reload();                               // a new version waited for the session to end
   }
   function renderMap(cur) {
-    const pts = [[7, 30], [24, 62], [42, 30], [60, 62], [78, 30], [94, 62]];
+    const n = DATA.levels.length, pts = DATA.levels.map((l, i) => [Math.round(7 + i * (87 / Math.max(1, n - 1))), i % 2 ? 62 : 30]);   // any number of stages, zig-zag path
     const path = pts.map((p, i) => (i ? 'L' : 'M') + (100 - p[0]) + ' ' + p[1]).join(' ');
     const stops = DATA.levels.map((l, i) => {
       const un = E.isUnlocked(P, DATA.cards, l.stage, DATA.levels); const st = E.stageStats(P, DATA.cards, l.stage);
